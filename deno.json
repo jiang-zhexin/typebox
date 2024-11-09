@@ -9,5 +9,11 @@
         "semiColons": false,
         "singleQuote": true,
         "proseWrap": "preserve"
+    },
+    "publish": {
+        "exclude": [
+            ".github",
+            "README.md"
+        ]
     }
 }
