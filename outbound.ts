@@ -3,7 +3,6 @@ import type { base_tls, duration, listable, network, shadowsocks_method, strateg
 
 export type outbound =
     | direct
-    | block
     | socks
     | http
     | shadowsocks
@@ -17,7 +16,6 @@ export type outbound =
     | hysteria2
     | tor
     | ssh
-    | dns
     | selector
     | urltest
 
@@ -26,10 +24,6 @@ export interface direct extends dialer {
     tag: string
     override_address?: string
     override_port?: number
-}
-export interface block {
-    type: 'block'
-    tag: string
 }
 export interface socks extends dialer, server {
     type: 'socks'
@@ -199,10 +193,6 @@ export interface ssh extends dialer, server {
     host_key?: listable<string>
     host_key_algorithms?: listable<string>
     client_version?: string
-}
-export interface dns {
-    type: 'dns'
-    tag: string
 }
 export interface selector {
     type: 'selector'

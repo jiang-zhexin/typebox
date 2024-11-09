@@ -1,6 +1,6 @@
 import type * as outbound from './outbound.ts'
 import type * as transport from './transport.ts'
-import type { base_tls, duration, listable, network, shadowsocks_method, strategy } from './types.ts'
+import type { base_tls, duration, listable, network, shadowsocks_method } from './types.ts'
 
 export type inbound =
     | direct
@@ -142,7 +142,7 @@ export interface hysteria2 extends listen {
     masquerade?: string
     brutal_debug?: boolean
 }
-export interface tun extends inbound_option {
+export interface tun {
     type: 'tun'
     tag: string
     interface_name?: string
@@ -244,7 +244,7 @@ interface multiplex {
     }
 }
 
-interface listen extends inbound_option {
+interface listen {
     listen: string
     listen_port: number
     tcp_fast_open?: boolean
@@ -252,13 +252,6 @@ interface listen extends inbound_option {
     udp_fragment?: boolean
     udp_timeout?: duration
     detour?: string
-}
-interface inbound_option {
-    sniff?: boolean
-    sniff_override_destination?: boolean
-    sniff_timeout?: duration
-    domain_strategy?: strategy
-    udp_disable_domain_unmapping?: boolean
 }
 
 interface auth {

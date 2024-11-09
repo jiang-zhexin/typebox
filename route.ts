@@ -1,4 +1,4 @@
-import type { base_rule, duration, listable, quic_client, sniff_protocol } from './types.ts'
+import type { base_rule, duration, listable, quic_client, sniff_protocol, strategy } from './types.ts'
 
 export interface route {
     rules?: rule[]
@@ -12,7 +12,37 @@ export interface route {
 }
 
 export type rule = default_rule | logical_rule
-interface default_rule extends base_rule {
+type default_rule = action & raw_default_rule
+type logical_rule = action & raw_logical_rule
+type action = default_action | route_options | reject | dns | sniff | resolve
+interface default_action {
+    action?: 'route'
+    outbound: string
+}
+interface route_options {
+    action: 'route-options'
+    udp_disable_domain_unmapping?: boolean
+    udp_connect?: boolean
+}
+interface reject {
+    action: 'reject'
+    method?: 'default' | 'drop'
+    no_drop?: boolean
+}
+interface dns {
+    action: 'hijack-dns'
+}
+interface sniff {
+    action: 'sniff'
+    sniffer?: sniff_protocol[]
+    timeout?: duration
+}
+interface resolve {
+    action: 'resolve'
+    strategy?: strategy
+    server?: string
+}
+interface raw_default_rule extends base_rule {
     inbound?: listable<string>
     ip_version?: 4 | 6
     auth_user?: listable<string>
@@ -27,12 +57,11 @@ interface default_rule extends base_rule {
     rule_set_ip_cidr_match_source?: boolean
     outbound: string
 }
-interface logical_rule {
-    type: 'logical'
+interface raw_logical_rule {
+    readonly type: 'logical'
     mode: 'and' | 'or'
     rules: rule[]
     invert?: boolean
-    outbound: string
 }
 
 export type rule_set = inline_rule_set | local_rule_set | remote_rule_set

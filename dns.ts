@@ -31,7 +31,25 @@ export interface server {
 }
 
 export type rule = default_rule | logical_rule
-interface default_rule extends base_rule {
+type default_rule = action & raw_default_rule
+type logical_rule = action & raw_logical_rule
+type action = route | route_options | reject
+interface route {
+    action?: 'route'
+    server: string
+}
+interface route_options {
+    action: 'route-options'
+    disable_cache?: boolean
+    rewrite_ttl?: number
+    client_subnet?: string
+}
+interface reject {
+    action: 'reject'
+    method?: 'default' | 'drop'
+    no_drop?: boolean
+}
+interface raw_default_rule extends base_rule {
     inbound?: listable<string>
     ip_version?: 4 | 6
     query_type?: listable<string | number>
@@ -51,12 +69,9 @@ interface default_rule extends base_rule {
     rewrite_ttl?: number
     client_subnet?: string
 }
-interface logical_rule {
-    type: 'logical'
+interface raw_logical_rule {
+    readonly type: 'logical'
     mode: 'and' | 'or'
     rules: rule[]
-    server?: string
-    disable_cache?: boolean
-    rewrite_ttl?: number
-    client_subnet?: string
+    invert?: boolean
 }
