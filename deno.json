@@ -1,6 +1,6 @@
 {
     "name": "@zhexin/typebox",
-    "version": "0.0.5",
+    "version": "1.10.0",
     "license": "GPLv3",
     "exports": "./mod.ts",
     "fmt": {
