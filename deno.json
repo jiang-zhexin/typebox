@@ -1,0 +1,13 @@
+{
+    "name": "@zhexin/typebox",
+    "version": "0.0.4",
+    "license": "GPLv3",
+    "exports": "./mod.ts",
+    "fmt": {
+        "lineWidth": 160,
+        "indentWidth": 4,
+        "semiColons": false,
+        "singleQuote": true,
+        "proseWrap": "preserve"
+    }
+}
