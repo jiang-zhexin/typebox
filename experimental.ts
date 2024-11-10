@@ -27,7 +27,7 @@ export interface clash_api {
 export interface v2ray_api {
     listen?: string
     stats?: {
-        enabled?: string
+        enabled: true
         inbounds?: string[]
         outbounds?: string[]
         users?: string[]
