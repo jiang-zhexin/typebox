@@ -70,7 +70,7 @@ interface raw_default_rule extends base_rule {
     client_subnet?: string
 }
 interface raw_logical_rule {
-    readonly type: 'logical'
+    type: 'logical'
     mode: 'and' | 'or'
     rules: rule[]
     invert?: boolean
