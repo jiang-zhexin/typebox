@@ -64,10 +64,6 @@ interface raw_default_rule extends base_rule {
     rule_set?: listable<string>
     rule_set_ip_cidr_match_source?: boolean
     rule_set_ip_cidr_accept_empty?: boolean
-    server?: string
-    disable_cache?: boolean
-    rewrite_ttl?: number
-    client_subnet?: string
 }
 interface raw_logical_rule {
     type: 'logical'

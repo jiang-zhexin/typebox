@@ -55,7 +55,6 @@ interface raw_default_rule extends base_rule {
     clash_mode?: string
     rule_set?: listable<string>
     rule_set_ip_cidr_match_source?: boolean
-    outbound: string
 }
 interface raw_logical_rule {
     type: 'logical'
