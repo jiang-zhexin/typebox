@@ -2,7 +2,7 @@ export type listable<T> = T | T[]
 
 export type unit = 'd' | 'h' | 'm' | 's' | 'ms' | 'us' | 'ns'
 export type duration = `${number}${unit}`
-export type headers = { [key: string]: string }
+export type headers = { [key: string]: listable<string> }
 export type strategy =
     | 'prefer_ipv4'
     | 'prefer_ipv6'
