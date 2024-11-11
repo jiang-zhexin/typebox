@@ -18,6 +18,8 @@ type action = default_action | route_options | reject | dns | sniff | resolve
 interface default_action {
     action?: 'route'
     outbound: string
+    udp_disable_domain_unmapping?: boolean
+    udp_connect?: boolean
 }
 interface route_options {
     action: 'route-options'

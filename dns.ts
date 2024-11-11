@@ -37,6 +37,9 @@ type action = route | route_options | reject
 interface route {
     action?: 'route'
     server: string
+    disable_cache?: boolean
+    rewrite_ttl?: number
+    client_subnet?: string
 }
 interface route_options {
     action: 'route-options'
