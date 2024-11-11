@@ -9,6 +9,7 @@ deno add jsr:@zhexin/typebox
 ```
 Import symbol
 ```TypeScript
+// main.ts
 import { typebox } from "@zhexin/typebox"
 
 let config: typebox = {
@@ -20,6 +21,12 @@ let config: typebox = {
     route: {},
     experimental: {}
 }
+
+await Deno.writeTextFile("./path/to/config.json", JSON.stringify(config, null, 4))
+```
+Run it
+```bash
+deno run --allow-write ./main.ts
 ```
 
 ### For node
