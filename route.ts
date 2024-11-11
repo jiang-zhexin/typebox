@@ -1,5 +1,5 @@
 import type { action_reject, base_action_route, base_action_route_options, base_default_rule, base_logical_rule, default_rule_with_metadata } from './rule.ts'
-import type { duration, item_with_tag, listable, quic_client, sniff_protocol, strategy } from './types.ts'
+import type { duration, item_with_tag, listable, sniff_protocol, strategy } from './types.ts'
 
 export interface route {
     rules?: rule[]
@@ -12,7 +12,11 @@ export interface route {
     default_mark?: number
 }
 
-export type rule = rule_item & action
+export declare namespace route {
+    export { rule, rule_set }
+}
+
+type rule = rule_item & action
 type rule_item = default_rule | logical_rule
 type action = action_route | action_route_options | action_reject | action_dns | action_sniff | action_resolve
 interface action_route extends base_action_route {
@@ -29,7 +33,7 @@ interface action_dns {
 }
 interface action_sniff {
     action: 'sniff'
-    sniffer?: sniff_protocol[]
+    sniffer?: listable<sniff_protocol>
     timeout?: duration
 }
 interface action_resolve {
@@ -44,7 +48,7 @@ interface logical_rule extends base_logical_rule {
     rules: rule[]
 }
 
-export type rule_set = inline_rule_set | local_rule_set | remote_rule_set
+type rule_set = inline_rule_set | local_rule_set | remote_rule_set
 interface inline_rule_set extends item_with_tag {
     type: 'inline'
     rules: headless_rule[]
@@ -72,3 +76,5 @@ interface default_headless_rule extends base_default_rule {
 interface logical_headless_rule extends base_logical_rule {
     rules: headless_rule[]
 }
+
+type quic_client = Lowercase<'chrimium' | 'safari' | 'firefox' | 'quic-go'>

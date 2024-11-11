@@ -1,6 +1,10 @@
-import type { duration, headers, http_method, listable } from './types.ts'
+import type { duration, listable } from './types.ts'
 
 export type transport = http | websocket | quic | grpc | httpupgrade
+
+export declare namespace transport {
+    export { grpc, http, httpupgrade, quic, websocket }
+}
 
 interface http {
     type: 'http'
@@ -34,3 +38,6 @@ interface httpupgrade {
     path?: string
     headers?: headers
 }
+
+type headers = { [key: string]: listable<string> }
+type http_method = 'GET' | 'HEAD' | 'POST' | 'PUT' | 'PATCH' | 'DELETE' | 'CONNECT' | 'OPTIONS' | 'TRACE'

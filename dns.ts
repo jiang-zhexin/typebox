@@ -14,13 +14,17 @@ export interface dns {
     client_subnet?: string
 }
 
-export interface fakeip {
+export declare namespace dns {
+    export { fakeip, rule, server }
+}
+
+interface fakeip {
     enabled: true
     inet4_range: string
     inet6_range: string
 }
 
-export interface server extends item_with_tag {
+interface server extends item_with_tag {
     address: string
     address_resolver?: string
     address_strategy?: string
@@ -30,7 +34,7 @@ export interface server extends item_with_tag {
     client_subnet?: string
 }
 
-export type rule = rule_item & action
+type rule = rule_item & action
 type rule_item = default_rule | logical_rule
 type action = action_route | action_route_options | action_reject
 interface common_action {

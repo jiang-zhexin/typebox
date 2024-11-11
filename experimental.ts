@@ -6,7 +6,11 @@ export interface experimental {
     v2ray_api?: v2ray_api
 }
 
-export interface cache_file {
+export declare namespace experimental {
+    export { cache_file, clash_api, v2ray_api }
+}
+
+interface cache_file {
     enabled: true
     path?: string
     cache_id?: string
@@ -14,7 +18,7 @@ export interface cache_file {
     store_rdrc?: boolean
     rdrc_timeout?: duration
 }
-export interface clash_api {
+interface clash_api {
     external_controller?: string
     external_ui?: string
     external_ui_download_url?: string
@@ -24,7 +28,7 @@ export interface clash_api {
     access_control_allow_origin?: listable<string>
     access_control_allow_private_network?: boolean
 }
-export interface v2ray_api {
+interface v2ray_api {
     listen?: string
     stats?: {
         enabled: true

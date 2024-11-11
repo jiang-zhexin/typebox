@@ -1,6 +1,6 @@
 import type { duration, item_with_tag, listable, network, shadowsocks_method } from './types.ts'
 import type { server_tls as tls } from './tls.ts'
-import type * as outbound from './outbound.ts'
+import type { dialer, server } from './outbound.ts'
 import type { transport } from './transport.ts'
 
 export type inbound =
@@ -21,61 +21,65 @@ export type inbound =
     | redirect
     | tproxy
 
-export interface direct extends listen {
+export declare namespace inbound {
+    export { direct, http, hysteria, hysteria2, mixed, naive, redirect, shadowsocks, shadowtls, socks, tls, tproxy, trojan, tuic, tun, vless, vmess }
+}
+
+interface direct extends listen {
     type: 'direct'
     network?: network
     override_address?: string
     override_port?: number
 }
-export interface mixed extends listen {
+interface mixed extends listen {
     type: 'mixed'
     users?: auth[]
     set_system_proxy?: boolean
 }
-export interface socks extends listen {
+interface socks extends listen {
     type: 'socks'
     users?: auth[]
 }
-export interface http extends listen {
+interface http extends listen {
     type: 'http'
     users?: auth[]
     set_system_proxy?: boolean
     tls?: tls
 }
-export interface shadowsocks extends listen {
+interface shadowsocks extends listen {
     type: 'shadowsocks'
     network?: network
     method: shadowsocks_method
     password: string
     users?: user[]
-    destinations?: [user & outbound.server]
+    destinations?: [user & server]
     multiplex?: multiplex
 }
-export interface vmess extends listen {
+interface vmess extends listen {
     type: 'vmess'
     users: vmess_user[]
     tls?: tls
     multiplex?: multiplex
     transport?: transport
 }
-export interface trojan extends listen {
+interface trojan extends listen {
     type: 'trojan'
     users: user[]
     tls?: tls
-    fallback?: outbound.server
+    fallback?: server
     fallback_for_alpn?: {
-        [alpn: string]: outbound.server
+        [alpn: string]: server
     }
     multiplex?: multiplex
     transport?: transport
 }
-export interface naive extends listen {
+interface naive extends listen {
     type: 'naive'
     users: auth[]
     network?: network
     tls?: tls
 }
-export interface hysteria extends listen {
+interface hysteria extends listen {
     type: 'hysteria'
     up: string
     up_mbps: number
@@ -89,25 +93,25 @@ export interface hysteria extends listen {
     disable_mtu_discovery?: boolean
     tls: tls
 }
-export interface shadowtls extends listen {
+interface shadowtls extends listen {
     type: 'shadowtls'
     version?: 1 | 2 | 3
     password?: string
     users?: user[]
-    handshake: outbound.server & outbound.dialer
+    handshake: server & dialer
     handshake_for_server_name?: {
-        [server_name: string]: outbound.server & outbound.dialer
+        [server_name: string]: server & dialer
     }
     strict_mode?: boolean
 }
-export interface vless extends listen {
+interface vless extends listen {
     type: 'vless'
     users: vless_user[]
     tls?: tls
     multiplex?: multiplex
     transport?: transport
 }
-export interface tuic extends listen {
+interface tuic extends listen {
     type: 'tuic'
     users: tuic_user[]
     congestion_control?: 'cubic' | 'new_reno' | 'bbr'
@@ -116,7 +120,7 @@ export interface tuic extends listen {
     heartbeat?: duration
     tls: tls
 }
-export interface hysteria2 extends listen {
+interface hysteria2 extends listen {
     type: 'hysteria2'
     up_mbps?: number
     down_mbps?: number
@@ -130,7 +134,7 @@ export interface hysteria2 extends listen {
     masquerade?: string
     brutal_debug?: boolean
 }
-export interface tun extends item_with_tag {
+interface tun extends item_with_tag {
     type: 'tun'
     interface_name?: string
     mtu?: number
@@ -163,15 +167,15 @@ export interface tun extends item_with_tag {
         http_proxy: tun_platform
     }
 }
-interface tun_platform extends outbound.server {
+interface tun_platform extends server {
     enabled: true
     bypass_domain?: listable<string>
     match_domain?: listable<string>
 }
-export interface redirect extends listen {
+interface redirect extends listen {
     type: 'redirect'
 }
-export interface tproxy extends listen {
+interface tproxy extends listen {
     type: 'tproxy'
     network?: network
 }
