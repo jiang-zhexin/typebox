@@ -1,7 +1,7 @@
 import type { duration, item_with_tag, listable, network, shadowsocks_method } from './types.ts'
-import { server_tls as tls } from './tls.ts'
+import type { server_tls as tls } from './tls.ts'
 import type * as outbound from './outbound.ts'
-import { transport } from './transport.ts'
+import type { transport } from './transport.ts'
 
 export type inbound =
     | direct
