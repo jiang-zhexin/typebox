@@ -15,3 +15,7 @@ export interface typebox {
     experimental?: experimental
     ntp?: ntp
 }
+
+export declare namespace typebox {
+    export { log, dns, inbound, outbound, route, experimental, ntp }
+}
