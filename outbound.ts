@@ -69,7 +69,7 @@ export interface vmess extends dialer, server {
     authenticated_length?: boolean
     network?: network
     tls?: tls
-    packet_encoding?: '' | 'packetaddr' | 'xudp'
+    packet_encoding?: 'packetaddr' | 'xudp'
     multiplex?: multiplex
     transport?: transport.transport
 }
@@ -147,7 +147,7 @@ export interface vless extends dialer, server {
     flow?: 'xtls-rprx-vision'
     network?: network
     tls?: tls
-    packet_encoding?: '' | 'packetaddr' | 'xudp'
+    packet_encoding?: 'packetaddr' | 'xudp'
     multiplex?: multiplex
     transport?: transport.transport
 }
