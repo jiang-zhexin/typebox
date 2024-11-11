@@ -1,5 +1,6 @@
-import type * as transport from './transport.ts'
-import type { base_tls, duration, listable, network, shadowsocks_method, strategy } from './types.ts'
+import type { duration, item_with_tag, listable, network, shadowsocks_method, strategy } from './types.ts'
+import { transport } from './transport.ts'
+import { client_tls as tls } from './tls.ts'
 
 export type outbound =
     | direct
@@ -25,27 +26,27 @@ export interface direct extends dialer {
     override_address?: string
     override_port?: number
 }
-export interface socks extends dialer, server {
+
+interface remote extends dialer, item_with_tag {
+    network?: network
+}
+export interface socks extends remote, server {
     type: 'socks'
-    tag: string
     version?: '4' | '4a' | '5'
     username?: string
     password?: string
-    network?: network
     udp_over_tcp?: udp_over_tcp
 }
-export interface http extends dialer, server {
+export interface http extends dialer, server, item_with_tag {
     type: 'http'
-    tag: string
     username?: string
     password?: string
     path?: string
     header?: Headers
     tls?: tls
 }
-export interface shadowsocks extends dialer, server {
+export interface shadowsocks extends remote, server {
     type: 'shadowsocks'
-    tag: string
     method: shadowsocks_method
     password: string
     plugin?: 'obfs-local' | 'v2ray-plugin'
@@ -54,56 +55,42 @@ export interface shadowsocks extends dialer, server {
     udp_over_tcp?: udp_over_tcp
     multiplex?: multiplex
 }
-export interface vmess extends dialer, server {
+export interface vmess extends remote, server {
     type: 'vmess'
-    tag: string
     uuid: string
     security?: 'auto' | 'none' | 'zero' | 'aes-128-gcm' | 'chacha20-poly1305'
     global_padding?: boolean
     authenticated_length?: boolean
-    network?: network
     tls?: tls
     packet_encoding?: 'packetaddr' | 'xudp'
     multiplex?: multiplex
-    transport?: transport.transport
+    transport?: transport
 }
-export interface trojan extends dialer, server {
+export interface trojan extends remote, server {
     type: 'trojan'
-    tag: string
     password: string
-    network?: network
     tls?: tls
     multiplex?: multiplex
-    transport?: transport.transport
+    transport?: transport
 }
 export type wireguard = onepeer | multipeer
-interface onepeer extends dialer, server {
+interface base_wiregurad extends remote {
     type: 'wireguard'
-    tag: string
     system_interface?: boolean
+    mtu?: number
     gso?: boolean
     interface_name?: string
     local_address: listable<string>
+    workers?: number
     private_key: string
+}
+interface onepeer extends base_wiregurad, server {
     peer_public_key?: string
     pre_shared_key?: string
     reserved?: number[]
-    workers?: number
-    mtu?: number
-    network?: network
 }
-interface multipeer extends dialer {
-    type: 'wireguard'
-    tag: string
-    system_interface?: boolean
-    gso?: boolean
-    interface_name?: string
-    local_address: listable<string>
-    private_key: string
+interface multipeer extends base_wiregurad {
     peers?: peer[]
-    workers?: number
-    mtu?: number
-    network?: network
 }
 interface peer extends server {
     public_key: string
@@ -111,9 +98,8 @@ interface peer extends server {
     reserved?: number[]
     allowed_ips?: listable<string>
 }
-export interface hysteria extends dialer, server {
+export interface hysteria extends remote, server {
     type: 'hysteria'
-    tag: string
     up: string
     up_mbps: number
     down: string
@@ -124,30 +110,25 @@ export interface hysteria extends dialer, server {
     recv_window_conn?: number
     recv_window?: number
     disable_mtu_discovery?: boolean
-    network?: network
     tls: tls
 }
-export interface shadowtls extends dialer, server {
+export interface shadowtls extends dialer, server, item_with_tag {
     type: 'shadowtls'
-    tag: string
     version?: 1 | 2 | 3
     password?: string
     tls: tls
 }
-export interface vless extends dialer, server {
+export interface vless extends remote, server {
     type: 'vless'
-    tag: string
     uuid: string
     flow?: 'xtls-rprx-vision'
-    network?: network
     tls?: tls
     packet_encoding?: 'packetaddr' | 'xudp'
     multiplex?: multiplex
-    transport?: transport.transport
+    transport?: transport
 }
-export interface tuic extends dialer, server {
+export interface tuic extends remote, server {
     type: 'tuic'
-    tag: string
     uuid: string
     password?: string
     congestion_control?: 'cubic' | 'new_reno' | 'bbr'
@@ -155,12 +136,10 @@ export interface tuic extends dialer, server {
     udp_over_stream?: boolean
     zero_rtt_handshake?: boolean
     heartbeat?: duration
-    network?: network
     tls: tls
 }
-export interface hysteria2 extends dialer, server {
+export interface hysteria2 extends remote, server {
     type: 'hysteria2'
-    tag: string
     up_mbps?: number
     down_mbps?: number
     obfs?: {
@@ -168,13 +147,11 @@ export interface hysteria2 extends dialer, server {
         password: string
     }
     password?: string
-    network?: network
     tls: tls
     brutal_debug?: boolean
 }
-export interface tor extends dialer {
+export interface tor extends dialer, item_with_tag {
     type: 'tor'
-    tag: string
     executable_path?: string
     extra_args?: string
     data_directory?: string
@@ -182,9 +159,8 @@ export interface tor extends dialer {
         [key: string]: string
     }
 }
-export interface ssh extends dialer, server {
+export interface ssh extends dialer, server, item_with_tag {
     type: 'ssh'
-    tag: string
     user?: string
     password?: string
     private_key?: listable<string>
@@ -194,22 +170,20 @@ export interface ssh extends dialer, server {
     host_key_algorithms?: listable<string>
     client_version?: string
 }
-export interface selector {
-    type: 'selector'
-    tag: string
+interface group_outbound extends item_with_tag {
     outbounds: string[]
-    default?: string
     interrupt_exist_connections?: boolean
 }
-export interface urltest {
+export interface selector extends group_outbound {
+    type: 'selector'
+    default?: string
+}
+export interface urltest extends group_outbound {
     type: 'urltest'
-    tag: string
-    outbounds: string[]
     url?: string
     interval?: duration
     tolerance?: number
     idle_timeout?: duration
-    interrupt_exist_connections?: boolean
 }
 
 export interface dialer {
@@ -231,37 +205,6 @@ export interface dialer {
 export interface server {
     server: string
     server_port: number
-}
-
-interface tls extends base_tls {
-    disable_sni?: boolean
-    insecure?: boolean
-    ech?: {
-        enabled: true
-        pq_signature_schemes_enabled?: boolean
-        dynamic_record_sizing_disabled?: boolean
-        config?: listable<string>
-        config_path?: string
-    }
-    utls?: {
-        enabled: true
-        fingerprint?:
-            | 'chrome'
-            | 'firefox'
-            | 'edge'
-            | 'safari'
-            | '360'
-            | 'qq'
-            | 'ios'
-            | 'android'
-            | 'random'
-            | 'randomized'
-    }
-    reality?: {
-        enabled: true
-        public_key: string
-        short_id: string
-    }
 }
 
 interface multiplex {

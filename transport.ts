@@ -1,43 +1,34 @@
-import type { duration, headers, listable } from './types.ts'
+import type { duration, headers, http_method, listable } from './types.ts'
 
 export type transport = http | websocket | quic | grpc | httpupgrade
 
-export interface http {
+interface http {
     type: 'http'
     host?: listable<string>
     path?: string
-    method?:
-        | 'GET'
-        | 'HEAD'
-        | 'POST'
-        | 'PUT'
-        | 'PATCH'
-        | 'DELETE'
-        | 'CONNECT'
-        | 'OPTIONS'
-        | 'TRACE'
+    method?: http_method
     headers?: headers
     idle_timeout?: duration
     ping_timeout?: duration
 }
-export interface websocket {
+interface websocket {
     type: 'ws'
     path?: string
     headers?: headers
     max_early_data?: number
     early_data_header_name?: string
 }
-export interface quic {
+interface quic {
     type: 'quic'
 }
-export interface grpc {
+interface grpc {
     type: 'grpc'
     service_name?: string
     idle_timeout?: duration
     ping_timeout?: duration
     permit_without_stream?: boolean
 }
-export interface httpupgrade {
+interface httpupgrade {
     type: 'httpupgrade'
     host?: string
     path?: string

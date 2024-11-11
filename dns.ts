@@ -1,4 +1,5 @@
-import type { base_rule, duration, listable, sniff_protocol, strategy } from './types.ts'
+import type { action_reject, base_action_route, base_action_route_options, base_logical_rule, default_rule_with_metadata } from './rule.ts'
+import type { duration, item_with_tag, listable, strategy } from './types.ts'
 
 export interface dns {
     servers?: server[]
@@ -19,8 +20,7 @@ export interface fakeip {
     inet6_range: string
 }
 
-export interface server {
-    tag: string
+export interface server extends item_with_tag {
     address: string
     address_resolver?: string
     address_strategy?: string
@@ -30,47 +30,22 @@ export interface server {
     client_subnet?: string
 }
 
-export type rule = default_rule | logical_rule
-type default_rule = action & raw_default_rule
-type logical_rule = action & raw_logical_rule
-type action = route | route_options | reject
-interface route {
-    action?: 'route'
+export type rule = rule_item & action
+type rule_item = default_rule | logical_rule
+type action = action_route | action_route_options | action_reject
+interface common_action {
+    disable_cache?: boolean
+    rewrite_ttl?: number
+    client_subnet?: string
+}
+interface action_route extends base_action_route, common_action {
     server: string
-    disable_cache?: boolean
-    rewrite_ttl?: number
-    client_subnet?: string
 }
-interface route_options {
-    action: 'route-options'
-    disable_cache?: boolean
-    rewrite_ttl?: number
-    client_subnet?: string
-}
-interface reject {
-    action: 'reject'
-    method?: 'default' | 'drop'
-    no_drop?: boolean
-}
-interface raw_default_rule extends base_rule {
-    inbound?: listable<string>
-    ip_version?: 4 | 6
+type action_route_options = base_action_route_options & common_action
+interface default_rule extends default_rule_with_metadata {
     query_type?: listable<string | number>
-    auth_user?: listable<string>
-    protocol?: listable<sniff_protocol>
-    ip_is_private?: boolean
-    source_ip_is_private?: boolean
-    user?: listable<string>
-    user_id?: listable<number>
     outbound?: listable<string>
-    clash_mode?: string
-    rule_set?: listable<string>
-    rule_set_ip_cidr_match_source?: boolean
-    rule_set_ip_cidr_accept_empty?: boolean
 }
-interface raw_logical_rule {
-    type: 'logical'
-    mode: 'and' | 'or'
+interface logical_rule extends base_logical_rule {
     rules: rule[]
-    invert?: boolean
 }
