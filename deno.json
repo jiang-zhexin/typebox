@@ -11,8 +11,7 @@
         "./ntp": "./ntp.ts",
         "./outbound": "./outbound.ts",
         "./route": "./route.ts",
-        "./transport": "./transport.ts",
-        "./types": "./types.ts"
+        "./transport": "./transport.ts"
     },
     "fmt": {
         "lineWidth": 160,
@@ -22,6 +21,10 @@
         "proseWrap": "preserve"
     },
     "publish": {
+        "include": [
+            "./*.ts",
+            "./README.md"
+        ],
         "exclude": [
             ".github"
         ]
