@@ -1,6 +1,8 @@
+type log_level = 'trace' | 'debug' | 'info' | 'warn' | 'error' | 'fatel' | 'panic'
+
 export interface log {
     disabled?: boolean
-    level?: 'trace' | 'debug' | 'info' | 'warn' | 'error' | 'fatel' | 'panic'
+    level?: log_level
     output?: string
     timestamp?: boolean
 }

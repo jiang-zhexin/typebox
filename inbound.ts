@@ -1,6 +1,7 @@
+import type { duration, item_with_tag, listable, network, shadowsocks_method } from './types.ts'
+import { server_tls as tls } from './tls.ts'
 import type * as outbound from './outbound.ts'
-import type * as transport from './transport.ts'
-import type { base_tls, duration, listable, network, shadowsocks_method } from './types.ts'
+import { transport } from './transport.ts'
 
 export type inbound =
     | direct
@@ -22,32 +23,27 @@ export type inbound =
 
 export interface direct extends listen {
     type: 'direct'
-    tag: string
     network?: network
     override_address?: string
     override_port?: number
 }
 export interface mixed extends listen {
     type: 'mixed'
-    tag: string
     users?: auth[]
     set_system_proxy?: boolean
 }
 export interface socks extends listen {
     type: 'socks'
-    tag: string
     users?: auth[]
 }
 export interface http extends listen {
     type: 'http'
-    tag: string
     users?: auth[]
     set_system_proxy?: boolean
     tls?: tls
 }
 export interface shadowsocks extends listen {
     type: 'shadowsocks'
-    tag: string
     network?: network
     method: shadowsocks_method
     password: string
@@ -57,15 +53,13 @@ export interface shadowsocks extends listen {
 }
 export interface vmess extends listen {
     type: 'vmess'
-    tag: string
     users: vmess_user[]
     tls?: tls
     multiplex?: multiplex
-    transport?: transport.transport
+    transport?: transport
 }
 export interface trojan extends listen {
     type: 'trojan'
-    tag: string
     users: user[]
     tls?: tls
     fallback?: outbound.server
@@ -73,18 +67,16 @@ export interface trojan extends listen {
         [alpn: string]: outbound.server
     }
     multiplex?: multiplex
-    transport?: transport.transport
+    transport?: transport
 }
 export interface naive extends listen {
     type: 'naive'
-    tag: string
     users: auth[]
     network?: network
     tls?: tls
 }
 export interface hysteria extends listen {
     type: 'hysteria'
-    tag: string
     up: string
     up_mbps: number
     down: string
@@ -99,7 +91,6 @@ export interface hysteria extends listen {
 }
 export interface shadowtls extends listen {
     type: 'shadowtls'
-    tag: string
     version?: 1 | 2 | 3
     password?: string
     users?: user[]
@@ -111,15 +102,13 @@ export interface shadowtls extends listen {
 }
 export interface vless extends listen {
     type: 'vless'
-    tag: string
     users: vless_user[]
     tls?: tls
     multiplex?: multiplex
-    transport?: transport.transport
+    transport?: transport
 }
 export interface tuic extends listen {
     type: 'tuic'
-    tag: string
     users: tuic_user[]
     congestion_control?: 'cubic' | 'new_reno' | 'bbr'
     auth_timeout?: duration
@@ -129,7 +118,6 @@ export interface tuic extends listen {
 }
 export interface hysteria2 extends listen {
     type: 'hysteria2'
-    tag: string
     up_mbps?: number
     down_mbps?: number
     obfs?: {
@@ -142,9 +130,8 @@ export interface hysteria2 extends listen {
     masquerade?: string
     brutal_debug?: boolean
 }
-export interface tun {
+export interface tun extends item_with_tag {
     type: 'tun'
-    tag: string
     interface_name?: string
     mtu?: number
     gso?: boolean
@@ -183,55 +170,10 @@ interface tun_platform extends outbound.server {
 }
 export interface redirect extends listen {
     type: 'redirect'
-    tag: string
 }
 export interface tproxy extends listen {
     type: 'tproxy'
-    tag: string
     network?: network
-}
-
-interface tls extends base_tls {
-    key?: listable<string>
-    key_path?: string
-    acme?: {
-        domain?: listable<string>
-        data_directory?: string
-        default_server_name?: string
-        email?: string
-        provider?: string
-        disable_http_challenge?: boolean
-        disable_tls_alpn_challenge?: boolean
-        alternative_http_port?: number
-        alternative_tls_port?: number
-        external_account?: {
-            key_id: string
-            mac_key: string
-        }
-        dns01_challenge?: {
-            provider: 'alidns'
-            access_key_id: string
-            access_key_secret: string
-            region_id: string
-        } | {
-            provider: 'cloudflare'
-            api_token: string
-        }
-    }
-    ech?: {
-        enabled: true
-        pq_signature_schemes_enabled?: boolean
-        dynamic_record_sizing_disabled?: boolean
-        key: listable<string>
-        key_path: string
-    }
-    reality?: {
-        enabled: true
-        handshake: outbound.dialer & outbound.server
-        private_key: string
-        short_id: string
-        max_time_difference?: duration
-    }
 }
 
 interface multiplex {
@@ -244,7 +186,7 @@ interface multiplex {
     }
 }
 
-interface listen {
+interface listen extends item_with_tag {
     listen: string
     listen_port: number
     tcp_fast_open?: boolean
