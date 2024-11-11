@@ -2,9 +2,17 @@ export type listable<T> = T | T[]
 export interface item_with_tag {
     tag: string
 }
-
-type unit = 'd' | 'h' | 'm' | 's' | 'ms' | 'us' | 'ns'
-export type duration = `${number}${unit}`
+ 
+type non_empty_string<T extends string> = T extends '' ? never : T
+type can_empty_string<T extends string> = '' | T
+type d = can_empty_string<`${number}d`>
+type h = can_empty_string<`${number}h`>
+type m = can_empty_string<`${number}m`>
+type s = can_empty_string<`${number}s`>
+type ms = can_empty_string<`${number}ms`>
+type us = can_empty_string<`${number}us`>
+type ns = can_empty_string<`${number}ns`>
+export type duration = non_empty_string<`${d}${h}${m}${s}${ms}${us}${ns}`>
 export type strategy =
     | 'prefer_ipv4'
     | 'prefer_ipv6'
