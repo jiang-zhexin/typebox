@@ -44,7 +44,7 @@ interface logical_rule extends base_logical_rule {
     rules: rule[]
 }
 
-type rule_set = inline_rule_set | local_rule_set | remote_rule_set
+export type rule_set = inline_rule_set | local_rule_set | remote_rule_set
 interface inline_rule_set extends item_with_tag {
     type: 'inline'
     rules: headless_rule[]
