@@ -2,7 +2,18 @@
     "name": "@zhexin/typebox",
     "version": "1.10.1",
     "license": "GPLv3",
-    "exports": "./mod.ts",
+    "exports": {
+        ".": "./mod.ts",
+        "./dns": "./dns.ts",
+        "./experimental": "./experimental.ts",
+        "./inbound": "./inbound.ts",
+        "./log": "./log.ts",
+        "./ntp": "./ntp.ts",
+        "./outbound": "./outbound.ts",
+        "./route": "./route.ts",
+        "./transport": "./transport.ts",
+        "./types": "./types.ts"
+    },
     "fmt": {
         "lineWidth": 160,
         "indentWidth": 4,
@@ -12,8 +23,7 @@
     },
     "publish": {
         "exclude": [
-            ".github",
-            "README.md"
+            ".github"
         ]
     }
 }
