@@ -1,4 +1,4 @@
-import type * as outbound from './outbound.ts'
+import type { outbound } from './outbound.ts'
 import type { duration } from './types.ts'
 
 export interface ntp extends outbound.dialer {
