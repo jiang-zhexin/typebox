@@ -23,6 +23,9 @@ export interface base_default_rule extends rule {
     package_name?: listable<string>
     wifi_ssid?: listable<string>
     wifi_bssid?: listable<string>
+    network_type?: listable<network_type>
+    network_is_expensive?: boolean
+    network_is_constrained?: boolean
 }
 
 export interface base_logical_rule extends rule {
@@ -57,3 +60,5 @@ export interface action_reject {
     method?: 'default' | 'drop'
     no_drop?: boolean
 }
+
+type network_type = 'wifi' | 'cellular' | 'ethernet' | 'other'
