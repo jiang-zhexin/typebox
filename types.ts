@@ -2,17 +2,19 @@ export type listable<T> = T | T[]
 export interface item_with_tag {
     tag: string
 }
- 
-type non_empty_string<T extends string> = T extends '' ? never : T
-type can_empty_string<T extends string> = '' | T
-type d = can_empty_string<`${number}d`>
-type h = can_empty_string<`${number}h`>
-type m = can_empty_string<`${number}m`>
-type s = can_empty_string<`${number}s`>
-type ms = can_empty_string<`${number}ms`>
-type us = can_empty_string<`${number}us`>
-type ns = can_empty_string<`${number}ns`>
-export type duration = non_empty_string<`${d}${h}${m}${s}${ms}${us}${ns}`>
+
+type can_empty<T extends string> = '' | T
+type non_empty<T extends string> = T extends '' ? never : T
+type empty_join<list extends string[]> = list extends [infer first extends string, ...infer rest extends string[]] ? `${can_empty<first>}${empty_join<rest>}` : ''
+export type duration = non_empty<empty_join<[
+    `${number}d`,
+    `${number}h`,
+    `${number}m`,
+    `${number}s`,
+    `${number}ms`,
+    `${number}us`,
+    `${number}ns`,
+]>>
 export type strategy =
     | 'prefer_ipv4'
     | 'prefer_ipv6'
