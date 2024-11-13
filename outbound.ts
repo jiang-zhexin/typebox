@@ -1,4 +1,4 @@
-import type { duration, item_with_tag, listable, network, shadowsocks_method, strategy } from './types.ts'
+import type { duration, item_with_tag, listable, network, network_strategy, shadowsocks_method, strategy } from './types.ts'
 import type { transport } from './transport.ts'
 import type { client_tls as tls } from './tls.ts'
 
@@ -37,7 +37,9 @@ export interface dialer {
     tcp_multi_path?: boolean
     udp_fragment?: boolean
     domain_strategy?: strategy
+    network_strategy?: network_strategy
     fallback_delay?: duration
+    network_fallback_delay?: duration
 }
 
 export interface server {

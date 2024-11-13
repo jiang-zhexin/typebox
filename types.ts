@@ -5,16 +5,18 @@ export interface item_with_tag {
 
 type can_empty<T extends string> = '' | T
 type non_empty<T extends string> = T extends '' ? never : T
-type empty_join<list extends string[]> = list extends [infer first extends string, ...infer rest extends string[]] ? `${can_empty<first>}${empty_join<rest>}` : ''
-export type duration = non_empty<empty_join<[
-    `${number}d`,
-    `${number}h`,
-    `${number}m`,
-    `${number}s`,
-    `${number}ms`,
-    `${number}us`,
-    `${number}ns`,
-]>>
+type empty_join<L extends string[]> = L extends [infer F extends string, ...infer R extends string[]] ? `${can_empty<F>}${empty_join<R>}` : ''
+export type duration = non_empty<
+    empty_join<[
+        `${number}d`,
+        `${number}h`,
+        `${number}m`,
+        `${number}s`,
+        `${number}ms`,
+        `${number}us`,
+        `${number}ns`,
+    ]>
+>
 export type strategy =
     | 'prefer_ipv4'
     | 'prefer_ipv6'
@@ -41,4 +43,5 @@ export type sniff_protocol = Lowercase<
     | 'ssh'
     | 'rdp'
 >
+export type network_strategy = 'default' | 'fallback' | 'hybrid' | 'wifi' | 'cellular' | 'ethernet' | 'wifi_only' | 'cellular_only' | 'ethernet_only'
 export type network = Lowercase<'tcp' | 'udp'>
