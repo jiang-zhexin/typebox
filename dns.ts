@@ -1,4 +1,4 @@
-import type { action_reject, base_action_route, base_action_route_options, base_logical_rule, default_rule_with_metadata } from './rule.ts'
+import type { action_reject, base_logical_rule, default_rule_with_metadata } from './rule.ts'
 import type { duration, item_with_tag, listable, strategy } from './types.ts'
 
 export interface dns {
@@ -37,15 +37,19 @@ interface server extends item_with_tag {
 type rule = rule_item & action
 type rule_item = default_rule | logical_rule
 type action = action_route | action_route_options | action_reject
-interface common_action {
+interface action_route {
+    action?: 'route'
+    server: string
     disable_cache?: boolean
     rewrite_ttl?: number
     client_subnet?: string
 }
-interface action_route extends base_action_route, common_action {
-    server: string
+interface action_route_options {
+    action: 'route-options'
+    disable_cache?: boolean
+    rewrite_ttl?: number
+    client_subnet?: string
 }
-type action_route_options = base_action_route_options & common_action
 interface default_rule extends default_rule_with_metadata {
     query_type?: listable<string | number>
     outbound?: listable<string>

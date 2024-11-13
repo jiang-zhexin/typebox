@@ -47,14 +47,6 @@ export interface default_rule_with_metadata {
     rule_set_ip_cidr_match_source?: boolean
 }
 
-export interface base_action_route {
-    action?: 'route'
-}
-
-export interface base_action_route_options {
-    action: 'route-options'
-}
-
 export interface action_reject {
     action: 'reject'
     method?: 'default' | 'drop'

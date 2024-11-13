@@ -2,6 +2,9 @@ export type listable<T> = T | T[]
 export interface item_with_tag {
     tag: string
 }
+export type headers = {
+    [key: string]: listable<string>
+}
 
 type can_empty<T extends string> = '' | T
 type non_empty<T extends string> = T extends '' ? never : T
@@ -32,7 +35,7 @@ export type shadowsocks_method =
     | 'aes-256-gcm'
     | 'chacha20-ietf-poly1305'
     | 'xchacha20-ietf-poly1305'
-export type sniff_protocol = Lowercase<
+export type sniff_protocol =
     | 'http'
     | 'tls'
     | 'quic'
@@ -42,6 +45,6 @@ export type sniff_protocol = Lowercase<
     | 'dtls'
     | 'ssh'
     | 'rdp'
->
+
 export type network_strategy = 'default' | 'fallback' | 'hybrid' | 'wifi' | 'cellular' | 'ethernet' | 'wifi_only' | 'cellular_only' | 'ethernet_only'
-export type network = Lowercase<'tcp' | 'udp'>
+export type network = 'tcp' | 'udp'

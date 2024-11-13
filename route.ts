@@ -1,4 +1,4 @@
-import type { action_reject, base_action_route, base_action_route_options, base_default_rule, base_logical_rule, default_rule_with_metadata } from './rule.ts'
+import type { action_reject, base_default_rule, base_logical_rule, default_rule_with_metadata } from './rule.ts'
 import type { duration, item_with_tag, listable, network_strategy, sniff_protocol, strategy } from './types.ts'
 
 export interface route {
@@ -21,14 +21,16 @@ export declare namespace route {
 type rule = rule_item & action
 type rule_item = default_rule | logical_rule
 type action = action_route | action_route_options | action_reject | action_dns | action_sniff | action_resolve
-interface action_route extends base_action_route {
+interface action_route {
+    action?: 'route'
     outbound: string
     network_strategy?: network_strategy
     fallback_delay?: duration
     udp_disable_domain_unmapping?: boolean
     udp_connect?: boolean
 }
-interface action_route_options extends base_action_route_options {
+interface action_route_options {
+    action: 'route-options'
     network_strategy?: network_strategy
     fallback_delay?: duration
     udp_disable_domain_unmapping?: boolean
@@ -83,4 +85,4 @@ interface logical_headless_rule extends base_logical_rule {
     rules: headless_rule[]
 }
 
-type quic_client = Lowercase<'chrimium' | 'safari' | 'firefox' | 'quic-go'>
+type quic_client = 'chrimium' | 'safari' | 'firefox' | 'quic-go'

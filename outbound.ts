@@ -1,4 +1,4 @@
-import type { duration, item_with_tag, listable, network, network_strategy, shadowsocks_method, strategy } from './types.ts'
+import type { duration, headers, item_with_tag, listable, network, network_strategy, shadowsocks_method, strategy } from './types.ts'
 import type { transport } from './transport.ts'
 import type { client_tls as tls } from './tls.ts'
 
@@ -69,7 +69,7 @@ interface http extends dialer, server, item_with_tag {
     username?: string
     password?: string
     path?: string
-    header?: Headers
+    header?: headers
     tls?: tls
 }
 interface shadowsocks extends remote, server {
