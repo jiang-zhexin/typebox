@@ -11,6 +11,7 @@ export interface dns {
     disable_cache?: boolean
     disable_expire?: boolean
     independent_cache?: boolean
+    cache_capacity?: number
     client_subnet?: string
 }
 
