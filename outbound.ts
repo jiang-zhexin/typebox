@@ -50,8 +50,6 @@ export interface server {
 interface direct extends dialer {
     type: 'direct'
     tag: string
-    override_address?: string
-    override_port?: number
 }
 
 interface remote extends dialer, item_with_tag {

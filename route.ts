@@ -24,6 +24,8 @@ type action = action_route | action_route_options | action_reject | action_dns |
 interface action_route {
     action?: 'route'
     outbound: string
+    override_address?: string
+    override_port?: number
     network_strategy?: network_strategy
     fallback_delay?: duration
     udp_disable_domain_unmapping?: boolean
@@ -31,6 +33,8 @@ interface action_route {
 }
 interface action_route_options {
     action: 'route-options'
+    override_address?: string
+    override_port?: number
     network_strategy?: network_strategy
     fallback_delay?: duration
     udp_disable_domain_unmapping?: boolean
