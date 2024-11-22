@@ -48,3 +48,26 @@ export type sniff_protocol =
 
 export type network_strategy = 'default' | 'fallback' | 'hybrid' | 'wifi' | 'cellular' | 'ethernet' | 'wifi_only' | 'cellular_only' | 'ethernet_only'
 export type network = 'tcp' | 'udp'
+
+export interface dialer {
+    detour?: string
+    bind_interface?: string
+    inet4_bind_address?: string
+    inet6_bind_address?: string
+    protect_path?: string
+    routing_mark?: number
+    reuse_addr?: boolean
+    connect_timeout?: duration
+    tcp_fast_open?: boolean
+    tcp_multi_path?: boolean
+    udp_fragment?: boolean
+    domain_strategy?: strategy
+    network_strategy?: network_strategy
+    fallback_delay?: duration
+    network_fallback_delay?: duration
+}
+
+export interface server {
+    server: string
+    server_port: number
+}

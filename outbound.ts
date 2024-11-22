@@ -1,4 +1,4 @@
-import type { duration, headers, item_with_tag, listable, network, network_strategy, shadowsocks_method, strategy } from './types.ts'
+import type { dialer, duration, headers, item_with_tag, listable, network, server, shadowsocks_method } from './types.ts'
 import type { transport } from './transport.ts'
 import type { client_tls as tls } from './tls.ts'
 
@@ -23,36 +23,13 @@ export declare namespace outbound {
     export { direct, http, hysteria, hysteria2, selector, shadowsocks, shadowtls, socks, ssh, tls, tor, trojan, tuic, urltest, vless, vmess }
 }
 
-export interface dialer {
-    detour?: string
-    bind_interface?: string
-    inet4_bind_address?: string
-    inet6_bind_address?: string
-    protect_path?: string
-    routing_mark?: number
-    reuse_addr?: boolean
-    connect_timeout?: duration
-    tcp_fast_open?: boolean
-    tcp_multi_path?: boolean
-    udp_fragment?: boolean
-    domain_strategy?: strategy
-    network_strategy?: network_strategy
-    fallback_delay?: duration
-    network_fallback_delay?: duration
-}
-
-export interface server {
-    server: string
-    server_port: number
+interface remote extends dialer, item_with_tag {
+    network?: network
 }
 
 interface direct extends dialer {
     type: 'direct'
     tag: string
-}
-
-interface remote extends dialer, item_with_tag {
-    network?: network
 }
 interface socks extends remote, server {
     type: 'socks'

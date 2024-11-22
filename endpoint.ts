@@ -1,5 +1,4 @@
-import type { dialer } from './outbound.ts'
-import type { duration, item_with_tag, listable } from './types.ts'
+import type { dialer, duration, item_with_tag, listable } from './types.ts'
 
 export type endpoint = wireguard
 

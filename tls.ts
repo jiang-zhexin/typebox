@@ -1,5 +1,4 @@
-import type { duration, listable } from './types.ts'
-import type { dialer, server } from './outbound.ts'
+import type { dialer, duration, listable, server } from './types.ts'
 
 export interface server_tls extends base_tls {
     key?: listable<string>

@@ -1,5 +1,4 @@
-import type { duration } from './types.ts'
-import type { dialer } from './outbound.ts'
+import type { dialer, duration } from './types.ts'
 
 export interface ntp extends dialer {
     enabled: true
