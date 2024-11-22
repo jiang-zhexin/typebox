@@ -9,7 +9,6 @@ export type outbound =
     | shadowsocks
     | vmess
     | trojan
-    | wireguard
     | hysteria
     | shadowtls
     | vless
@@ -21,7 +20,7 @@ export type outbound =
     | urltest
 
 export declare namespace outbound {
-    export { direct, http, hysteria, hysteria2, selector, shadowsocks, shadowtls, socks, ssh, tls, tor, trojan, tuic, urltest, vless, vmess, wireguard }
+    export { direct, http, hysteria, hysteria2, selector, shadowsocks, shadowtls, socks, ssh, tls, tor, trojan, tuic, urltest, vless, vmess }
 }
 
 export interface dialer {
@@ -97,31 +96,6 @@ interface trojan extends remote, server {
     tls?: tls
     multiplex?: multiplex
     transport?: transport
-}
-type wireguard = onepeer | multipeer
-interface base_wiregurad extends remote {
-    type: 'wireguard'
-    system_interface?: boolean
-    mtu?: number
-    gso?: boolean
-    interface_name?: string
-    local_address: listable<string>
-    workers?: number
-    private_key: string
-}
-interface onepeer extends base_wiregurad, server {
-    peer_public_key?: string
-    pre_shared_key?: string
-    reserved?: number[]
-}
-interface multipeer extends base_wiregurad {
-    peers?: peer[]
-}
-interface peer extends server {
-    public_key: string
-    pre_shared_key?: string
-    reserved?: number[]
-    allowed_ips?: listable<string>
 }
 interface hysteria extends remote, server {
     type: 'hysteria'

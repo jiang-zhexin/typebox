@@ -5,6 +5,7 @@
     "exports": {
         ".": "./mod.ts",
         "./dns": "./dns.ts",
+        "./endpoint": "./endpoint.ts",
         "./experimental": "./experimental.ts",
         "./inbound": "./inbound.ts",
         "./log": "./log.ts",
