@@ -1,4 +1,6 @@
 # Types for the sing-box config
+[![JSR Scope](https://jsr.io/badges/@zhexin)](https://jsr.io/@zhexin) [![JSR](https://jsr.io/badges/@zhexin/typebox)](https://jsr.io/@zhexin/typebox) [![JSR Score](https://jsr.io/badges/@zhexin/typebox/score)](https://jsr.io/@zhexin/typebox)
+
 This project provides TypeScript types for the entire sing-box config.
 
 ## How to use?
