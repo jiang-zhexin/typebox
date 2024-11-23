@@ -10,7 +10,7 @@ import type { route } from './route.ts'
 export interface typebox {
     log?: log
     dns?: dns
-    endpoints?:endpoint[]
+    endpoints?: endpoint[]
     inbounds?: inbound[]
     outbounds?: outbound[]
     route?: route

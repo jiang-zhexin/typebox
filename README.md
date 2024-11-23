@@ -11,15 +11,28 @@ Import symbol
 ```TypeScript
 // main.ts
 import { typebox } from "@zhexin/typebox"
+import { outbound } from '@zhexin/typebox/outbound'
 
-let config: typebox = {
+const ss: outbound.shadowsocks = {
+    type: 'shadowsocks',
+    tag: 'ss-out',
+    method: '2022-blake3-aes-128-gcm',
+    password: '',
+    server: '',
+    server_port: 11451,
+    multiplex: {
+        enabled: true,
+    },
+}
+
+const config: typebox = {
     log: {},
-    ntp: {},
     dns: {},
+    endpoints: [],
     inbounds: [],
-    outbounds: [],
+    outbounds: [ss],
     route: {},
-    experimental: {}
+    experimental: {},
 }
 
 await Deno.writeTextFile("./path/to/config.json", JSON.stringify(config, null, 4))
@@ -57,6 +70,6 @@ The value of any tag field like `dns.server.tag` or `outbound.tag` is required, 
 Any field marked as `deprecated` will not appear, even though it is available in the current version.
 
 ### Enabled
-Any `Enabled` field must be true.
+Any `enabled` field must be true.
 
 if you are not enabling it, you should omit the entire field.
