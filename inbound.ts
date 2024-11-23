@@ -137,7 +137,6 @@ interface tun extends item_with_tag {
     type: 'tun'
     interface_name?: string
     mtu?: number
-    gso?: boolean
     address: listable<string>
     auto_route?: boolean
     iproute2_table_index?: number

@@ -11,7 +11,6 @@ interface wireguard extends dialer, item_with_tag {
     name?: string
     system?: boolean
     mtu?: number
-    gso?: boolean
     address: listable<string>
     private_key: string
     listen_port: number
