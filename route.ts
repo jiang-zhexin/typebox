@@ -21,24 +21,21 @@ export declare namespace route {
 type rule = rule_item & action
 type rule_item = default_rule | logical_rule
 type action = action_route | action_route_options | action_reject | action_dns | action_sniff | action_resolve
-interface action_route {
+interface action_route extends options {
     action?: 'route'
     outbound: string
-    override_address?: string
-    override_port?: number
-    network_strategy?: network_strategy
-    fallback_delay?: duration
-    udp_disable_domain_unmapping?: boolean
-    udp_connect?: boolean
 }
-interface action_route_options {
+interface action_route_options extends options {
     action: 'route-options'
+}
+interface options {
     override_address?: string
     override_port?: number
     network_strategy?: network_strategy
     fallback_delay?: duration
     udp_disable_domain_unmapping?: boolean
     udp_connect?: boolean
+    udp_timeout?: duration
 }
 interface action_dns {
     action: 'hijack-dns'

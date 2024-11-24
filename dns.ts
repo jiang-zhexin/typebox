@@ -38,15 +38,14 @@ interface server extends item_with_tag {
 type rule = rule_item & action
 type rule_item = default_rule | logical_rule
 type action = action_route | action_route_options | action_reject
-interface action_route {
+interface action_route extends options {
     action?: 'route'
     server: string
-    disable_cache?: boolean
-    rewrite_ttl?: number
-    client_subnet?: string
 }
-interface action_route_options {
+interface action_route_options extends options {
     action: 'route-options'
+}
+interface options {
     disable_cache?: boolean
     rewrite_ttl?: number
     client_subnet?: string
