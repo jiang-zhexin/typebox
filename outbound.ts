@@ -125,6 +125,7 @@ interface hysteria2 extends remote, server {
     password?: string
     tls: tls
     brutal_debug?: boolean
+    masquerade?: string | masquerade
 }
 interface tor extends dialer, item_with_tag {
     type: 'tor'
@@ -179,4 +180,23 @@ interface multiplex {
 interface udp_over_tcp {
     enabled: true
     version: 1 | 2
+}
+
+type masquerade = masquerade.file | masquerade.proxy | masquerade.http
+declare namespace masquerade {
+    export interface file {
+        type: 'file'
+        directory: string
+    }
+    export interface proxy {
+        type: 'proxy'
+        url: string
+        rewrite_host?: boolean
+    }
+    export interface http {
+        type: 'string'
+        status_code?: number
+        headers?: headers
+        content: string
+    }
 }
