@@ -116,6 +116,8 @@ interface tuic extends remote, server {
 }
 interface hysteria2 extends remote, server {
     type: 'hysteria2'
+    server_ports?: listable<string>
+    hop_interval?: duration
     up_mbps?: number
     down_mbps?: number
     obfs?: {
