@@ -1,3 +1,4 @@
+import type { certificate } from './certificate.ts'
 import type { dns } from './dns.ts'
 import type { endpoint } from './endpoint.ts'
 import type { experimental } from './experimental.ts'
@@ -16,4 +17,5 @@ export interface typebox {
     route?: route
     experimental?: experimental
     ntp?: ntp
+    certificate?: certificate
 }

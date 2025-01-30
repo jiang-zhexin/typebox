@@ -1,5 +1,5 @@
 import type { action_reject, base_default_rule, base_logical_rule, default_rule_with_metadata } from './rule.ts'
-import type { duration, item_with_tag, listable, network_strategy, sniff_protocol, strategy } from './types.ts'
+import type { duration, item_with_tag, listable, network_strategy, resolver, sniff_protocol, strategy } from './types.ts'
 
 export interface route {
     rules?: rule[]
@@ -10,6 +10,7 @@ export interface route {
     override_android_vpn?: boolean
     default_interface?: string
     default_mark?: number
+    default_domain_resolver?: string | resolver
     default_network_strategy?: network_strategy
     default_fallback_delay?: duration
 }
@@ -36,6 +37,8 @@ interface options {
     udp_disable_domain_unmapping?: boolean
     udp_connect?: boolean
     udp_timeout?: duration
+    tls_fragment?: boolean
+    tls_fragment_fallback_delay?: duration
 }
 interface action_dns {
     action: 'hijack-dns'

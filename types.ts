@@ -2,9 +2,7 @@ export type listable<T> = T | T[]
 export interface item_with_tag {
     tag: string
 }
-export type headers = {
-    [key: string]: listable<string>
-}
+export type headers = Record<string, listable<string>>
 
 type can_empty<T extends string> = '' | T
 type non_empty<T extends string> = T extends '' ? never : T
@@ -61,10 +59,26 @@ export interface dialer {
     tcp_fast_open?: boolean
     tcp_multi_path?: boolean
     udp_fragment?: boolean
-    domain_strategy?: strategy
+    domain_resolver?: string | resolver
     network_strategy?: network_strategy
     fallback_delay?: duration
     network_fallback_delay?: duration
+    /**
+     * @deprecated domain_strategy is merged to domain_resolver in sing-box 1.12.0
+     * @since 1.12.0
+     */
+    domain_strategy?: strategy
+}
+
+export interface options {
+    disable_cache?: boolean
+    rewrite_ttl?: number
+    client_subnet?: string
+}
+
+export interface resolver extends options {
+    server: string
+    strategy?: strategy
 }
 
 export interface server {
