@@ -3,12 +3,22 @@ import type { transport } from './transport.ts'
 import type { client_tls as tls } from './tls.ts'
 
 export const createOutbound = <
-    const O extends outbound<never, never>,
->(outbound: O) => outbound
+    const O extends outbound<OT[number], DS[number]>,
+    const OT extends readonly string[] = never,
+    const DS extends readonly string[] = never,
+>(outbound: O, _options?: {
+    assertExistOutbounds?: OT
+    assertExistDnsServers?: DS
+}) => outbound
 
 export const createOutbounds = <
-    const O extends outbound<O[number]['tag'], never>[],
->(outbounds: O) => outbounds
+    const O extends readonly outbound<O[number]['tag'] | OT[number], DS[number]>[],
+    const OT extends readonly string[] = never,
+    const DS extends readonly string[] = never,
+>(outbounds: O, _options?: {
+    assertExistOutbounds?: OT
+    assertExistDnsServers?: DS
+}) => outbounds
 
 export type outbound<O extends string = never, DS extends string = never> =
     | direct<O, DS>

@@ -2,12 +2,22 @@ import type { action_reject, base_default_rule, base_logical_rule, default_rule_
 import type { duration, item_with_tag, listable, network_strategy, resolver, sniff_protocol, strategy } from './types.ts'
 
 export const createRuleSet = <
-    const RS extends rule_set<never>,
->(rs: RS) => rs
+    const RS extends rule_set<OT[number]>,
+    const OT extends readonly string[] = never,
+>(rs: RS, _options?: { assertExistOutbound?: OT }) => rs
 
 export const createRule = <
-    const R extends rule<never, never, never, never>,
->(r: R) => r
+    const R extends rule<OT[number], IT[number], RS[number], DS[number]>,
+    const OT extends readonly string[] = never,
+    const IT extends readonly string[] = never,
+    const RS extends readonly string[] = never,
+    const DS extends readonly string[] = never,
+>(r: R, _options?: {
+    assertExistOutbounds?: OT
+    assertExistInbounds?: IT
+    assertExistRuleSet?: RS
+    assertExistDnsServers?: DS
+}) => r
 
 export interface route<
     O extends string = never,

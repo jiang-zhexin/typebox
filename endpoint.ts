@@ -1,12 +1,22 @@
 import type { dialer, duration, item_with_tag, listable } from './types.ts'
 
 export const createEndpoint = <
-    const E extends endpoint<never, never>,
->(endpoint: E) => endpoint
+    const E extends endpoint<OT[number], DS[number]>,
+    const OT extends readonly string[] = never,
+    const DS extends readonly string[] = never,
+>(endpoint: E, _options?: {
+    assertExistOutbounds?: OT
+    assertExistDnsServers?: DS
+}) => endpoint
 
 export const createEndpoints = <
-    const E extends readonly endpoint<E[number]['tag'], never>[],
->(endpoints: E) => endpoints
+    const E extends readonly endpoint<E[number]['tag'] | OT[number], DS[number]>[],
+    const OT extends readonly string[] = never,
+    const DS extends readonly string[] = never,
+>(endpoints: E, _options?: {
+    assertExistOutbounds?: OT
+    assertExistDnsServers?: DS
+}) => endpoints
 
 export type endpoint<
     O extends string = never,

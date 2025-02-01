@@ -9,13 +9,16 @@ const rule_set_block = createRuleSet({
     type: 'remote',
     format: 'binary',
     url: '',
-})
+    download_detour: 'direct-out',
+}, { assertExistOutbound: ['direct-out'] })
+
 const rule_set_proxy = createRuleSet({
     tag: 'proxy',
     type: 'remote',
     format: 'binary',
     url: '',
-})
+    // download_detour: 'unkown-outbound',
+}, { assertExistOutbound: ['unkown-outbound'] })
 const rule_set_direct = createRuleSet({
     tag: 'direct',
     type: 'remote',
@@ -121,11 +124,9 @@ createTypebox({
     },
     route: {
         rule_set: [
-            {
-                ...rule_set_block,
-                download_detour: 'direct-out',
-            },
+            rule_set_block,
             rule_set_direct,
+            // Here will be an error when download_detour is 'unkown-outbound'
             rule_set_proxy,
         ],
         rules: [

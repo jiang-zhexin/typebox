@@ -3,12 +3,26 @@ import type { server_tls as tls } from './tls.ts'
 import type { transport } from './transport.ts'
 
 export const createInbound = <
-    const I extends inbound<never, never, never>,
->(inbound: I) => inbound
+    const I extends inbound<OT[number], DS[number], IT[number]>,
+    const OT extends readonly string[] = never,
+    const IT extends readonly string[] = never,
+    const DS extends readonly string[] = never,
+>(inbound: I, _options?: {
+    assertExistOutbounds?: OT
+    assertExistInbounds?: IT
+    assertExistDnsServers?: DS
+}) => inbound
 
 export const createInbounds = <
-    const I extends readonly inbound<never, never, never>[],
->(inbounds: I) => inbounds
+    const I extends readonly inbound<OT[number], DS[number], IT[number] | I[number]['tag']>[],
+    const OT extends readonly string[] = never,
+    const IT extends readonly string[] = never,
+    const DS extends readonly string[] = never,
+>(inbounds: I, _options?: {
+    assertExistOutbounds?: OT
+    assertExistInbounds?: IT
+    assertExistDnsServers?: DS
+}) => inbounds
 
 export type inbound<O extends string = never, DS extends string = never, I extends string = never> =
     | direct<I>

@@ -4,12 +4,35 @@ import type { dialer, duration, item_with_tag, listable, options, resolver, stra
 import type { headers } from './types.ts'
 
 export const createDnsServer = <
-    const DS extends dns.server<never, never>,
->(server: DS) => server
+    const DS extends dns.server<OT[number], DST[number]>,
+    const DST extends readonly string[] = never,
+    const OT extends readonly string[] = never,
+>(server: DS, _options?: {
+    assertExistDnsServers?: DST
+    assertExistOutbounds?: OT
+}) => server
 
 export const createDnsServers = <
-    const DS extends readonly dns.server<never, DS[number]['tag']>[],
->(server: DS) => server
+    const DS extends readonly dns.server<OT[number], DS[number]['tag'] | DST[number]>[],
+    const OT extends readonly string[] = never,
+    const DST extends readonly string[] = never,
+>(server: DS, _options?: {
+    assertExistOutbounds?: OT
+    assertExistDnsServers?: DST
+}) => server
+
+export const createDnsRule = <
+    const R extends rule<OT[number] | 'any', IT[number], RS[number], DS[number]>,
+    const OT extends readonly string[] = never,
+    const IT extends readonly string[] = never,
+    const RS extends readonly string[] = never,
+    const DS extends readonly string[] = never,
+>(r: R, _options?: {
+    assertExistOutbounds?: OT
+    assertExistInbounds?: IT
+    assertExistRuleSet?: RS
+    assertExistDnsServers?: DS
+}) => r
 
 export interface dns<
     O extends string = never,
@@ -31,7 +54,11 @@ export interface dns<
      * @deprecated Legacy fake-ip configuration is deprecated and will be removed in sing-box 1.14.0
      * @since 1.12.0
      */
-    fakeip?: fakeip
+    fakeip?: {
+        enabled: true
+        inet4_range: string
+        inet6_range: string
+    }
 }
 
 export declare namespace dns {
@@ -51,103 +78,103 @@ export declare namespace dns {
         export { dhcp, fakeip, h3, https, legacy, local, predefined, quic, tcp, tls, udp }
     }
     export { rule }
+}
+/**
+ * @deprecated Legacy DNS servers is deprecated and will be removed in sing-box 1.14.0
+ * @since 1.12.0
+ */
+interface legacy<O extends string = never, DS extends string = never> extends item_with_tag {
+    address: string
+    address_resolver?: DS
+    address_strategy?: string
+    address_fallback_delay?: duration
+    strategy?: strategy
+    detour?: O
+    client_subnet?: string
+}
+interface local<O extends string = never, DS extends string = never> extends dialer<O, DS>, item_with_tag {
+    type: 'local'
+}
+interface tcp<O extends string = never, DS extends string = never> extends dialer<O, DS>, item_with_tag {
+    type: 'tcp'
+    server: string
     /**
-     * @deprecated Legacy DNS servers is deprecated and will be removed in sing-box 1.14.0
-     * @since 1.12.0
+     * @default 53
      */
-    interface legacy<O extends string = never, DS extends string = never> extends item_with_tag {
-        address: string
-        address_resolver?: DS
-        address_strategy?: string
-        address_fallback_delay?: duration
-        strategy?: strategy
-        detour?: O
-        client_subnet?: string
-    }
-    interface local<O extends string = never, DS extends string = never> extends dialer<O, DS>, item_with_tag {
-        type: 'local'
-    }
-    interface tcp<O extends string = never, DS extends string = never> extends dialer<O, DS>, item_with_tag {
-        type: 'tcp'
-        server: string
-        /**
-         * @default 53
-         */
-        server_port?: number
-    }
-    interface udp<O extends string = never, DS extends string = never> extends dialer<O, DS>, item_with_tag {
-        type: 'udp'
-        server: string
-        /**
-         * @default 53
-         */
-        server_port?: number
-    }
-    interface tls<O extends string = never, DS extends string = never> extends dialer<O, DS>, item_with_tag {
-        type: 'tls'
-        server: string
-        /**
-         * @default 853
-         */
-        server_port?: number
-        tls?: client_tls
-    }
-    interface quic<O extends string = never, DS extends string = never> extends dialer<O, DS>, item_with_tag {
-        type: 'quic'
-        server: string
-        /**
-         * @default 853
-         */
-        server_port?: number
-        tls?: client_tls
-    }
-    interface https<O extends string = never, DS extends string = never> extends dialer<O, DS>, item_with_tag {
-        type: 'https'
-        server: string
-        /**
-         * @default 443
-         */
-        server_port?: number
-        /**
-         * @default /dns-query
-         */
-        path?: string
-        headers?: headers
-        tls?: client_tls
-    }
-    interface h3<O extends string = never, DS extends string = never> extends dialer<O, DS>, item_with_tag {
-        type: 'h3'
-        server: string
-        /**
-         * @default 443
-         */
-        server_port?: number
-        /**
-         * @default /dns-query
-         */
-        path?: string
-        headers?: headers
-        tls?: client_tls
-    }
-    interface predefined extends item_with_tag {
-        type: 'predefined'
-        responses: response[]
-    }
-    interface dhcp<O extends string = never, DS extends string = never> extends dialer<O, DS>, item_with_tag {
-        type: 'dhcp'
-        interface?: string
-    }
-    interface fakeip extends item_with_tag {
-        type: 'fakeip'
-        /**
-         * @example 198.18.0.0/15
-         */
-        inet4_range: string
-        /**
-         * @example fc00::/18
-         */
-        inet6_range: string
-    }
+    server_port?: number
+}
+interface udp<O extends string = never, DS extends string = never> extends dialer<O, DS>, item_with_tag {
+    type: 'udp'
+    server: string
+    /**
+     * @default 53
+     */
+    server_port?: number
+}
+interface tls<O extends string = never, DS extends string = never> extends dialer<O, DS>, item_with_tag {
+    type: 'tls'
+    server: string
+    /**
+     * @default 853
+     */
+    server_port?: number
+    tls?: client_tls
+}
+interface quic<O extends string = never, DS extends string = never> extends dialer<O, DS>, item_with_tag {
+    type: 'quic'
+    server: string
+    /**
+     * @default 853
+     */
+    server_port?: number
+    tls?: client_tls
+}
+interface https<O extends string = never, DS extends string = never> extends dialer<O, DS>, item_with_tag {
+    type: 'https'
+    server: string
+    /**
+     * @default 443
+     */
+    server_port?: number
+    /**
+     * @default /dns-query
+     */
+    path?: string
+    headers?: headers
+    tls?: client_tls
+}
+interface h3<O extends string = never, DS extends string = never> extends dialer<O, DS>, item_with_tag {
+    type: 'h3'
+    server: string
+    /**
+     * @default 443
+     */
+    server_port?: number
+    /**
+     * @default /dns-query
+     */
+    path?: string
+    headers?: headers
+    tls?: client_tls
+}
+interface predefined extends item_with_tag {
+    type: 'predefined'
+    responses: response[]
+}
+interface dhcp<O extends string = never, DS extends string = never> extends dialer<O, DS>, item_with_tag {
+    type: 'dhcp'
+    interface?: string
+}
+interface fakeip extends item_with_tag {
+    type: 'fakeip'
+    /**
+     * @example 198.18.0.0/15
+     */
+    inet4_range: string
+    /**
+     * @example fc00::/18
+     */
+    inet6_range: string
 }
 
 interface response {
@@ -165,12 +192,6 @@ interface response {
     answer?: listable<string>
     ns?: listable<string>
     extra?: listable<string>
-}
-
-interface fakeip {
-    enabled: true
-    inet4_range: string
-    inet6_range: string
 }
 
 type rule<O extends string, I extends string, RS extends string, DS extends string> = rule_item<O, I, RS, DS> & action<DS>
