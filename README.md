@@ -1,58 +1,56 @@
 # Types for the sing-box config
 
-[![JSR Scope](https://jsr.io/badges/@zhexin)](https://jsr.io/@zhexin) [![JSR](https://jsr.io/badges/@zhexin/typebox)](https://jsr.io/@zhexin/typebox) [![JSR Score](https://jsr.io/badges/@zhexin/typebox/score)](https://jsr.io/@zhexin/typebox)
+[![JSR Scope](https://jsr.io/badges/@zhexin)](https://jsr.io/@zhexin)
+[![JSR](https://jsr.io/badges/@zhexin/typebox)](https://jsr.io/@zhexin/typebox)
+[![JSR Score](https://jsr.io/badges/@zhexin/typebox/score)](https://jsr.io/@zhexin/typebox)
 
 This project provides TypeScript types for the entire sing-box config.
 
 ## How to use?
 
-### For Deno
-
-Install Deno
-
 ```bash
-# Windows
-irm https://deno.land/install.ps1 | iex
-# MacOS/Linux
-curl -fsSL https://deno.land/install.sh | sh
-```
+# Node.js
+npx jsr add @zhexin/typebox
+# or
+yarn dlx jsr add @zhexin/typebox
+# or
+pnpm dlx jsr add @zhexin/typebox
 
-Init
-
-```bash
-deno init singconf
-cd singconf
+# Deno
 deno add jsr:@zhexin/typebox
+
+# Bun
+bunx jsr add @zhexin/typebox
 ```
 
 Coding
 
 ```TypeScript
 // main.ts
-import { typebox } from "@zhexin/typebox"
-import { outbound } from "@zhexin/typebox/outbound"
+import { createTypebox } from "@zhexin/typebox"
+import { createOutbound } from "@zhexin/typebox/outbound"
 
-const ss: outbound.shadowsocks = {
-    type: "shadowsocks",
-    tag: "ss-out",
-    method: "2022-blake3-aes-128-gcm",
-    password: "",
-    server: "",
+const ss_out = createOutbound({
+    type: 'shadowsocks',
+    tag: 'ss-out',
+    method: '2022-blake3-aes-128-gcm',
+    password: '',
+    server: '',
     server_port: 11451,
     multiplex: {
         enabled: true,
     },
-}
+})
 
-const config: typebox = {
+const config = createTypebox({
     log: {},
     dns: {},
     endpoints: [],
     inbounds: [],
-    outbounds: [ss],
+    outbounds: [ss_out],
     route: {},
     experimental: {},
-}
+})
 
 // export to .json file
 await Deno.writeTextFile("./path/to/config.json", JSON.stringify(config, null, 4))
@@ -62,35 +60,6 @@ Run it
 
 ```bash
 deno run --allow-write ./main.ts
-```
-
-### For Node.js
-
-```bash
-npx jsr add @zhexin/typebox
-# or
-yarn dlx jsr add @zhexin/typebox
-# or
-pnpm dlx jsr add @zhexin/typebox
-```
-
-Import
-
-```TypeScript
-import { typebox } from "@zhexin/typebox"
-
-```
-
-### For Bun
-
-```bash
-bunx jsr add @zhexin/typebox
-```
-
-Import
-
-```TypeScript
-import { typebox } from "@zhexin/typebox"
 ```
 
 ## About version
