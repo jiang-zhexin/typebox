@@ -1,12 +1,23 @@
 import type { dialer, duration, item_with_tag, listable } from './types.ts'
 
-export type endpoint = wireguard
+export const createEndpoint = <
+    const E extends endpoint<never, never>,
+>(endpoint: E) => endpoint
+
+export const createEndpoints = <
+    const E extends readonly endpoint<E[number]['tag'], never>[],
+>(endpoints: E) => endpoints
+
+export type endpoint<
+    O extends string = never,
+    DS extends string = never,
+> = wireguard<O, DS>
 
 export declare namespace endpoint {
     export { wireguard }
 }
 
-interface wireguard extends dialer, item_with_tag {
+interface wireguard<O extends string = never, DS extends string = never> extends dialer<O, DS>, item_with_tag {
     type: 'wireguard'
     name?: string
     system?: boolean

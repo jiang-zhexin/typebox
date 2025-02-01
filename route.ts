@@ -1,16 +1,29 @@
 import type { action_reject, base_default_rule, base_logical_rule, default_rule_with_metadata } from './rule.ts'
 import type { duration, item_with_tag, listable, network_strategy, resolver, sniff_protocol, strategy } from './types.ts'
 
-export interface route {
-    rules?: rule[]
-    rule_set?: rule_set[]
-    final?: string
+export const createRuleSet = <
+    const RS extends rule_set<never>,
+>(rs: RS) => rs
+
+export const createRule = <
+    const R extends rule<never, never, never, never>,
+>(r: R) => r
+
+export interface route<
+    O extends string = never,
+    I extends string = never,
+    RS extends readonly rule_set<O>[] = never,
+    DS extends string = never,
+> {
+    rules?: rule<O, I, RS[number]['tag'], DS>[]
+    rule_set?: RS
+    final?: O
     find_process?: string
     auto_detect_interface?: boolean
     override_android_vpn?: boolean
     default_interface?: string
     default_mark?: number
-    default_domain_resolver?: string | resolver
+    default_domain_resolver?: DS | resolver<DS>
     default_network_strategy?: network_strategy
     default_fallback_delay?: duration
 }
@@ -19,12 +32,12 @@ export declare namespace route {
     export { rule, rule_set }
 }
 
-type rule = rule_item & action
-type rule_item = default_rule | logical_rule
-type action = action_route | action_route_options | action_reject | action_dns | action_sniff | action_resolve
-interface action_route extends options {
+type rule<O extends string = never, I extends string = never, RS extends string = never, DS extends string = never> = rule_item<O, I, RS, DS> & action<O, DS>
+type rule_item<O extends string, I extends string, RS extends string, DS extends string> = default_rule<I, RS> | logical_rule<O, I, RS, DS>
+type action<O extends string, DS extends string> = action_route<O> | action_route_options | action_reject | action_dns | action_sniff | action_resolve<DS>
+interface action_route<O extends string> extends options {
     action?: 'route'
-    outbound: string
+    outbound: O
 }
 interface action_route_options extends options {
     action: 'route-options'
@@ -48,19 +61,19 @@ interface action_sniff {
     sniffer?: listable<sniff_protocol>
     timeout?: duration
 }
-interface action_resolve {
+interface action_resolve<DS extends string> {
     action: 'resolve'
     strategy?: strategy
-    server?: string
+    server?: DS
 }
-interface default_rule extends default_rule_with_metadata {
+interface default_rule<I extends string, RS extends string> extends default_rule_with_metadata<I, RS> {
     client?: listable<quic_client>
 }
-interface logical_rule extends base_logical_rule {
-    rules: rule[]
+interface logical_rule<O extends string, I extends string, RS extends string, DS extends string> extends base_logical_rule {
+    rules: rule<O, I, RS, DS>[]
 }
 
-type rule_set = inline_rule_set | local_rule_set | remote_rule_set
+type rule_set<O extends string = never> = inline_rule_set | local_rule_set | remote_rule_set<O>
 interface inline_rule_set extends item_with_tag {
     type: 'inline'
     rules: headless_rule[]
@@ -74,10 +87,10 @@ interface local_rule_set extends outline_rule_set {
     type: 'local'
     path: string
 }
-interface remote_rule_set extends outline_rule_set {
+interface remote_rule_set<O extends string> extends outline_rule_set {
     type: 'remote'
     url: string
-    download_detour?: string
+    download_detour?: O
     update_interval?: duration
 }
 

@@ -33,8 +33,8 @@ export interface base_logical_rule extends rule {
     mode: 'and' | 'or'
 }
 
-export interface default_rule_with_metadata {
-    inbound?: listable<string>
+export interface default_rule_with_metadata<I extends string = never, RS extends string = never> extends base_default_rule {
+    inbound?: listable<I>
     ip_version?: 4 | 6
     auth_user?: listable<string>
     protocol?: listable<sniff_protocol>
@@ -43,7 +43,7 @@ export interface default_rule_with_metadata {
     user?: listable<string>
     user_id?: listable<number>
     clash_mode?: string
-    rule_set?: listable<string>
+    rule_set?: listable<RS>
     rule_set_ip_cidr_match_source?: boolean
 }
 

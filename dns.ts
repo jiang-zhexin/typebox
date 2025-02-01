@@ -1,12 +1,26 @@
+import type { route } from './route.ts'
 import type { action_reject, base_logical_rule, default_rule_with_metadata } from './rule.ts'
 import type { client_tls } from './tls.ts'
 import type { dialer, duration, item_with_tag, listable, options, resolver, strategy } from './types.ts'
 import type { headers } from './types.ts'
 
-export interface dns {
-    servers?: dns.server[]
-    rules?: rule[]
-    final?: string
+export const createDnsServer = <
+    const DS extends dns.server<never, never>,
+>(server: DS) => server
+
+export const createDnsServers = <
+    const DS extends readonly dns.server<never, DS[number]['tag']>[],
+>(server: DS) => server
+
+export interface dns<
+    O extends string = never,
+    I extends string = never,
+    RS extends readonly route.rule_set<O>[] = never,
+    DS extends readonly dns.server<O, DS[number]['tag']>[] = never,
+> {
+    servers?: DS
+    rules?: rule<O | 'any', I, RS[number]['tag'], DS[number]['tag']>[]
+    final?: DS[number]['tag']
     reverse_mapping?: boolean
     strategy?: strategy
     disable_cache?: boolean
@@ -22,7 +36,18 @@ export interface dns {
 }
 
 export declare namespace dns {
-    export type server = legacy | local | tcp | udp | tls | quic | https | h3 | predefined | dhcp | fakeip
+    export type server<O extends string = never, DS extends string = never> =
+        | legacy<O, DS>
+        | local<O, DS>
+        | tcp<O, DS>
+        | udp<O, DS>
+        | tls<O, DS>
+        | quic<O, DS>
+        | https<O, DS>
+        | h3<O, DS>
+        | predefined
+        | dhcp<O, DS>
+        | fakeip
     export namespace server {
         export { dhcp, fakeip, h3, https, legacy, local, predefined, quic, tcp, tls, udp }
     }
@@ -31,19 +56,19 @@ export declare namespace dns {
      * @deprecated Legacy DNS servers is deprecated and will be removed in sing-box 1.14.0
      * @since 1.12.0
      */
-    interface legacy extends item_with_tag {
+    interface legacy<O extends string = never, DS extends string = never> extends item_with_tag {
         address: string
-        address_resolver?: string
+        address_resolver?: DS
         address_strategy?: string
         address_fallback_delay?: duration
         strategy?: strategy
-        detour?: string
+        detour?: O
         client_subnet?: string
     }
-    interface local extends dialer, item_with_tag {
+    interface local<O extends string = never, DS extends string = never> extends dialer<O, DS>, item_with_tag {
         type: 'local'
     }
-    interface tcp extends dialer, item_with_tag {
+    interface tcp<O extends string = never, DS extends string = never> extends dialer<O, DS>, item_with_tag {
         type: 'tcp'
         server: string
         /**
@@ -51,7 +76,7 @@ export declare namespace dns {
          */
         server_port?: number
     }
-    interface udp extends dialer, item_with_tag {
+    interface udp<O extends string = never, DS extends string = never> extends dialer<O, DS>, item_with_tag {
         type: 'udp'
         server: string
         /**
@@ -59,7 +84,7 @@ export declare namespace dns {
          */
         server_port?: number
     }
-    interface tls extends dialer, item_with_tag {
+    interface tls<O extends string = never, DS extends string = never> extends dialer<O, DS>, item_with_tag {
         type: 'tls'
         server: string
         /**
@@ -68,7 +93,7 @@ export declare namespace dns {
         server_port?: number
         tls?: client_tls
     }
-    interface quic extends dialer, item_with_tag {
+    interface quic<O extends string = never, DS extends string = never> extends dialer<O, DS>, item_with_tag {
         type: 'quic'
         server: string
         /**
@@ -77,7 +102,7 @@ export declare namespace dns {
         server_port?: number
         tls?: client_tls
     }
-    interface https extends dialer, item_with_tag {
+    interface https<O extends string = never, DS extends string = never> extends dialer<O, DS>, item_with_tag {
         type: 'https'
         server: string
         /**
@@ -91,7 +116,7 @@ export declare namespace dns {
         headers?: headers
         tls?: client_tls
     }
-    interface h3 extends dialer, item_with_tag {
+    interface h3<O extends string = never, DS extends string = never> extends dialer<O, DS>, item_with_tag {
         type: 'h3'
         server: string
         /**
@@ -109,7 +134,7 @@ export declare namespace dns {
         type: 'predefined'
         responses: response[]
     }
-    interface dhcp extends dialer, item_with_tag {
+    interface dhcp<O extends string = never, DS extends string = never> extends dialer<O, DS>, item_with_tag {
         type: 'dhcp'
         interface?: string
     }
@@ -149,23 +174,23 @@ interface fakeip {
     inet6_range: string
 }
 
-type rule = rule_item & action
-type rule_item = default_rule | logical_rule
-type action = action_route | action_route_options | action_reject
-interface action_route extends resolver {
+type rule<O extends string, I extends string, RS extends string, DS extends string> = rule_item<O, I, RS, DS> & action<DS>
+type rule_item<O extends string, I extends string, RS extends string, DS extends string> = default_rule<O, I, RS> | logical_rule<O, I, RS, DS>
+type action<DS extends string> = action_route<DS> | action_route_options | action_reject
+interface action_route<DS extends string> extends resolver<DS> {
     action?: 'route'
 }
 interface action_route_options extends options {
     action: 'route-options'
 }
-interface default_rule extends default_rule_with_metadata {
+interface default_rule<O extends string, I extends string, RS extends string> extends default_rule_with_metadata<I, RS> {
     query_type?: listable<string | number>
     /**
      * @deprecated outbound rule items are deprecated and will be removed in sing-box 1.14.0
      * @since 1.12.0
      */
-    outbound?: listable<string>
+    outbound?: listable<O>
 }
-interface logical_rule extends base_logical_rule {
-    rules: rule[]
+interface logical_rule<O extends string, I extends string, RS extends string, DS extends string> extends base_logical_rule {
+    rules: rule<O, I, RS, DS>[]
 }

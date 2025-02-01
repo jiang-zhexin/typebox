@@ -1,11 +1,11 @@
 import type { dialer, duration, listable, server } from './types.ts'
 
-export interface server_tls extends base_tls {
+export interface server_tls<O extends string, DS extends string> extends base_tls {
     key?: listable<string>
     key_path?: string
     acme?: acme
     ech?: server_ech
-    reality?: server_reality
+    reality?: server_reality<O, DS>
 }
 
 export interface client_tls extends base_tls {
@@ -48,8 +48,8 @@ interface base_reality {
     short_id: string
 }
 
-interface server_reality extends base_reality {
-    handshake: dialer & server
+interface server_reality<O extends string, DS extends string> extends base_reality {
+    handshake: dialer<O, DS> & server
     private_key: string
     max_time_difference?: duration
 }

@@ -2,50 +2,58 @@ import type { dialer, duration, item_with_tag, listable, network, server, shadow
 import type { server_tls as tls } from './tls.ts'
 import type { transport } from './transport.ts'
 
-export type inbound =
-    | direct
-    | mixed
-    | socks
-    | http
-    | shadowsocks
-    | vmess
-    | trojan
-    | naive
-    | hysteria
-    | shadowtls
-    | vless
-    | tuic
-    | hysteria2
+export const createInbound = <
+    const I extends inbound<never, never, never>,
+>(inbound: I) => inbound
+
+export const createInbounds = <
+    const I extends readonly inbound<never, never, never>[],
+>(inbounds: I) => inbounds
+
+export type inbound<O extends string = never, DS extends string = never, I extends string = never> =
+    | direct<I>
+    | mixed<I>
+    | socks<I>
+    | http<O, DS, I>
+    | shadowsocks<I>
+    | vmess<O, DS, I>
+    | trojan<O, DS, I>
+    | naive<O, DS, I>
+    | hysteria<O, DS, I>
+    | shadowtls<O, DS, I>
+    | vless<O, DS, I>
+    | tuic<O, DS, I>
+    | hysteria2<O, DS, I>
     | tun
-    | redirect
-    | tproxy
+    | redirect<I>
+    | tproxy<I>
 
 export declare namespace inbound {
     export { direct, http, hysteria, hysteria2, mixed, naive, redirect, shadowsocks, shadowtls, socks, tls, tproxy, trojan, tuic, tun, vless, vmess }
 }
 
-interface direct extends listen {
+interface direct<I extends string = never> extends listen<I> {
     type: 'direct'
     network?: network
     override_address?: string
     override_port?: number
 }
-interface mixed extends listen {
+interface mixed<I extends string = never> extends listen<I> {
     type: 'mixed'
     users?: auth[]
     set_system_proxy?: boolean
 }
-interface socks extends listen {
+interface socks<I extends string = never> extends listen<I> {
     type: 'socks'
     users?: auth[]
 }
-interface http extends listen {
+interface http<O extends string = never, DS extends string = never, I extends string = never> extends listen<I> {
     type: 'http'
     users?: auth[]
     set_system_proxy?: boolean
-    tls?: tls
+    tls?: tls<O, DS>
 }
-interface shadowsocks extends listen {
+interface shadowsocks<I extends string = never> extends listen<I> {
     type: 'shadowsocks'
     network?: network
     method: shadowsocks_method
@@ -54,17 +62,17 @@ interface shadowsocks extends listen {
     destinations?: [user & server]
     multiplex?: multiplex
 }
-interface vmess extends listen {
+interface vmess<O extends string = never, DS extends string = never, I extends string = never> extends listen<I> {
     type: 'vmess'
     users: vmess_user[]
-    tls?: tls
+    tls?: tls<O, DS>
     multiplex?: multiplex
     transport?: transport
 }
-interface trojan extends listen {
+interface trojan<O extends string = never, DS extends string = never, I extends string = never> extends listen<I> {
     type: 'trojan'
     users: user[]
-    tls?: tls
+    tls?: tls<O, DS>
     fallback?: server
     fallback_for_alpn?: {
         [alpn: string]: server
@@ -72,13 +80,13 @@ interface trojan extends listen {
     multiplex?: multiplex
     transport?: transport
 }
-interface naive extends listen {
+interface naive<O extends string = never, DS extends string = never, I extends string = never> extends listen<I> {
     type: 'naive'
     users: auth[]
     network?: network
-    tls?: tls
+    tls?: tls<O, DS>
 }
-interface hysteria extends listen {
+interface hysteria<O extends string = never, DS extends string = never, I extends string = never> extends listen<I> {
     type: 'hysteria'
     up: string
     up_mbps: number
@@ -90,36 +98,36 @@ interface hysteria extends listen {
     recv_window_client?: number
     max_conn_client?: number
     disable_mtu_discovery?: boolean
-    tls: tls
+    tls: tls<O, DS>
 }
-interface shadowtls extends listen {
+interface shadowtls<O extends string = never, DS extends string = never, I extends string = never> extends listen<I> {
     type: 'shadowtls'
     version?: 1 | 2 | 3
     password?: string
     users?: user[]
-    handshake: server & dialer
+    handshake: server & dialer<O, DS>
     handshake_for_server_name?: {
-        [server_name: string]: server & dialer
+        [server_name: string]: server & dialer<O, DS>
     }
     strict_mode?: boolean
 }
-interface vless extends listen {
+interface vless<O extends string = never, DS extends string = never, I extends string = never> extends listen<I> {
     type: 'vless'
     users: vless_user[]
-    tls?: tls
+    tls?: tls<O, DS>
     multiplex?: multiplex
     transport?: transport
 }
-interface tuic extends listen {
+interface tuic<O extends string = never, DS extends string = never, I extends string = never> extends listen<I> {
     type: 'tuic'
     users: tuic_user[]
     congestion_control?: 'cubic' | 'new_reno' | 'bbr'
     auth_timeout?: duration
     zero_rtt_handshake?: boolean
     heartbeat?: duration
-    tls: tls
+    tls: tls<O, DS>
 }
-interface hysteria2 extends listen {
+interface hysteria2<O extends string = never, DS extends string = never, I extends string = never> extends listen<I> {
     type: 'hysteria2'
     up_mbps?: number
     down_mbps?: number
@@ -129,7 +137,7 @@ interface hysteria2 extends listen {
     }
     users: user[]
     ignore_client_bandwidth?: boolean
-    tls: tls
+    tls: tls<O, DS>
     masquerade?: string
     brutal_debug?: boolean
 }
@@ -170,10 +178,10 @@ interface tun_platform extends server {
     bypass_domain?: listable<string>
     match_domain?: listable<string>
 }
-interface redirect extends listen {
+interface redirect<I extends string = never> extends listen<I> {
     type: 'redirect'
 }
-interface tproxy extends listen {
+interface tproxy<I extends string = never> extends listen<I> {
     type: 'tproxy'
     network?: network
 }
@@ -188,14 +196,14 @@ interface multiplex {
     }
 }
 
-interface listen extends item_with_tag {
+interface listen<I extends string> extends item_with_tag {
     listen: string
     listen_port: number
     tcp_fast_open?: boolean
     tcp_multi_path?: boolean
     udp_fragment?: boolean
     udp_timeout?: duration
-    detour?: string
+    detour?: I
 }
 
 interface auth {

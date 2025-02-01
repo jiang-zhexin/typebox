@@ -2,43 +2,51 @@ import type { dialer, duration, headers, item_with_tag, listable, network, serve
 import type { transport } from './transport.ts'
 import type { client_tls as tls } from './tls.ts'
 
-export type outbound =
-    | direct
-    | socks
-    | http
-    | shadowsocks
-    | vmess
-    | trojan
-    | hysteria
-    | shadowtls
-    | vless
-    | tuic
-    | hysteria2
-    | tor
-    | ssh
-    | selector
-    | urltest
+export const createOutbound = <
+    const O extends outbound<never, never>,
+>(outbound: O) => outbound
+
+export const createOutbounds = <
+    const O extends outbound<O[number]['tag'], never>[],
+>(outbounds: O) => outbounds
+
+export type outbound<O extends string = never, DS extends string = never> =
+    | direct<O, DS>
+    | socks<O, DS>
+    | http<O, DS>
+    | shadowsocks<O, DS>
+    | vmess<O, DS>
+    | trojan<O, DS>
+    | hysteria<O, DS>
+    | shadowtls<O, DS>
+    | vless<O, DS>
+    | tuic<O, DS>
+    | hysteria2<O, DS>
+    | tor<O, DS>
+    | ssh<O, DS>
+    | selector<O>
+    | urltest<O>
 
 export declare namespace outbound {
     export { direct, http, hysteria, hysteria2, selector, shadowsocks, shadowtls, socks, ssh, tls, tor, trojan, tuic, urltest, vless, vmess }
 }
 
-interface remote extends dialer, item_with_tag {
+interface remote<O extends string, DS extends string> extends dialer<O, DS>, item_with_tag {
     network?: network
 }
 
-interface direct extends dialer {
+interface direct<O extends string = never, DS extends string = never> extends dialer<O, DS> {
     type: 'direct'
     tag: string
 }
-interface socks extends remote, server {
+interface socks<O extends string = never, DS extends string = never> extends remote<O, DS>, server {
     type: 'socks'
     version?: '4' | '4a' | '5'
     username?: string
     password?: string
     udp_over_tcp?: udp_over_tcp
 }
-interface http extends dialer, server, item_with_tag {
+interface http<O extends string = never, DS extends string = never> extends dialer<O, DS>, server, item_with_tag {
     type: 'http'
     username?: string
     password?: string
@@ -46,7 +54,7 @@ interface http extends dialer, server, item_with_tag {
     header?: headers
     tls?: tls
 }
-interface shadowsocks extends remote, server {
+interface shadowsocks<O extends string = never, DS extends string = never> extends remote<O, DS>, server {
     type: 'shadowsocks'
     method: shadowsocks_method
     password: string
@@ -56,7 +64,7 @@ interface shadowsocks extends remote, server {
     udp_over_tcp?: udp_over_tcp
     multiplex?: multiplex
 }
-interface vmess extends remote, server {
+interface vmess<O extends string = never, DS extends string = never> extends remote<O, DS>, server {
     type: 'vmess'
     uuid: string
     security?: 'auto' | 'none' | 'zero' | 'aes-128-gcm' | 'chacha20-poly1305'
@@ -67,14 +75,14 @@ interface vmess extends remote, server {
     multiplex?: multiplex
     transport?: transport
 }
-interface trojan extends remote, server {
+interface trojan<O extends string = never, DS extends string = never> extends remote<O, DS>, server {
     type: 'trojan'
     password: string
     tls?: tls
     multiplex?: multiplex
     transport?: transport
 }
-interface hysteria extends remote, server {
+interface hysteria<O extends string = never, DS extends string = never> extends remote<O, DS>, server {
     type: 'hysteria'
     up: string
     up_mbps: number
@@ -88,13 +96,13 @@ interface hysteria extends remote, server {
     disable_mtu_discovery?: boolean
     tls: tls
 }
-interface shadowtls extends dialer, server, item_with_tag {
+interface shadowtls<O extends string = never, DS extends string = never> extends dialer<O, DS>, server, item_with_tag {
     type: 'shadowtls'
     version?: 1 | 2 | 3
     password?: string
     tls: tls
 }
-interface vless extends remote, server {
+interface vless<O extends string = never, DS extends string = never> extends remote<O, DS>, server {
     type: 'vless'
     uuid: string
     flow?: 'xtls-rprx-vision'
@@ -103,7 +111,7 @@ interface vless extends remote, server {
     multiplex?: multiplex
     transport?: transport
 }
-interface tuic extends remote, server {
+interface tuic<O extends string = never, DS extends string = never> extends remote<O, DS>, server {
     type: 'tuic'
     uuid: string
     password?: string
@@ -114,7 +122,7 @@ interface tuic extends remote, server {
     heartbeat?: duration
     tls: tls
 }
-interface hysteria2 extends remote, server {
+interface hysteria2<O extends string = never, DS extends string = never> extends remote<O, DS>, server {
     type: 'hysteria2'
     server_ports?: listable<string>
     hop_interval?: duration
@@ -129,7 +137,7 @@ interface hysteria2 extends remote, server {
     brutal_debug?: boolean
     masquerade?: string | masquerade
 }
-interface tor extends dialer, item_with_tag {
+interface tor<O extends string = never, DS extends string = never> extends dialer<O, DS>, item_with_tag {
     type: 'tor'
     executable_path?: string
     extra_args?: string
@@ -138,7 +146,7 @@ interface tor extends dialer, item_with_tag {
         [key: string]: string
     }
 }
-interface ssh extends dialer, server, item_with_tag {
+interface ssh<O extends string = never, DS extends string = never> extends dialer<O, DS>, server, item_with_tag {
     type: 'ssh'
     user?: string
     password?: string
@@ -149,15 +157,15 @@ interface ssh extends dialer, server, item_with_tag {
     host_key_algorithms?: listable<string>
     client_version?: string
 }
-interface group_outbound extends item_with_tag {
-    outbounds: string[]
+interface group_outbound<O extends string = never> extends item_with_tag {
+    outbounds: O[]
     interrupt_exist_connections?: boolean
 }
-interface selector extends group_outbound {
+interface selector<O extends string = never> extends group_outbound<O> {
     type: 'selector'
-    default?: string
+    default?: O
 }
-interface urltest extends group_outbound {
+interface urltest<O extends string = never> extends group_outbound<O> {
     type: 'urltest'
     url?: string
     interval?: duration
