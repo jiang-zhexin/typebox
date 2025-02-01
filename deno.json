@@ -4,6 +4,7 @@
     "license": "GPLv3",
     "exports": {
         ".": "./mod.ts",
+        "./certificate": "./certificate.ts",
         "./dns": "./dns.ts",
         "./endpoint": "./endpoint.ts",
         "./experimental": "./experimental.ts",
@@ -27,7 +28,8 @@
             "./README.md"
         ],
         "exclude": [
-            ".github"
+            ".github",
+            "./*.test.ts"
         ]
     }
 }
