@@ -16,7 +16,7 @@ export interface typebox<
     RS extends readonly route.rule_set<O[number]['tag'] | E[number]['tag']>[] = never,
 > {
     log?: log
-    dns?: dns<O[number]['tag'] | E[number]['tag'], I[number]['tag'] | E[number]['tag'], RS, DS>
+    dns?: dns<O[number]['tag'] | E[number]['tag'], I[number]['tag'] | E[number]['tag'], RS[number]['tag'], DS>
     endpoints?: E
     inbounds?: I
     outbounds?: O

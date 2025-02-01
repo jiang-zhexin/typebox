@@ -1,4 +1,3 @@
-import type { route } from './route.ts'
 import type { action_reject, base_logical_rule, default_rule_with_metadata } from './rule.ts'
 import type { client_tls } from './tls.ts'
 import type { dialer, duration, item_with_tag, listable, options, resolver, strategy } from './types.ts'
@@ -15,11 +14,11 @@ export const createDnsServers = <
 export interface dns<
     O extends string = never,
     I extends string = never,
-    RS extends readonly route.rule_set<O>[] = never,
+    RS extends string = never,
     DS extends readonly dns.server<O, DS[number]['tag']>[] = never,
 > {
     servers?: DS
-    rules?: rule<O | 'any', I, RS[number]['tag'], DS[number]['tag']>[]
+    rules?: rule<O | 'any', I, RS, DS[number]['tag']>[]
     final?: DS[number]['tag']
     reverse_mapping?: boolean
     strategy?: strategy
