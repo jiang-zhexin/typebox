@@ -7,7 +7,7 @@ export const createEndpoint = <
 >(endpoint: E, _options?: {
     assertExistOutbounds?: OT
     assertExistDnsServers?: DS
-}) => endpoint
+}): E => endpoint
 
 export const createEndpoints = <
     const E extends readonly endpoint<E[number]['tag'] | OT[number], DS[number]>[],
@@ -16,7 +16,7 @@ export const createEndpoints = <
 >(endpoints: E, _options?: {
     assertExistOutbounds?: OT
     assertExistDnsServers?: DS
-}) => endpoints
+}): E => endpoints
 
 /**
  * You should not use this directly, instead use {@link createEndpoint} or {@link createEndpoints}.

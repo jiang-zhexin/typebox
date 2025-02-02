@@ -16,7 +16,9 @@ import type { duration, item_with_tag, listable, network_strategy, resolver, sni
 export const createRuleSet = <
     const RS extends rule_set<OT[number]>,
     const OT extends readonly string[] = never,
->(rs: RS, _options?: { assertExistOutbound?: OT }) => rs
+>(rs: RS, _options?: {
+    assertExistOutbound?: OT
+}): RS => rs
 
 /**
  * @example
@@ -38,7 +40,7 @@ export const createRule = <
     assertExistInbounds?: IT
     assertExistRuleSet?: RS
     assertExistDnsServers?: DS
-}) => r
+}): R => r
 
 /**
  * You should not use this directly, instead use {@link createRuleSet} or {@link createRule}.

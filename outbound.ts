@@ -23,7 +23,7 @@ export const createOutbound = <
 >(outbound: O, _options?: {
     assertExistOutbounds?: OT
     assertExistDnsServers?: DS
-}) => outbound
+}): O => outbound
 
 /**
  * @example
@@ -48,7 +48,7 @@ export const createOutbounds = <
 >(outbounds: O, _options?: {
     assertExistOutbounds?: OT
     assertExistDnsServers?: DS
-}) => outbounds
+}): O => outbounds
 
 /**
  * You should not use this directly, instead use {@link createOutbound} or {@link createOutbounds}.
