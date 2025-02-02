@@ -24,6 +24,9 @@ export const createInbounds = <
     assertExistDnsServers?: DS
 }) => inbounds
 
+/**
+ * You should not use this directly, instead use {@link createInbound} or {@link createInbounds}.
+ */
 export type inbound<O extends string = never, DS extends string = never, I extends string = never> =
     | direct<I>
     | mixed<I>

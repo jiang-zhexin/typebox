@@ -1,3 +1,36 @@
+/**
+ * @module
+ * Typebox - Type safety of sing-box config.
+ *
+ * @example
+ * ```ts
+ * import { createTypebox } from "@zhexin/typebox"
+ * import { createOutbound } from "@zhexin/typebox/outbound"
+ *
+ * const ss_out = createOutbound({
+ *     type: 'shadowsocks',
+ *     tag: 'ss-out',
+ *     method: '2022-blake3-aes-128-gcm',
+ *     password: '',
+ *     server: '',
+ *     server_port: 11451,
+ *     multiplex: {
+ *         enabled: true,
+ *     },
+ * })
+ *
+ * const config = createTypebox({
+ *     log: {},
+ *     dns: {},
+ *     endpoints: [],
+ *     inbounds: [],
+ *     outbounds: [ss_out],
+ *     route: {},
+ *     experimental: {},
+ * })
+ * ```
+ */
+
 import type { certificate } from './certificate.ts'
 import type { dns } from './dns.ts'
 import type { endpoint } from './endpoint.ts'
@@ -8,6 +41,9 @@ import type { ntp } from './ntp.ts'
 import type { outbound } from './outbound.ts'
 import type { route } from './route.ts'
 
+/**
+ * You should not use this directly, instead use {@link createTypebox}.
+ */
 export interface typebox<
     O extends readonly outbound<O[number]['tag'] | E[number]['tag'], DS[number]['tag']>[] = never,
     E extends readonly endpoint<O[number]['tag'] | E[number]['tag'], DS[number]['tag']>[] = never,
@@ -26,6 +62,22 @@ export interface typebox<
     certificate?: certificate
 }
 
+/**
+ * @example
+ * ```ts
+ * import { createTypebox } from "@zhexin/typebox"
+ *
+ * const config = createTypebox({
+ *     log: {},
+ *     dns: {},
+ *     endpoints: [],
+ *     inbounds: [],
+ *     outbounds: [],
+ *     route: {},
+ *     experimental: {},
+ * })
+ * ```
+ */
 export const createTypebox = <
     const O extends readonly outbound<O[number]['tag'] | E[number]['tag'], DS[number]['tag']>[] = never,
     const E extends readonly endpoint<O[number]['tag'] | E[number]['tag'], DS[number]['tag']>[] = never,

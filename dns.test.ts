@@ -14,9 +14,7 @@ const _ali = createDnsServer({
     type: 'https',
     tag: 'ali',
     server: '223.5.5.5',
-    // This error is used to check type safety
     domain_resolver: 'other-dns-server',
-    // This error is used to check type safety
     detour: 'c',
 }, { assertExistDnsServers: ['other-dns-server'], assertExistOutbounds: ['c'] })
 
@@ -31,6 +29,5 @@ const _dns_servers = createDnsServers([{
     tag: 'dns-server',
     type: 'https',
     server: '',
-    // This error is used to check type safety
-    domain_resolver: 'unkown-dns-server',
+    domain_resolver: 'other-dns-server',
 }], { assertExistDnsServers: ['other-dns-server'] })

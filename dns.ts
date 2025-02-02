@@ -3,6 +3,17 @@ import type { client_tls } from './tls.ts'
 import type { dialer, duration, item_with_tag, listable, options, resolver, strategy } from './types.ts'
 import type { headers } from './types.ts'
 
+/**
+ * @example
+ * ```ts
+ * const alidns = createDnsServer({
+ *     type: 'https',
+ *     tag: 'ali',
+ *     server: '223.5.5.5',
+ *     detour: 'c',
+ * }, { assertExistOutbounds: ['c'] })
+ * ```
+ */
 export const createDnsServer = <
     const DS extends dns.server<OT[number], DST[number]>,
     const DST extends readonly string[] = never,
@@ -34,6 +45,9 @@ export const createDnsRule = <
     assertExistDnsServers?: DS
 }) => r
 
+/**
+ * You should not use this directly, instead use {@link createDnsServer} or {@link createDnsRule}.
+ */
 export interface dns<
     O extends string = never,
     I extends string = never,

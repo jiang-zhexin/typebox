@@ -2,6 +2,20 @@ import type { dialer, duration, headers, item_with_tag, listable, network, serve
 import type { transport } from './transport.ts'
 import type { client_tls as tls } from './tls.ts'
 
+/**
+ * @example
+ * ```ts
+ * const a = createOutbound({
+ *     tag: 'a',
+ *     type: 'direct',
+ *     detour: 'b',
+ *     domain_resolver: 'c',
+ * }, {
+ *     assertExistOutbounds: ['b'], // Now you can use 'b' in detour
+ *     assertExistDnsServers: ['c'], // Now you can use 'c' in domain_resolver
+ * })
+ * ```
+ */
 export const createOutbound = <
     const O extends outbound<OT[number], DS[number]>,
     const OT extends readonly string[] = never,
@@ -11,6 +25,22 @@ export const createOutbound = <
     assertExistDnsServers?: DS
 }) => outbound
 
+/**
+ * @example
+ * ```ts
+ * const myoutbounds = createOutbounds([
+ *     {
+ *         tag: 'a',
+ *         type: 'direct',
+ *     },
+ *     {
+ *         type: 'selector',
+ *         tag: 'b',
+ *         outbounds: ['a'],
+ *     },
+ * ])
+ * ```
+ */
 export const createOutbounds = <
     const O extends readonly outbound<O[number]['tag'] | OT[number], DS[number]>[],
     const OT extends readonly string[] = never,
@@ -20,6 +50,9 @@ export const createOutbounds = <
     assertExistDnsServers?: DS
 }) => outbounds
 
+/**
+ * You should not use this directly, instead use {@link createOutbound} or {@link createOutbounds}.
+ */
 export type outbound<O extends string = never, DS extends string = never> =
     | direct<O, DS>
     | socks<O, DS>

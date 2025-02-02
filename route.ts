@@ -1,11 +1,32 @@
 import type { action_reject, base_default_rule, base_logical_rule, default_rule_with_metadata } from './rule.ts'
 import type { duration, item_with_tag, listable, network_strategy, resolver, sniff_protocol, strategy } from './types.ts'
 
+/**
+ * @example
+ * ```ts
+ * const rule_set_block = createRuleSet({
+ *     tag: 'block',
+ *     type: 'remote',
+ *     format: 'binary',
+ *     url: '',
+ *     download_detour: 'direct-out',
+ * }, { assertExistOutbound: ['direct-out'] })
+ * ```
+ */
 export const createRuleSet = <
     const RS extends rule_set<OT[number]>,
     const OT extends readonly string[] = never,
 >(rs: RS, _options?: { assertExistOutbound?: OT }) => rs
 
+/**
+ * @example
+ * ```ts
+ * const rule_hijack_dns = createRule({
+ *     port: 53,
+ *     action: 'hijack-dns',
+ * })
+ * ```
+ */
 export const createRule = <
     const R extends rule<OT[number], IT[number], RS[number], DS[number]>,
     const OT extends readonly string[] = never,
@@ -19,6 +40,9 @@ export const createRule = <
     assertExistDnsServers?: DS
 }) => r
 
+/**
+ * You should not use this directly, instead use {@link createRuleSet} or {@link createRule}.
+ */
 export interface route<
     O extends string = never,
     I extends string = never,

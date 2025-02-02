@@ -18,6 +18,9 @@ export const createEndpoints = <
     assertExistDnsServers?: DS
 }) => endpoints
 
+/**
+ * You should not use this directly, instead use {@link createEndpoint} or {@link createEndpoints}.
+ */
 export type endpoint<
     O extends string = never,
     DS extends string = never,

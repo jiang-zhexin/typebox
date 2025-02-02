@@ -9,6 +9,9 @@ export const createNtp = <
     assertExistDnsServers?: DS
 }) => n
 
+/**
+ * You should not use this directly, instead use {@link createNtp}.
+ */
 export interface ntp<
     O extends string = never,
     DS extends string = never,
