@@ -84,4 +84,4 @@ export const createTypebox = <
     const I extends readonly inbound<O[number]['tag'] | E[number]['tag'], DS[number]['tag'], I[number]['tag'] | E[number]['tag']>[] = never,
     const DS extends readonly dns.server<O[number]['tag'], DS[number]['tag']>[] = never,
     const RS extends readonly route.rule_set<O[number]['tag'] | E[number]['tag']>[] = never,
->(typebox: typebox<O, E, I, DS, RS>) => typebox
+>(typebox: typebox<O, E, I, DS, RS>): typebox<O, E, I, DS, RS> => typebox

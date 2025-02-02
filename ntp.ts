@@ -7,7 +7,7 @@ export const createNtp = <
 >(n: N, _options?: {
     assertExistOutbounds?: OT
     assertExistDnsServers?: DS
-}) => n
+}): N => n
 
 /**
  * You should not use this directly, instead use {@link createNtp}.

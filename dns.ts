@@ -21,7 +21,7 @@ export const createDnsServer = <
 >(server: DS, _options?: {
     assertExistDnsServers?: DST
     assertExistOutbounds?: OT
-}) => server
+}): DS => server
 
 export const createDnsServers = <
     const DS extends readonly dns.server<OT[number], DS[number]['tag'] | DST[number]>[],
@@ -30,7 +30,7 @@ export const createDnsServers = <
 >(server: DS, _options?: {
     assertExistOutbounds?: OT
     assertExistDnsServers?: DST
-}) => server
+}): DS => server
 
 export const createDnsRule = <
     const R extends rule<OT[number] | 'any', IT[number], RS[number], DS[number]>,
@@ -43,7 +43,7 @@ export const createDnsRule = <
     assertExistInbounds?: IT
     assertExistRuleSet?: RS
     assertExistDnsServers?: DS
-}) => r
+}): R => r
 
 /**
  * You should not use this directly, instead use {@link createDnsServer} or {@link createDnsRule}.

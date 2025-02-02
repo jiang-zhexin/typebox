@@ -11,7 +11,7 @@ export const createInbound = <
     assertExistOutbounds?: OT
     assertExistInbounds?: IT
     assertExistDnsServers?: DS
-}) => inbound
+}): I => inbound
 
 export const createInbounds = <
     const I extends readonly inbound<OT[number], DS[number], IT[number] | I[number]['tag']>[],
@@ -22,7 +22,7 @@ export const createInbounds = <
     assertExistOutbounds?: OT
     assertExistInbounds?: IT
     assertExistDnsServers?: DS
-}) => inbounds
+}): I => inbounds
 
 /**
  * You should not use this directly, instead use {@link createInbound} or {@link createInbounds}.
