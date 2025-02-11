@@ -12,8 +12,7 @@
         "./log": "./log.ts",
         "./ntp": "./ntp.ts",
         "./outbound": "./outbound.ts",
-        "./route": "./route.ts",
-        "./transport": "./transport.ts"
+        "./route": "./route.ts"
     },
     "fmt": {
         "lineWidth": 160,

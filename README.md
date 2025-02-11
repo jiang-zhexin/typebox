@@ -11,21 +11,17 @@ This project provides TypeScript types for the entire sing-box config.
 ```bash
 # Node.js
 npx jsr add @zhexin/typebox
-# or
 yarn dlx jsr add @zhexin/typebox
-# or
 pnpm dlx jsr add @zhexin/typebox
-
 # Deno
 deno add jsr:@zhexin/typebox
-
 # Bun
 bunx jsr add @zhexin/typebox
 ```
 
 Coding
 
-```TypeScript
+```ts
 // main.ts
 import { createTypebox } from "@zhexin/typebox"
 import { createOutbound } from "@zhexin/typebox/outbound"
@@ -36,7 +32,7 @@ const ss_out = createOutbound({
     method: '2022-blake3-aes-128-gcm',
     password: '',
     server: '',
-    server_port: 11451,
+    server_port: 0,
     multiplex: {
         enabled: true,
     },

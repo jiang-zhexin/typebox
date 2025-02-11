@@ -1,3 +1,13 @@
+/**
+ * @module
+ * The ntp field.
+ *
+ * @example
+ * ```ts
+ * import { createNtp } from "@zhexin/typebox/ntp"
+ * ```
+ */
+
 import type { dialer, duration } from './types.ts'
 
 export const createNtp = <

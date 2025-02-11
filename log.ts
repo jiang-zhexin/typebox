@@ -1,3 +1,20 @@
+/**
+ * @module
+ * The log field.
+ *
+ * @example
+ * ```ts
+ * import { createLog } from "@zhexin/typebox/log"
+ * ```
+ */
+
+export const createLog = <
+    const L extends log,
+>(l: L): L => l
+
+/**
+ * You should not use this directly, instead use {@link createLog}.
+ */
 export interface log {
     disabled?: boolean
     level?: log_level
