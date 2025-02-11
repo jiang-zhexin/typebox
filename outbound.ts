@@ -243,16 +243,16 @@ interface udp_over_tcp {
 
 type masquerade = masquerade.file | masquerade.proxy | masquerade.http
 declare namespace masquerade {
-    export interface file {
+    interface file {
         type: 'file'
         directory: string
     }
-    export interface proxy {
+    interface proxy {
         type: 'proxy'
         url: string
         rewrite_host?: boolean
     }
-    export interface http {
+    interface http {
         type: 'string'
         status_code?: number
         headers?: headers
