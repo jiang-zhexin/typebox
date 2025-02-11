@@ -13,31 +13,35 @@ import type { server_tls as tls } from './tls.ts'
 import type { transport } from './transport.ts'
 
 export const createInbound = <
-    const I extends inbound<OT[number], DS[number], IT[number]>,
+    const I extends inbound<OT[number], DS[number], IT[number], RS[number]>,
     const OT extends readonly string[] = never,
     const IT extends readonly string[] = never,
     const DS extends readonly string[] = never,
+    const RS extends readonly string[] = never,
 >(inbound: I, _options?: {
     assertExistOutbounds?: OT
     assertExistInbounds?: IT
     assertExistDnsServers?: DS
+    assertExistRuleSet?: RS
 }): I => inbound
 
 export const createInbounds = <
-    const I extends readonly inbound<OT[number], DS[number], IT[number] | I[number]['tag']>[],
+    const I extends readonly inbound<OT[number], DS[number], IT[number] | I[number]['tag'], RS[number]>[],
     const OT extends readonly string[] = never,
     const IT extends readonly string[] = never,
     const DS extends readonly string[] = never,
+    const RS extends readonly string[] = never,
 >(inbounds: I, _options?: {
     assertExistOutbounds?: OT
     assertExistInbounds?: IT
     assertExistDnsServers?: DS
+    assertExistRuleSet?: RS
 }): I => inbounds
 
 /**
  * You should not use this directly, instead use {@link createInbound} or {@link createInbounds}.
  */
-export type inbound<O extends string = never, DS extends string = never, I extends string = never> =
+export type inbound<O extends string = never, DS extends string = never, I extends string = never, RS extends string = never> =
     | direct<I>
     | mixed<I>
     | socks<I>
@@ -51,7 +55,7 @@ export type inbound<O extends string = never, DS extends string = never, I exten
     | vless<O, DS, I>
     | tuic<O, DS, I>
     | hysteria2<O, DS, I>
-    | tun
+    | tun<RS>
     | redirect<I>
     | tproxy<I>
 
@@ -164,7 +168,7 @@ interface hysteria2<O extends string = never, DS extends string = never, I exten
     masquerade?: string
     brutal_debug?: boolean
 }
-interface tun extends item_with_tag {
+interface tun<RS extends string> extends item_with_tag {
     type: 'tun'
     interface_name?: string
     mtu?: number
@@ -177,9 +181,9 @@ interface tun extends item_with_tag {
     auto_redirect_output_mark?: string
     strict_route?: boolean
     route_address?: listable<string>
-    route_address_set?: listable<string>
+    route_address_set?: listable<RS>
     route_exclude_address?: listable<string>
-    route_exclude_address_set?: listable<string>
+    route_exclude_address_set?: listable<RS>
     include_interface?: listable<string>
     exclude_interface?: listable<string>
     include_uid?: listable<number>
