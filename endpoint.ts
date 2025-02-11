@@ -1,3 +1,13 @@
+/**
+ * @module
+ * The endpoints field.
+ *
+ * @example
+ * ```ts
+ * import { createEndpoint, createEndpoints } from "@zhexin/typebox/endpoint"
+ * ```
+ */
+
 import type { dialer, duration, item_with_tag, listable } from './types.ts'
 
 export const createEndpoint = <

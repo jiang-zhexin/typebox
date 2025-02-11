@@ -1,3 +1,13 @@
+/**
+ * @module
+ * The route field.
+ *
+ * @example
+ * ```ts
+ * import { createRuleSet, createRule } from "@zhexin/typebox/route"
+ * ```
+ */
+
 import type { action_reject, base_default_rule, base_logical_rule, default_rule_with_metadata } from './rule.ts'
 import type { duration, item_with_tag, listable, network_strategy, resolver, sniff_protocol, strategy } from './types.ts'
 

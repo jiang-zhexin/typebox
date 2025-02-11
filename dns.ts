@@ -1,3 +1,13 @@
+/**
+ * @module
+ * The dns field.
+ *
+ * @example
+ * ```ts
+ * import { createDnsServer, createDnsServers, createDnsRule } from "@zhexin/typebox/dns"
+ * ```
+ */
+
 import type { action_reject, base_logical_rule, default_rule_with_metadata } from './rule.ts'
 import type { client_tls } from './tls.ts'
 import type { dialer, duration, item_with_tag, listable, options, resolver, strategy } from './types.ts'

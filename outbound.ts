@@ -1,3 +1,13 @@
+/**
+ * @module
+ * The outbounds field.
+ *
+ * @example
+ * ```ts
+ * import { createOutbound, createOutbounds } from "@zhexin/typebox/outbound"
+ * ```
+ */
+
 import type { dialer, duration, headers, item_with_tag, listable, network, server, shadowsocks_method } from './types.ts'
 import type { transport } from './transport.ts'
 import type { client_tls as tls } from './tls.ts'

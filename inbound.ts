@@ -1,3 +1,13 @@
+/**
+ * @module
+ * The inbounds field.
+ *
+ * @example
+ * ```ts
+ * import { createInbound, createInbounds } from "@zhexin/typebox/inbound"
+ * ```
+ */
+
 import type { dialer, duration, item_with_tag, listable, network, server, shadowsocks_method } from './types.ts'
 import type { server_tls as tls } from './tls.ts'
 import type { transport } from './transport.ts'
