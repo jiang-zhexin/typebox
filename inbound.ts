@@ -55,10 +55,6 @@ export type inbound<O extends string = never, DS extends string = never, I exten
     | redirect<I>
     | tproxy<I>
 
-export declare namespace inbound {
-    export { direct, http, hysteria, hysteria2, mixed, naive, redirect, shadowsocks, shadowtls, socks, tls, tproxy, trojan, tuic, tun, vless, vmess }
-}
-
 interface direct<I extends string = never> extends listen<I> {
     type: 'direct'
     network?: network

@@ -98,9 +98,6 @@ export declare namespace dns {
         | predefined
         | dhcp<O, DS>
         | fakeip
-    export namespace server {
-        export { dhcp, fakeip, h3, https, legacy, local, predefined, quic, tcp, tls, udp }
-    }
     export { rule }
 }
 /**
