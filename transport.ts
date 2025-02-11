@@ -2,10 +2,6 @@ import type { duration, headers, listable } from './types.ts'
 
 export type transport = http | websocket | quic | grpc | httpupgrade
 
-export declare namespace transport {
-    export { grpc, http, httpupgrade, quic, websocket }
-}
-
 interface http {
     type: 'http'
     host?: listable<string>

@@ -80,10 +80,6 @@ export type outbound<O extends string = never, DS extends string = never> =
     | selector<O>
     | urltest<O>
 
-export declare namespace outbound {
-    export { direct, http, hysteria, hysteria2, selector, shadowsocks, shadowtls, socks, ssh, tls, tor, trojan, tuic, urltest, vless, vmess }
-}
-
 interface remote<O extends string, DS extends string> extends dialer<O, DS>, item_with_tag {
     network?: network
 }

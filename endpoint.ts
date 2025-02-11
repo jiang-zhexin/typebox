@@ -36,10 +36,6 @@ export type endpoint<
     DS extends string = never,
 > = wireguard<O, DS>
 
-export declare namespace endpoint {
-    export { wireguard }
-}
-
 interface wireguard<O extends string = never, DS extends string = never> extends dialer<O, DS>, item_with_tag {
     type: 'wireguard'
     name?: string
