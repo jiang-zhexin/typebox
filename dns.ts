@@ -98,6 +98,7 @@ export declare namespace dns {
         | predefined
         | dhcp<O, DS>
         | fakeip
+        | tailscale<O>
     export { rule }
 }
 /**
@@ -196,6 +197,18 @@ interface fakeip extends item_with_tag {
      * @example fc00::/18
      */
     inet6_range: string
+}
+interface tailscale<O extends string = never> extends item_with_tag {
+    type: 'tailscale'
+    /**
+     * The tag of the Tailscale endpoint.
+     */
+    endpoint: O
+    /**
+     * Indicates whether default DNS resolvers should be accepted for fallback queries in addition to MagicDNS.
+     * if not enabled, NXDOMAIN will be returned for non-Tailscale domain queries.
+     */
+    accept_default_resolvers?: boolean
 }
 
 interface response {
