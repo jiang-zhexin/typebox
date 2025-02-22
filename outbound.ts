@@ -241,21 +241,19 @@ interface udp_over_tcp {
     version: 1 | 2
 }
 
-type masquerade = masquerade.file | masquerade.proxy | masquerade.http
-declare namespace masquerade {
-    interface file {
-        type: 'file'
-        directory: string
-    }
-    interface proxy {
-        type: 'proxy'
-        url: string
-        rewrite_host?: boolean
-    }
-    interface http {
-        type: 'string'
-        status_code?: number
-        headers?: headers
-        content: string
-    }
+type masquerade = masquerade_file | masquerade_proxy | masquerade_http
+interface masquerade_file {
+    type: 'file'
+    directory: string
+}
+interface masquerade_proxy {
+    type: 'proxy'
+    url: string
+    rewrite_host?: boolean
+}
+interface masquerade_http {
+    type: 'string'
+    status_code?: number
+    headers?: headers
+    content: string
 }
