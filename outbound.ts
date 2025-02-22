@@ -75,6 +75,7 @@ export type outbound<O extends string = never, DS extends string = never> =
     | vless<O, DS>
     | tuic<O, DS>
     | hysteria2<O, DS>
+    | anytls<O, DS>
     | tor<O, DS>
     | ssh<O, DS>
     | selector<O>
@@ -185,6 +186,20 @@ interface hysteria2<O extends string = never, DS extends string = never> extends
     tls: tls
     brutal_debug?: boolean
     masquerade?: string | masquerade
+}
+interface anytls<O extends string = never, DS extends string = never> extends remote<O, DS>, server {
+    password: string
+    /**
+     * Interval checking for idle sessions.
+     * @default 30s
+     */
+    idle_session_check_interval?: duration
+    /**
+     * In the check, close sessions that have been idle for longer than this.
+     * @default 30s
+     */
+    idle_session_timeout?: duration
+    tls?: tls
 }
 interface tor<O extends string = never, DS extends string = never> extends dialer<O, DS>, item_with_tag {
     type: 'tor'

@@ -55,6 +55,7 @@ export type inbound<O extends string = never, DS extends string = never, I exten
     | vless<O, DS, I>
     | tuic<O, DS, I>
     | hysteria2<O, DS, I>
+    | antyls<O, DS, I>
     | tun<RS>
     | redirect<I>
     | tproxy<I>
@@ -167,6 +168,14 @@ interface hysteria2<O extends string = never, DS extends string = never, I exten
     tls: tls<O, DS>
     masquerade?: string
     brutal_debug?: boolean
+}
+interface antyls<O extends string = never, DS extends string = never, I extends string = never> extends listen<I> {
+    users: user[]
+    /**
+     * AnyTLS padding scheme line array.
+     */
+    padding_scheme?: listable<string>
+    tls?: tls<O, DS>
 }
 interface tun<RS extends string> extends item_with_tag {
     type: 'tun'
