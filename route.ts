@@ -9,7 +9,7 @@
  */
 
 import type { action_reject, base_default_rule, base_logical_rule, default_rule_with_metadata } from './rule.ts'
-import type { duration, item_with_tag, listable, network_strategy, resolver, sniff_protocol, strategy } from './types.ts'
+import type { duration, item_with_tag, listable, network_strategy, resolver, sniff_protocol } from './types.ts'
 
 /**
  * @example
@@ -107,10 +107,8 @@ interface action_sniff {
     sniffer?: listable<sniff_protocol>
     timeout?: duration
 }
-interface action_resolve<DS extends string> {
+interface action_resolve<DS extends string> extends Partial<resolver<DS>> {
     action: 'resolve'
-    strategy?: strategy
-    server?: DS
 }
 interface default_rule<I extends string, RS extends string> extends default_rule_with_metadata<I, RS> {
     client?: listable<quic_client>
