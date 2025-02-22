@@ -29,7 +29,13 @@ interface base_tls {
 
 interface base_ech {
     enabled: true
+    /**
+     * @deprecated ECH support has been migrated to use stdlib in sing-box 1.12.0, which does not come with support for PQ signature schemes, so pq_signature_schemes_enabled has been deprecated and no longer works.
+     */
     pq_signature_schemes_enabled?: boolean
+    /**
+     * @deprecated dynamic_record_sizing_disabled has nothing to do with ECH, was added by mistake, has been deprecated and no longer works.
+     */
     dynamic_record_sizing_disabled?: boolean
 }
 
