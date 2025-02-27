@@ -95,7 +95,6 @@ export declare namespace dns {
         | quic<O, DS>
         | https<O, DS>
         | h3<O, DS>
-        | predefined
         | dhcp<O, DS>
         | fakeip
         | tailscale<O>
@@ -179,10 +178,6 @@ interface h3<O extends string = never, DS extends string = never> extends dialer
     headers?: headers
     tls?: client_tls
 }
-interface predefined extends item_with_tag {
-    type: 'predefined'
-    responses: response[]
-}
 interface dhcp<O extends string = never, DS extends string = never> extends dialer<O, DS>, item_with_tag {
     type: 'dhcp'
     interface?: string
@@ -211,9 +206,17 @@ interface tailscale<O extends string = never> extends item_with_tag {
     accept_default_resolvers?: boolean
 }
 
-interface response {
-    query?: listable<string>
-    query_type?: listable<string>
+type rule<O extends string, I extends string, RS extends string, DS extends string> = rule_item<O, I, RS, DS> & action<DS>
+type rule_item<O extends string, I extends string, RS extends string, DS extends string> = default_rule<O, I, RS> | logical_rule<O, I, RS, DS>
+type action<DS extends string> = action_route<DS> | action_route_options | action_reject | action_predefined
+interface action_route<DS extends string> extends resolver<DS> {
+    action?: 'route'
+}
+interface action_route_options extends options {
+    action: 'route-options'
+}
+interface action_predefined {
+    action: 'predefined'
     /**
      * @default NOERROR
      */
@@ -226,16 +229,6 @@ interface response {
     answer?: listable<string>
     ns?: listable<string>
     extra?: listable<string>
-}
-
-type rule<O extends string, I extends string, RS extends string, DS extends string> = rule_item<O, I, RS, DS> & action<DS>
-type rule_item<O extends string, I extends string, RS extends string, DS extends string> = default_rule<O, I, RS> | logical_rule<O, I, RS, DS>
-type action<DS extends string> = action_route<DS> | action_route_options | action_reject
-interface action_route<DS extends string> extends resolver<DS> {
-    action?: 'route'
-}
-interface action_route_options extends options {
-    action: 'route-options'
 }
 interface default_rule<O extends string, I extends string, RS extends string> extends default_rule_with_metadata<I, RS> {
     query_type?: listable<string | number>
