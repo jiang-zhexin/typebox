@@ -257,6 +257,8 @@ interface default_rule<O extends string, I extends string, RS extends string> ex
      * @since 1.12.0
      */
     outbound?: listable<O>
+    rule_set_ip_cidr_accept_empty?: boolean
+    ip_accept_any?: boolean
 }
 interface logical_rule<O extends string, I extends string, RS extends string, DS extends string> extends base_logical_rule {
     rules: rule<O, I, RS, DS>[]
