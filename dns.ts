@@ -89,6 +89,7 @@ export declare namespace dns {
     export type server<O extends string = never, DS extends string = never> =
         | legacy<O, DS>
         | local<O, DS>
+        | hosts
         | tcp<O, DS>
         | udp<O, DS>
         | tls<O, DS>
@@ -115,6 +116,25 @@ interface legacy<O extends string = never, DS extends string = never> extends it
 }
 interface local<O extends string = never, DS extends string = never> extends dialer<O, DS>, item_with_tag {
     type: 'local'
+}
+interface hosts extends item_with_tag {
+    type: 'hosts'
+    /**
+     * List of paths to hosts files.
+     * @default /etc/hosts
+     * @default C:\Windows\System32\Drivers\etc\hosts
+     */
+    path?: listable<string>
+    /**
+     * @example
+     * ```json
+     * {
+     *   "www.google.com": "127.0.0.1",
+     *   "localhost": ["127.0.0.1", "::1"]
+     * }
+     * ```
+     */
+    predefined?: Record<string, listable<string>>
 }
 interface tcp<O extends string = never, DS extends string = never> extends dialer<O, DS>, item_with_tag {
     type: 'tcp'
