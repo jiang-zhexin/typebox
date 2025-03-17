@@ -138,6 +138,7 @@ interface shadowtls<O extends string = never, DS extends string = never, I exten
         [server_name: string]: server & dialer<O, DS>
     }
     strict_mode?: boolean
+    wildcard_sni?: 'off' | 'authed' | 'all'
 }
 interface vless<O extends string = never, DS extends string = never, I extends string = never> extends listen<I> {
     type: 'vless'
