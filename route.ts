@@ -114,7 +114,7 @@ interface default_rule<I extends string, RS extends string> extends default_rule
     client?: listable<quic_client>
 }
 interface logical_rule<O extends string, I extends string, RS extends string, DS extends string> extends base_logical_rule {
-    rules: rule<O, I, RS, DS>[]
+    rules: rule_item<O, I, RS, DS>[]
 }
 
 type rule_set<O extends string = never> = inline_rule_set | local_rule_set | remote_rule_set<O>
