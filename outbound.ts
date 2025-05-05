@@ -65,6 +65,7 @@ export const createOutbounds = <
  */
 export type outbound<O extends string = never, DS extends string = never> =
     | direct<O, DS>
+    | block
     | socks<O, DS>
     | http<O, DS>
     | shadowsocks<O, DS>
@@ -85,9 +86,11 @@ interface remote<O extends string, DS extends string> extends dialer<O, DS>, ite
     network?: network
 }
 
-interface direct<O extends string = never, DS extends string = never> extends dialer<O, DS> {
+interface direct<O extends string = never, DS extends string = never> extends dialer<O, DS>, item_with_tag {
     type: 'direct'
-    tag: string
+}
+interface block extends item_with_tag {
+    type: 'block'
 }
 interface socks<O extends string = never, DS extends string = never> extends remote<O, DS>, server {
     type: 'socks'
