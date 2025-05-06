@@ -11,8 +11,8 @@ This project provides TypeScript types for the entire sing-box config.
 ```bash
 # Node.js
 npx jsr add @zhexin/typebox
-yarn dlx jsr add @zhexin/typebox
-pnpm dlx jsr add @zhexin/typebox
+yarn add jsr:@zhexin/typebox
+pnpm add jsr:@zhexin/typebox
 # Deno
 deno add jsr:@zhexin/typebox
 # Bun
