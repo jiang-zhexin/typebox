@@ -76,6 +76,10 @@ interface tailscale<O extends string = never, DS extends string = never> extends
      */
     hostname?: string
     /**
+     * Indicates whether the node should accept routes advertised by other nodes.
+     */
+    accept_routes?: boolean
+    /**
      * The exit node name or IP address to use.
      */
     exit_node?: string
