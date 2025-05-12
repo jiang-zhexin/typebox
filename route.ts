@@ -96,8 +96,15 @@ interface options {
     udp_disable_domain_unmapping?: boolean
     udp_connect?: boolean
     udp_timeout?: duration
+    /**
+     * Conflict with `tls_record_fragment`.
+     */
     tls_fragment?: boolean
     tls_fragment_fallback_delay?: duration
+    /**
+     * Conflict with `tls_fragment`.
+     */
+    tls_record_fragment?: boolean
 }
 interface action_dns {
     action: 'hijack-dns'
