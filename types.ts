@@ -85,3 +85,17 @@ export interface server {
     server: string
     server_port: number
 }
+
+export interface listen<I extends string> extends item_with_tag {
+    listen: string
+    listen_port: number
+    bind_interface?: string
+    routing_mark?: number
+    reuse_addr?: boolean
+    netns?: string
+    tcp_fast_open?: boolean
+    tcp_multi_path?: boolean
+    udp_fragment?: boolean
+    udp_timeout?: duration
+    detour?: I
+}

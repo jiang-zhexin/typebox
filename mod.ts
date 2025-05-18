@@ -40,6 +40,7 @@ import type { log } from './log.ts'
 import type { ntp } from './ntp.ts'
 import type { outbound } from './outbound.ts'
 import type { route } from './route.ts'
+import type { service } from './service.ts'
 
 /**
  * You should not use this directly, instead use {@link createTypebox}.
@@ -48,15 +49,17 @@ export interface typebox<
     O extends readonly outbound<O[number]['tag'] | E[number]['tag'], DS[number]['tag']>[] = never,
     E extends readonly endpoint<O[number]['tag'] | E[number]['tag'], DS[number]['tag']>[] = never,
     I extends readonly inbound<O[number]['tag'] | E[number]['tag'], DS[number]['tag'], I[number]['tag'] | E[number]['tag'], RS[number]['tag']>[] = never,
-    DS extends readonly dns.server<O[number]['tag'], DS[number]['tag']>[] = never,
+    S extends readonly service<O[number]['tag'] | E[number]['tag'], I[number]['tag'] | E[number]['tag'], DS[number]['tag']>[] = never,
+    DS extends readonly dns.server<O[number]['tag'], S[number]['tag'], DS[number]['tag']>[] = never,
     RS extends readonly route.rule_set<O[number]['tag'] | E[number]['tag']>[] = never,
 > {
     log?: log
-    dns?: dns<O[number]['tag'] | E[number]['tag'], I[number]['tag'] | E[number]['tag'], RS[number]['tag'], DS>
+    dns?: dns<O[number]['tag'] | E[number]['tag'], I[number]['tag'] | E[number]['tag'], S[number]['tag'], RS[number]['tag'], DS>
     endpoints?: E
     inbounds?: I
     outbounds?: O
     route?: route<O[number]['tag'] | E[number]['tag'], I[number]['tag'] | E[number]['tag'], RS, DS[number]['tag']>
+    service?: S
     experimental?: experimental
     ntp?: ntp<O[number]['tag'] | E[number]['tag'], DS[number]['tag']>
     certificate?: certificate
@@ -82,6 +85,7 @@ export const createTypebox = <
     const O extends readonly outbound<O[number]['tag'] | E[number]['tag'], DS[number]['tag']>[] = never,
     const E extends readonly endpoint<O[number]['tag'] | E[number]['tag'], DS[number]['tag']>[] = never,
     const I extends readonly inbound<O[number]['tag'] | E[number]['tag'], DS[number]['tag'], I[number]['tag'] | E[number]['tag'], RS[number]['tag']>[] = never,
-    const DS extends readonly dns.server<O[number]['tag'], DS[number]['tag']>[] = never,
+    const S extends readonly service<O[number]['tag'] | E[number]['tag'], I[number]['tag'] | E[number]['tag'], DS[number]['tag']>[] = never,
+    const DS extends readonly dns.server<O[number]['tag'], S[number]['tag'], DS[number]['tag']>[] = never,
     const RS extends readonly route.rule_set<O[number]['tag'] | E[number]['tag']>[] = never,
->(typebox: typebox<O, E, I, DS, RS>): typebox<O, E, I, DS, RS> => typebox
+>(typebox: typebox<O, E, I, S, DS, RS>): typebox<O, E, I, S, DS, RS> => typebox

@@ -25,20 +25,24 @@ import type { headers } from './types.ts'
  * ```
  */
 export const createDnsServer = <
-    const DS extends dns.server<OT[number], DST[number]>,
+    const DS extends dns.server<OT[number], ST[number], DST[number]>,
     const DST extends readonly string[] = never,
+    const ST extends readonly string[] = never,
     const OT extends readonly string[] = never,
 >(server: DS, _options?: {
     assertExistDnsServers?: DST
+    assertExistService?: ST
     assertExistOutbounds?: OT
 }): DS => server
 
 export const createDnsServers = <
-    const DS extends readonly dns.server<OT[number], DS[number]['tag'] | DST[number]>[],
+    const DS extends readonly dns.server<OT[number], ST[number], DS[number]['tag'] | DST[number]>[],
     const OT extends readonly string[] = never,
+    const ST extends readonly string[] = never,
     const DST extends readonly string[] = never,
 >(server: DS, _options?: {
     assertExistOutbounds?: OT
+    assertExistService?: ST
     assertExistDnsServers?: DST
 }): DS => server
 
@@ -61,8 +65,9 @@ export const createDnsRule = <
 export interface dns<
     O extends string = never,
     I extends string = never,
+    S extends string = never,
     RS extends string = never,
-    DS extends readonly dns.server<O, DS[number]['tag']>[] = never,
+    DS extends readonly dns.server<O, S, DS[number]['tag']>[] = never,
 > {
     servers?: DS
     rules?: rule<O | 'any', I, RS, DS[number]['tag']>[]
@@ -86,7 +91,7 @@ export interface dns<
 }
 
 export declare namespace dns {
-    export type server<O extends string = never, DS extends string = never> =
+    export type server<O extends string = never, S extends string = never, DS extends string = never> =
         | legacy<O, DS>
         | local<O, DS>
         | hosts
@@ -99,6 +104,7 @@ export declare namespace dns {
         | dhcp<O, DS>
         | fakeip
         | tailscale<O>
+        | resolved<S>
     export { rule }
 }
 /**
@@ -223,6 +229,11 @@ interface tailscale<O extends string = never> extends item_with_tag {
      * Indicates whether default DNS resolvers should be accepted for fallback queries in addition to MagicDNS.
      * if not enabled, NXDOMAIN will be returned for non-Tailscale domain queries.
      */
+    accept_default_resolvers?: boolean
+}
+interface resolved<S extends string = never> extends item_with_tag {
+    type: 'resolved'
+    service: S
     accept_default_resolvers?: boolean
 }
 

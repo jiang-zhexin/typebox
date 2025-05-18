@@ -8,7 +8,7 @@
  * ```
  */
 
-import type { dialer, duration, item_with_tag, listable, network, server, shadowsocks_method } from './types.ts'
+import type { dialer, duration, item_with_tag, listable, listen, network, server, shadowsocks_method } from './types.ts'
 import type { server_tls as tls } from './tls.ts'
 import type { transport } from './transport.ts'
 
@@ -231,20 +231,6 @@ interface multiplex {
         up_mbps: number
         down_mbps: number
     }
-}
-
-interface listen<I extends string> extends item_with_tag {
-    listen: string
-    listen_port: number
-    bind_interface?: string
-    routing_mark?: number
-    reuse_addr?: boolean
-    netns?: string
-    tcp_fast_open?: boolean
-    tcp_multi_path?: boolean
-    udp_fragment?: boolean
-    udp_timeout?: duration
-    detour?: I
 }
 
 interface auth {
