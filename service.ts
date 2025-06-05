@@ -30,6 +30,7 @@ interface derp<O extends string = never, I extends string = never, DS extends st
     config_path: string
     verify_client_endpoint?: listable<string>
     verify_client_url?: listable<verify_client_url<O, DS>> | listable<string>
+    home?: string
     mesh_with?: listable<mesh_with<O, DS>>
     mesh_psk?: string
     mesh_psk_file?: string
