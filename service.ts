@@ -44,6 +44,7 @@ interface resolved<I extends string = never> extends listen<I>, item_with_tag {
 interface ssm_api<O extends string = never, I extends string = never, DS extends string = never> extends listen<I>, item_with_tag {
     type: 'ssm-api'
     servers: { [key: string]: I }
+    cache_path?: string
     tls?: server_tls<O, DS>
 }
 

@@ -189,6 +189,7 @@ interface tun<RS extends string> extends item_with_tag {
     auto_redirect?: boolean
     auto_redirect_input_mark?: string
     auto_redirect_output_mark?: string
+    loopback_address?: listable<string>
     strict_route?: boolean
     route_address?: listable<string>
     route_address_set?: listable<RS>
