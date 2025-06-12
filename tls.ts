@@ -14,6 +14,9 @@ export interface client_tls extends base_tls {
     ech?: client_ech
     utls?: utls
     reality?: client_reality
+    fragment?: boolean
+    fragment_fallback_delay?: duration
+    record_fragment?: boolean
 }
 
 interface base_tls {
