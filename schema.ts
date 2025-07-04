@@ -10,7 +10,7 @@ import type { route } from './route.ts'
 import type { service } from './service.ts'
 
 export interface schema {
-    $schema: string
+    $schema?: string
     log?: log
     dns?: dns<string, string, string, string, dns.server<string, string, string>[]>
     endpoints?: endpoint<string, string>[]
