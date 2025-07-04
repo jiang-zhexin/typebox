@@ -17,7 +17,7 @@ export interface schema {
     inbounds?: inbound<string, string, string, string>[]
     outbounds?: outbound<string, string>[]
     route?: route<string, string, route.rule_set<string>[], string>
-    services?: service[]
+    services?: service<string, string, string>[]
     experimental?: experimental
     ntp?: ntp<string, string>
     certificate?: certificate
