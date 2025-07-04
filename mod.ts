@@ -59,7 +59,7 @@ export interface typebox<
     inbounds?: I
     outbounds?: O
     route?: route<O[number]['tag'] | E[number]['tag'], I[number]['tag'] | E[number]['tag'], RS, DS[number]['tag']>
-    service?: S
+    services?: S
     experimental?: experimental
     ntp?: ntp<O[number]['tag'] | E[number]['tag'], DS[number]['tag']>
     certificate?: certificate
