@@ -8,7 +8,7 @@ This project provides TypeScript types for the entire sing-box config.
 
 ### Use in JSON schema
 
-```json
+```jsonc
 {
     "$schema": "https://github.com/jiang-zhexin/typebox/releases/latest/download/schema.json",
     // other sing-box config
