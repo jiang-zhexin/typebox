@@ -242,7 +242,7 @@ interface urltest<O extends string = never> extends group_outbound<O> {
 
 interface multiplex {
     enabled: true
-    padding?: number
+    padding?: boolean
     protocol?: 'smux' | 'yamux' | 'h2mux'
     max_connections?: number
     min_streams?: number
