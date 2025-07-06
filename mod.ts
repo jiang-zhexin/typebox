@@ -53,6 +53,7 @@ export interface typebox<
     DS extends readonly dns.server<O[number]['tag'], S[number]['tag'], DS[number]['tag']>[] = never,
     RS extends readonly route.rule_set<O[number]['tag'] | E[number]['tag']>[] = never,
 > {
+    $schema?: string
     log?: log
     dns?: dns<O[number]['tag'] | E[number]['tag'], I[number]['tag'] | E[number]['tag'], S[number]['tag'], RS[number]['tag'], DS>
     endpoints?: E
