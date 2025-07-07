@@ -272,5 +272,5 @@ interface default_rule<O extends string, I extends string, RS extends string> ex
     ip_accept_any?: boolean
 }
 interface logical_rule<O extends string, I extends string, RS extends string, DS extends string> extends base_logical_rule {
-    rules: rule<O, I, RS, DS>[]
+    rules: rule_item<O, I, RS, DS>[]
 }

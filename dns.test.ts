@@ -1,4 +1,4 @@
-import { createDnsServer, createDnsServers } from './dns.ts'
+import { createDnsRule, createDnsServer, createDnsServers } from './dns.ts'
 
 createDnsServer({
     type: 'https',
@@ -31,3 +31,18 @@ const _dns_servers = createDnsServers([{
     server: '',
     domain_resolver: 'other-dns-server',
 }], { assertExistDnsServers: ['other-dns-server'] })
+
+createDnsRule({
+    type: 'logical',
+    mode: 'and',
+    rules: [
+        {
+            process_name: 'a',
+        },
+        {
+            domain: 'b',
+            invert: true,
+        },
+    ],
+    server: 'dns-server',
+}, { assertExistDnsServers: ['dns-server'] })
