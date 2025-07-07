@@ -64,7 +64,7 @@ export interface route<
     rules?: rule<O, I, RS[number]['tag'], DS>[]
     rule_set?: RS
     final?: O
-    find_process?: string
+    find_process?: boolean
     auto_detect_interface?: boolean
     override_android_vpn?: boolean
     default_interface?: string
