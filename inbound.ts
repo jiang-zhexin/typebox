@@ -206,7 +206,7 @@ interface tun<RS extends string> extends item_with_tag {
     exclude_package?: listable<string>
     endpoint_independent_nat?: boolean
     udp_timeout?: string
-    stack?: 'system' | 'gVisor' | 'mixed'
+    stack?: 'system' | 'gvisor' | 'mixed'
     platform?: {
         http_proxy: tun_platform
     }
