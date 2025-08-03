@@ -226,7 +226,7 @@ interface tproxy<I extends string = never> extends listen<I> {
 
 interface multiplex {
     enabled: true
-    padding?: number
+    padding?: boolean
     brutal?: {
         enabled: true
         up_mbps: number
