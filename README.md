@@ -6,6 +6,12 @@ This project provides TypeScript types for the entire sing-box config.
 
 ## How to use?
 
+| Feature Matrix | JSON Schema | TypeScript |
+| -------------- | ----------- | ---------- |
+| Auto complete  | ✔️           | ✔️          |
+| Modular        | ❌           | ✔️          |
+| Tag check      | ❌           | ✔️          |
+
 ### Use in JSON schema
 
 ```jsonc
