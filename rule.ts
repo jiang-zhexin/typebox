@@ -26,6 +26,9 @@ export interface base_default_rule extends rule {
     network_type?: listable<network_type>
     network_is_expensive?: boolean
     network_is_constrained?: boolean
+    interface_address?: Record<string, listable<string>>
+    network_interface_address?: Record<network_type, listable<string>>
+    default_interface_address?: listable<string>
 }
 
 export interface base_logical_rule extends rule {
