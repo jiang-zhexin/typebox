@@ -13,28 +13,49 @@ import type { server_tls as tls } from './tls.ts'
 import type { transport } from './transport.ts'
 
 export const createInbound = <
-    const I extends inbound<OT[number], DS[number], IT[number], RS[number]>,
+    const I extends inbound<OT[number] | string, DS[number] | string, IT[number] | string, RS[number] | string>,
     const OT extends readonly string[] = never,
     const IT extends readonly string[] = never,
     const DS extends readonly string[] = never,
     const RS extends readonly string[] = never,
 >(inbound: I, _options?: {
+    /**
+     * @deprecated
+     */
     assertExistOutbounds?: OT
+    /**
+     * @deprecated
+     */
     assertExistInbounds?: IT
+    /**
+     * @deprecated
+     */
     assertExistDnsServers?: DS
+    /**
+     * @deprecated
+     */
     assertExistRuleSet?: RS
 }): I => inbound
 
 export const createInbounds = <
-    const I extends readonly inbound<OT[number], DS[number], IT[number] | I[number]['tag'], RS[number]>[],
+    const I extends readonly inbound<OT[number] | string, DS[number] | string, IT[number] | I[number]['tag'], RS[number] | string>[],
     const OT extends readonly string[] = never,
     const IT extends readonly string[] = never,
     const DS extends readonly string[] = never,
     const RS extends readonly string[] = never,
 >(inbounds: I, _options?: {
+    /**
+     * @deprecated
+     */
     assertExistOutbounds?: OT
     assertExistInbounds?: IT
+    /**
+     * @deprecated
+     */
     assertExistDnsServers?: DS
+    /**
+     * @deprecated
+     */
     assertExistRuleSet?: RS
 }): I => inbounds
 

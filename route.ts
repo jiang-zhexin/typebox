@@ -20,13 +20,16 @@ import type { duration, item_with_tag, listable, network_strategy, resolver, sni
  *     format: 'binary',
  *     url: '',
  *     download_detour: 'direct-out',
- * }, { assertExistOutbound: ['direct-out'] })
+ * })
  * ```
  */
 export const createRuleSet = <
-    const RS extends rule_set<OT[number]>,
+    const RS extends rule_set<OT[number] | string>,
     const OT extends readonly string[] = never,
 >(rs: RS, _options?: {
+    /**
+     * @deprecated
+     */
     assertExistOutbound?: OT
 }): RS => rs
 
@@ -40,15 +43,27 @@ export const createRuleSet = <
  * ```
  */
 export const createRule = <
-    const R extends rule<OT[number], IT[number], RS[number], DS[number]>,
+    const R extends rule<OT[number] | string, IT[number] | string, RS[number] | string, DS[number] | string>,
     const OT extends readonly string[] = never,
     const IT extends readonly string[] = never,
     const RS extends readonly string[] = never,
     const DS extends readonly string[] = never,
 >(r: R, _options?: {
+    /**
+     * @deprecated
+     */
     assertExistOutbounds?: OT
+    /**
+     * @deprecated
+     */
     assertExistInbounds?: IT
+    /**
+     * @deprecated
+     */
     assertExistRuleSet?: RS
+    /**
+     * @deprecated
+     */
     assertExistDnsServers?: DS
 }): R => r
 

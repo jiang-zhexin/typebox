@@ -1,6 +1,6 @@
 import { createRule } from './route.ts'
 
-const _a = createRule({
+createRule({
     type: 'logical',
     mode: 'and',
     rules: [
@@ -14,7 +14,4 @@ const _a = createRule({
     ],
     // action: 'route',
     outbound: 'select',
-}, {
-    assertExistOutbounds: ['select'],
-    assertExistRuleSet: ['steam', 'steam-cn'],
 })
