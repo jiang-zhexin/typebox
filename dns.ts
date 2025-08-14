@@ -21,41 +21,68 @@ import type { headers } from './types.ts'
  *     tag: 'ali',
  *     server: '223.5.5.5',
  *     detour: 'c',
- * }, { assertExistOutbounds: ['c'] })
+ * })
  * ```
  */
 export const createDnsServer = <
-    const DS extends dns.server<OT[number], ST[number], DST[number]>,
+    const DS extends dns.server<OT[number] | string, ST[number] | string, DST[number] | string>,
     const DST extends readonly string[] = never,
     const ST extends readonly string[] = never,
     const OT extends readonly string[] = never,
 >(server: DS, _options?: {
+    /**
+     * @deprecated
+     */
     assertExistDnsServers?: DST
+    /**
+     * @deprecated
+     */
     assertExistService?: ST
+    /**
+     * @deprecated
+     */
     assertExistOutbounds?: OT
 }): DS => server
 
 export const createDnsServers = <
-    const DS extends readonly dns.server<OT[number], ST[number], DS[number]['tag'] | DST[number]>[],
+    const DS extends readonly dns.server<OT[number] | string, ST[number] | string, DS[number]['tag'] | DST[number]>[],
     const OT extends readonly string[] = never,
     const ST extends readonly string[] = never,
     const DST extends readonly string[] = never,
 >(server: DS, _options?: {
+    /**
+     * @deprecated
+     */
     assertExistOutbounds?: OT
+    /**
+     * @deprecated
+     */
     assertExistService?: ST
     assertExistDnsServers?: DST
 }): DS => server
 
 export const createDnsRule = <
-    const R extends rule<OT[number] | 'any', IT[number], RS[number], DS[number]>,
+    const R extends rule<OT[number] | string, IT[number] | string, RS[number] | string, DS[number] | string>,
     const OT extends readonly string[] = never,
     const IT extends readonly string[] = never,
     const RS extends readonly string[] = never,
     const DS extends readonly string[] = never,
 >(r: R, _options?: {
+    /**
+     * @deprecated
+     */
     assertExistOutbounds?: OT
+    /**
+     * @deprecated
+     */
     assertExistInbounds?: IT
+    /**
+     * @deprecated
+     */
     assertExistRuleSet?: RS
+    /**
+     * @deprecated
+     */
     assertExistDnsServers?: DS
 }): R => r
 

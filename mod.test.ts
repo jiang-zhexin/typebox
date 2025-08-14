@@ -10,7 +10,7 @@ const rule_set_block = createRuleSet({
     format: 'binary',
     url: '',
     download_detour: 'direct-out',
-}, { assertExistOutbound: ['direct-out'] })
+})
 
 const rule_set_proxy = createRuleSet({
     tag: 'proxy',
@@ -18,7 +18,7 @@ const rule_set_proxy = createRuleSet({
     format: 'binary',
     url: '',
     // download_detour: 'unkown-outbound',
-}, { assertExistOutbound: ['unkown-outbound'] })
+})
 const rule_set_direct = createRuleSet({
     tag: 'direct',
     type: 'remote',

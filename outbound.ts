@@ -20,18 +20,21 @@ import type { client_tls as tls } from './tls.ts'
  *     type: 'direct',
  *     detour: 'b',
  *     domain_resolver: 'c',
- * }, {
- *     assertExistOutbounds: ['b'], // Now you can use 'b' in detour
- *     assertExistDnsServers: ['c'], // Now you can use 'c' in domain_resolver
  * })
  * ```
  */
 export const createOutbound = <
-    const O extends outbound<OT[number], DS[number]>,
+    const O extends outbound<OT[number] | string, DS[number] | string>,
     const OT extends readonly string[] = never,
     const DS extends readonly string[] = never,
 >(outbound: O, _options?: {
+    /**
+     * @deprecated
+     */
     assertExistOutbounds?: OT
+    /**
+     * @deprecated
+     */
     assertExistDnsServers?: DS
 }): O => outbound
 
@@ -52,11 +55,14 @@ export const createOutbound = <
  * ```
  */
 export const createOutbounds = <
-    const O extends readonly outbound<O[number]['tag'] | OT[number], DS[number]>[],
+    const O extends readonly outbound<O[number]['tag'] | OT[number], DS[number] | string>[],
     const OT extends readonly string[] = never,
     const DS extends readonly string[] = never,
 >(outbounds: O, _options?: {
     assertExistOutbounds?: OT
+    /**
+     * @deprecated
+     */
     assertExistDnsServers?: DS
 }): O => outbounds
 

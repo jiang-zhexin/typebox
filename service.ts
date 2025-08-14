@@ -12,13 +12,22 @@ import type { dialer, item_with_tag, listable, listen, server } from './types.ts
 import type { client_tls, server_tls } from './tls.ts'
 
 export const createService = <
-    const S extends service<O[number], I[number], DS[number]>,
+    const S extends service<O[number] | string, I[number] | string, DS[number] | string>,
     const O extends readonly string[] = never,
     const I extends readonly string[] = never,
     const DS extends readonly string[] = never,
 >(service: S, _options?: {
+    /**
+     * @deprecated
+     */
     assertExistOutbounds?: O
+    /**
+     * @deprecated
+     */
     assertExistInbounds?: I
+    /**
+     * @deprecated
+     */
     assertExistDnsServers?: DS
 }): S => service
 

@@ -11,20 +11,29 @@
 import type { dialer, duration, item_with_tag, listable } from './types.ts'
 
 export const createEndpoint = <
-    const E extends endpoint<OT[number], DS[number]>,
+    const E extends endpoint<OT[number] | string, DS[number] | string>,
     const OT extends readonly string[] = never,
     const DS extends readonly string[] = never,
 >(endpoint: E, _options?: {
+    /**
+     * @deprecated
+     */
     assertExistOutbounds?: OT
+    /**
+     * @deprecated
+     */
     assertExistDnsServers?: DS
 }): E => endpoint
 
 export const createEndpoints = <
-    const E extends readonly endpoint<E[number]['tag'] | OT[number], DS[number]>[],
+    const E extends readonly endpoint<E[number]['tag'] | OT[number], DS[number] | string>[],
     const OT extends readonly string[] = never,
     const DS extends readonly string[] = never,
 >(endpoints: E, _options?: {
     assertExistOutbounds?: OT
+    /**
+     * @deprecated
+     */
     assertExistDnsServers?: DS
 }): E => endpoints
 

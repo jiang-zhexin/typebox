@@ -11,11 +11,17 @@
 import type { dialer, duration } from './types.ts'
 
 export const createNtp = <
-    const N extends ntp<OT[number], DS[number]>,
+    const N extends ntp<OT[number] | string, DS[number] | string>,
     const OT extends readonly string[] = never,
     const DS extends readonly string[] = never,
 >(n: N, _options?: {
+    /**
+     * @deprecated
+     */
     assertExistOutbounds?: OT
+    /**
+     * @deprecated
+     */
     assertExistDnsServers?: DS
 }): N => n
 
