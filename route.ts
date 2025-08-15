@@ -94,7 +94,7 @@ export declare namespace route {
 }
 
 type rule<O extends string = never, I extends string = never, RS extends string = never, DS extends string = never> = rule_item<O, I, RS, DS> & action<O, DS>
-type rule_item<O extends string, I extends string, RS extends string, DS extends string> = default_rule<I, RS> | logical_rule<O, I, RS, DS>
+type rule_item<O extends string, I extends string, RS extends string, DS extends string> = default_rule<I, RS, O> | logical_rule<O, I, RS, DS>
 type action<O extends string, DS extends string> = action_route<O> | action_route_options | action_reject | action_dns | action_sniff | action_resolve<DS>
 interface action_route<O extends string> extends options {
     action?: 'route'
@@ -132,8 +132,13 @@ interface action_sniff {
 interface action_resolve<DS extends string> extends Partial<resolver<DS>> {
     action: 'resolve'
 }
-interface default_rule<I extends string, RS extends string> extends default_rule_with_metadata<I, RS> {
+interface default_rule<I extends string, RS extends string, O extends string> extends default_rule_with_metadata<I, RS> {
     client?: listable<quic_client>
+    /**
+     * Match specified outbounds' preferred routes.
+     * Only support the tag of endpoint tailscale/wireguard now.
+     */
+    preferred_by?: listable<O>
 }
 interface logical_rule<O extends string, I extends string, RS extends string, DS extends string> extends base_logical_rule {
     rules: rule_item<O, I, RS, DS>[]
