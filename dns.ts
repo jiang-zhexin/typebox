@@ -149,6 +149,7 @@ interface legacy<O extends string = never, DS extends string = never> extends it
 }
 interface local<O extends string = never, DS extends string = never> extends dialer<O, DS>, item_with_tag {
     type: 'local'
+    prefer_go?: boolean
 }
 interface hosts extends item_with_tag {
     type: 'hosts'
