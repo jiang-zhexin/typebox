@@ -45,7 +45,8 @@ export type sniff_protocol =
     | 'rdp'
 
 export type network_strategy = 'default' | 'fallback' | 'hybrid' | 'wifi' | 'cellular' | 'ethernet' | 'wifi_only' | 'cellular_only' | 'ethernet_only'
-export type network = 'tcp' | 'udp'
+export type network = 'tcp' | 'udp' | 'icmp'
+export type dns_network = 'tcp' | 'udp'
 
 export interface dialer<O extends string = never, DS extends string = never> {
     detour?: O

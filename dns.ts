@@ -10,7 +10,7 @@
 
 import type { action_reject, base_logical_rule, default_rule_with_metadata } from './rule.ts'
 import type { client_tls } from './tls.ts'
-import type { dialer, duration, item_with_tag, listable, options, resolver, strategy } from './types.ts'
+import type { dialer, dns_network, duration, item_with_tag, listable, options, resolver, strategy } from './types.ts'
 import type { headers } from './types.ts'
 
 /**
@@ -296,6 +296,7 @@ interface default_rule<O extends string, I extends string, RS extends string> ex
      * @since 1.12.0
      */
     outbound?: listable<O>
+    network?: listable<dns_network>
     rule_set_ip_cidr_accept_empty?: boolean
     ip_accept_any?: boolean
 }
