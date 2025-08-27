@@ -52,7 +52,7 @@ export interface default_rule_with_metadata<I extends string = never, RS extends
 
 export interface action_reject {
     action: 'reject'
-    method?: 'default' | 'drop'
+    method?: 'default' | 'drop' | 'reply'
     no_drop?: boolean
 }
 
