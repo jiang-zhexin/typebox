@@ -28,6 +28,8 @@ interface base_tls {
     cipher_suites?: listable<cipher_suites>
     certificate?: listable<string>
     certificate_path?: string
+    kernel_tx?: boolean
+    kernel_rx?: boolean
 }
 
 interface base_ech {
