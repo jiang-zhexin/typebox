@@ -6,6 +6,10 @@ export interface server_tls<O extends string, DS extends string> extends base_tl
     acme?: acme
     ech?: server_ech
     reality?: server_reality<O, DS>
+    client_authentication?: client_authentication
+    client_certificate?: listable<string>
+    client_certificate_path?: listable<string>
+    client_certificate_public_key_sha256?: listable<string>
 }
 
 export interface client_tls extends base_tls {
@@ -17,6 +21,7 @@ export interface client_tls extends base_tls {
     fragment?: boolean
     fragment_fallback_delay?: duration
     record_fragment?: boolean
+    certificate_public_key_sha256?: listable<string>
 }
 
 interface base_tls {
@@ -30,6 +35,7 @@ interface base_tls {
     certificate_path?: string
     kernel_tx?: boolean
     kernel_rx?: boolean
+    curve_preferences?: listable<curve_preference>
 }
 
 interface base_ech {
@@ -125,3 +131,15 @@ type cipher_suites =
     | 'TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384'
     | 'TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256'
     | 'TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256'
+type curve_preference =
+    | 'P256'
+    | 'P384'
+    | 'P521'
+    | 'X25519'
+    | 'X25519MLKEM768'
+type client_authentication =
+    | 'no'
+    | 'request'
+    | 'require-any'
+    | 'verify-if-given'
+    | 'require-and-verify'
