@@ -4,6 +4,10 @@
 
 This project provides TypeScript types for the entire sing-box config.
 
+## Try TypeBox Online
+
+You can try TypeBox online on [TypeBox Playground](https://typebox.zhexin.org). It runs entirely in the browser, so it is almost identical to the local setup but doesn't require installing anything on your machine.
+
 ## How to use?
 
 | Feature Matrix | JSON Schema | TypeScript |
