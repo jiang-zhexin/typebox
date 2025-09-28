@@ -8,7 +8,7 @@
  * ```
  */
 
-import type { dialer, duration } from './types.ts'
+import type { dialer, duration, server } from './types.ts'
 
 export const createNtp = <
     const N extends ntp<OT[number] | string, DS[number] | string>,
@@ -31,7 +31,7 @@ export const createNtp = <
 export interface ntp<
     O extends string = never,
     DS extends string = never,
-> extends dialer<O, DS> {
+> extends dialer<O, DS>, server {
     enabled: true
     interval?: duration
     write_to_system?: boolean
