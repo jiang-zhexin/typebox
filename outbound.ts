@@ -197,6 +197,7 @@ interface hysteria2<O extends string = never, DS extends string = never> extends
     masquerade?: string | masquerade
 }
 interface anytls<O extends string = never, DS extends string = never> extends remote<O, DS>, server {
+    type: 'anytls'
     password: string
     /**
      * Interval checking for idle sessions.
