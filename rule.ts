@@ -33,7 +33,7 @@ export interface base_logical_rule extends rule {
     mode: 'and' | 'or'
 }
 
-export interface default_rule_with_metadata<I extends string = never, RS extends string = never> extends base_default_rule {
+export interface default_rule_with_metadata<I extends string, RS extends string> extends base_default_rule {
     inbound?: listable<I>
     ip_version?: 4 | 6
     auth_user?: listable<string>

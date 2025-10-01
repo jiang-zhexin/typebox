@@ -11,27 +11,17 @@
 import type { dialer, duration, server } from './types.ts'
 
 export const createNtp = <
-    const N extends ntp<OT[number] | string, DS[number] | string>,
-    const OT extends readonly string[] = never,
-    const DS extends readonly string[] = never,
->(n: N, _options?: {
-    /**
-     * @deprecated
-     */
-    assertExistOutbounds?: OT
-    /**
-     * @deprecated
-     */
-    assertExistDnsServers?: DS
-}): N => n
+    outbound_tag extends string,
+    dns_server_tag extends string,
+>(n: ntp<outbound_tag, dns_server_tag>): ntp<outbound_tag, dns_server_tag> => n
 
 /**
  * You should not use this directly, instead use {@link createNtp}.
  */
 export interface ntp<
-    O extends string = never,
-    DS extends string = never,
-> extends dialer<O, DS>, server {
+    outbound_tag extends string,
+    dns_server_tag extends string,
+> extends dialer<outbound_tag, dns_server_tag>, server {
     enabled: true
     interval?: duration
     write_to_system?: boolean

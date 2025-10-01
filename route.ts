@@ -24,14 +24,9 @@ import type { duration, item_with_tag, listable, network_strategy, resolver, sni
  * ```
  */
 export const createRuleSet = <
-    const RS extends rule_set<OT[number] | string>,
-    const OT extends readonly string[] = never,
->(rs: RS, _options?: {
-    /**
-     * @deprecated
-     */
-    assertExistOutbound?: OT
-}): RS => rs
+    tag extends string,
+    outbound_tag extends string = never,
+>(rs: rule_set<tag, outbound_tag>): rule_set<tag, outbound_tag> => rs
 
 /**
  * @example
@@ -43,48 +38,30 @@ export const createRuleSet = <
  * ```
  */
 export const createRule = <
-    const R extends rule<OT[number] | string, IT[number] | string, RS[number] | string, DS[number] | string>,
-    const OT extends readonly string[] = never,
-    const IT extends readonly string[] = never,
-    const RS extends readonly string[] = never,
-    const DS extends readonly string[] = never,
->(r: R, _options?: {
-    /**
-     * @deprecated
-     */
-    assertExistOutbounds?: OT
-    /**
-     * @deprecated
-     */
-    assertExistInbounds?: IT
-    /**
-     * @deprecated
-     */
-    assertExistRuleSet?: RS
-    /**
-     * @deprecated
-     */
-    assertExistDnsServers?: DS
-}): R => r
+    outbound_tag extends string = never,
+    inbound_tag extends string = never,
+    rule_set_tag extends string = never,
+    dns_server_tag extends string = never,
+>(r: rule<outbound_tag, inbound_tag, rule_set_tag, dns_server_tag>): rule<outbound_tag, inbound_tag, rule_set_tag, dns_server_tag> => r
 
 /**
  * You should not use this directly, instead use {@link createRuleSet} or {@link createRule}.
  */
 export interface route<
-    O extends string = never,
-    I extends string = never,
-    RS extends readonly rule_set<O>[] = never,
-    DS extends string = never,
+    outbound_tag extends string,
+    inbound_tag extends string,
+    dns_server_tag extends string,
+    RS extends rule_set<string, outbound_tag>,
 > {
-    rules?: rule<O, I, RS[number]['tag'], DS>[]
-    rule_set?: RS
-    final?: O
+    rules?: rule<outbound_tag, inbound_tag, RS['tag'], dns_server_tag>[]
+    rule_set?: RS[]
+    final?: outbound_tag
     find_process?: boolean
     auto_detect_interface?: boolean
     override_android_vpn?: boolean
     default_interface?: string
     default_mark?: number
-    default_domain_resolver?: DS | resolver<DS>
+    default_domain_resolver?: dns_server_tag | resolver<dns_server_tag>
     default_network_strategy?: network_strategy
     default_fallback_delay?: duration
 }
@@ -93,7 +70,7 @@ export declare namespace route {
     export { rule, rule_set }
 }
 
-type rule<O extends string = never, I extends string = never, RS extends string = never, DS extends string = never> = rule_item<O, I, RS, DS> & action<O, DS>
+type rule<O extends string, I extends string, RS extends string, DS extends string> = rule_item<O, I, RS, DS> & action<O, DS>
 type rule_item<O extends string, I extends string, RS extends string, DS extends string> = default_rule<I, RS> | logical_rule<O, I, RS, DS>
 type action<O extends string, DS extends string> = action_route<O> | action_route_options | action_reject | action_dns | action_sniff | action_resolve<DS>
 interface action_route<O extends string> extends options {
@@ -139,21 +116,21 @@ interface logical_rule<O extends string, I extends string, RS extends string, DS
     rules: rule_item<O, I, RS, DS>[]
 }
 
-type rule_set<O extends string = never> = inline_rule_set | local_rule_set | remote_rule_set<O>
-interface inline_rule_set extends item_with_tag {
+type rule_set<T extends string, O extends string> = inline_rule_set<T> | local_rule_set<T> | remote_rule_set<T, O>
+interface inline_rule_set<T extends string> extends item_with_tag<T> {
     type: 'inline'
     rules: headless_rule[]
 }
 
 type rule_set_data_format = 'source' | 'binary'
-interface outline_rule_set extends item_with_tag {
+interface outline_rule_set<T extends string> extends item_with_tag<T> {
     format?: rule_set_data_format
 }
-interface local_rule_set extends outline_rule_set {
+interface local_rule_set<T extends string> extends outline_rule_set<T> {
     type: 'local'
     path: string
 }
-interface remote_rule_set<O extends string> extends outline_rule_set {
+interface remote_rule_set<T extends string, O extends string> extends outline_rule_set<T> {
     type: 'remote'
     url: string
     download_detour?: O

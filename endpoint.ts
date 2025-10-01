@@ -11,41 +11,28 @@
 import type { dialer, duration, item_with_tag, listable } from './types.ts'
 
 export const createEndpoint = <
-    const E extends endpoint<OT[number] | string, DS[number] | string>,
-    const OT extends readonly string[] = never,
-    const DS extends readonly string[] = never,
->(endpoint: E, _options?: {
-    /**
-     * @deprecated
-     */
-    assertExistOutbounds?: OT
-    /**
-     * @deprecated
-     */
-    assertExistDnsServers?: DS
-}): E => endpoint
+    tag extends string,
+    outbound_tag extends string = never,
+    dns_server_tag extends string = never,
+>(endpoint: endpoint<tag, outbound_tag, dns_server_tag>): endpoint<tag, outbound_tag, dns_server_tag> => endpoint
 
 export const createEndpoints = <
-    const E extends readonly endpoint<E[number]['tag'] | OT[number], DS[number] | string>[],
-    const OT extends readonly string[] = never,
-    const DS extends readonly string[] = never,
->(endpoints: E, _options?: {
-    assertExistOutbounds?: OT
-    /**
-     * @deprecated
-     */
-    assertExistDnsServers?: DS
-}): E => endpoints
+    tag extends string,
+    outbound_tag extends string,
+    dns_server_tag extends string,
+    E extends endpoint<tag, outbound_tag | E['tag'], dns_server_tag>,
+>(endpoints: E[]): E[] => endpoints
 
 /**
  * You should not use this directly, instead use {@link createEndpoint} or {@link createEndpoints}.
  */
 export type endpoint<
-    O extends string = never,
-    DS extends string = never,
-> = wireguard<O, DS> | tailscale<O, DS>
+    tag extends string,
+    outbound_tag extends string,
+    dns_server_tag extends string,
+> = wireguard<tag, outbound_tag, dns_server_tag> | tailscale<tag, outbound_tag, dns_server_tag>
 
-interface wireguard<O extends string = never, DS extends string = never> extends dialer<O, DS>, item_with_tag {
+interface wireguard<T extends string, O extends string, DS extends string> extends dialer<O, DS>, item_with_tag<T> {
     type: 'wireguard'
     name?: string
     system?: boolean
@@ -57,7 +44,7 @@ interface wireguard<O extends string = never, DS extends string = never> extends
     udp_timeout?: duration
     workers?: number
 }
-interface tailscale<O extends string = never, DS extends string = never> extends dialer<O, DS>, item_with_tag {
+interface tailscale<T extends string, O extends string, DS extends string> extends dialer<O, DS>, item_with_tag<T> {
     type: 'tailscale'
     /**
      * The directory where the Tailscale state is stored.

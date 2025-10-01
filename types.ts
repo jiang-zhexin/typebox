@@ -1,6 +1,6 @@
 export type listable<T> = T | T[]
-export interface item_with_tag {
-    tag: string
+export interface item_with_tag<T extends string> {
+    tag: T
 }
 export type headers = Record<string, listable<string>>
 
@@ -47,7 +47,7 @@ export type sniff_protocol =
 export type network_strategy = 'default' | 'fallback' | 'hybrid' | 'wifi' | 'cellular' | 'ethernet' | 'wifi_only' | 'cellular_only' | 'ethernet_only'
 export type network = 'tcp' | 'udp'
 
-export interface dialer<O extends string = never, DS extends string = never> {
+export interface dialer<O extends string, DS extends string> {
     detour?: O
     bind_interface?: string
     inet4_bind_address?: string
@@ -86,7 +86,7 @@ export interface server {
     server_port: number
 }
 
-export interface listen<I extends string> extends item_with_tag {
+export interface listen<T extends string, I extends string> extends item_with_tag<T> {
     listen: string
     listen_port: number
     bind_interface?: string
