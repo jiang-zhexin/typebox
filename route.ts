@@ -152,7 +152,7 @@ interface inline_rule_set extends item_with_tag {
 
 type rule_set_data_format = 'source' | 'binary'
 interface outline_rule_set extends item_with_tag {
-    format: rule_set_data_format
+    format?: rule_set_data_format
 }
 interface local_rule_set extends outline_rule_set {
     type: 'local'
