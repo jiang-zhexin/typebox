@@ -8,9 +8,7 @@
  * ```
  */
 
-export const createLog = <
-    const L extends log,
->(l: L): L => l
+export const createLog = (l: log): log => l
 
 /**
  * You should not use this directly, instead use {@link createLog}.

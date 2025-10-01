@@ -13,96 +13,66 @@ import type { server_tls as tls } from './tls.ts'
 import type { transport } from './transport.ts'
 
 export const createInbound = <
-    const I extends inbound<OT[number] | string, DS[number] | string, IT[number] | string, RS[number] | string>,
-    const OT extends readonly string[] = never,
-    const IT extends readonly string[] = never,
-    const DS extends readonly string[] = never,
-    const RS extends readonly string[] = never,
->(inbound: I, _options?: {
-    /**
-     * @deprecated
-     */
-    assertExistOutbounds?: OT
-    /**
-     * @deprecated
-     */
-    assertExistInbounds?: IT
-    /**
-     * @deprecated
-     */
-    assertExistDnsServers?: DS
-    /**
-     * @deprecated
-     */
-    assertExistRuleSet?: RS
-}): I => inbound
+    tag extends string,
+    inbound_tag extends string = never,
+    outbound_tag extends string = never,
+    dns_server_tag extends string = never,
+    rule_set_tag extends string = never,
+>(inbound: inbound<tag, outbound_tag, dns_server_tag, inbound_tag, rule_set_tag>): inbound<tag, outbound_tag, dns_server_tag, inbound_tag, rule_set_tag> =>
+    inbound
 
 export const createInbounds = <
-    const I extends readonly inbound<OT[number] | string, DS[number] | string, IT[number] | I[number]['tag'], RS[number] | string>[],
-    const OT extends readonly string[] = never,
-    const IT extends readonly string[] = never,
-    const DS extends readonly string[] = never,
-    const RS extends readonly string[] = never,
->(inbounds: I, _options?: {
-    /**
-     * @deprecated
-     */
-    assertExistOutbounds?: OT
-    assertExistInbounds?: IT
-    /**
-     * @deprecated
-     */
-    assertExistDnsServers?: DS
-    /**
-     * @deprecated
-     */
-    assertExistRuleSet?: RS
-}): I => inbounds
+    tag extends string,
+    outbound_tag extends string,
+    dns_server_tag extends string,
+    rule_set_tag extends string,
+    I extends inbound<tag, outbound_tag, dns_server_tag, I['tag'], rule_set_tag>,
+>(inbounds: I[]): I[] => inbounds
 
 /**
  * You should not use this directly, instead use {@link createInbound} or {@link createInbounds}.
  */
-export type inbound<O extends string = never, DS extends string = never, I extends string = never, RS extends string = never> =
-    | direct<I>
-    | mixed<I>
-    | socks<I>
-    | http<O, DS, I>
-    | shadowsocks<I>
-    | vmess<O, DS, I>
-    | trojan<O, DS, I>
-    | naive<O, DS, I>
-    | hysteria<O, DS, I>
-    | shadowtls<O, DS, I>
-    | vless<O, DS, I>
-    | tuic<O, DS, I>
-    | hysteria2<O, DS, I>
-    | anytls<O, DS, I>
-    | tun<RS>
-    | redirect<I>
-    | tproxy<I>
+export type inbound<tag extends string, outbound_tag extends string, dns_server_tag extends string, inbound_tag extends string, rule_set_tag extends string> =
+    | direct<tag, inbound_tag>
+    | mixed<tag, inbound_tag>
+    | socks<tag, inbound_tag>
+    | http<tag, outbound_tag, dns_server_tag, inbound_tag>
+    | shadowsocks<tag, inbound_tag>
+    | vmess<tag, outbound_tag, dns_server_tag, inbound_tag>
+    | trojan<tag, outbound_tag, dns_server_tag, inbound_tag>
+    | naive<tag, outbound_tag, dns_server_tag, inbound_tag>
+    | hysteria<tag, outbound_tag, dns_server_tag, inbound_tag>
+    | shadowtls<tag, outbound_tag, dns_server_tag, inbound_tag>
+    | vless<tag, outbound_tag, dns_server_tag, inbound_tag>
+    | tuic<tag, outbound_tag, dns_server_tag, inbound_tag>
+    | hysteria2<tag, outbound_tag, dns_server_tag, inbound_tag>
+    | anytls<tag, outbound_tag, dns_server_tag, inbound_tag>
+    | tun<tag, rule_set_tag>
+    | redirect<tag, inbound_tag>
+    | tproxy<tag, inbound_tag>
 
-interface direct<I extends string = never> extends listen<I> {
+interface direct<T extends string, I extends string> extends listen<T, I> {
     type: 'direct'
     network?: network
     override_address?: string
     override_port?: number
 }
-interface mixed<I extends string = never> extends listen<I> {
+interface mixed<T extends string, I extends string> extends listen<T, I> {
     type: 'mixed'
     users?: auth[]
     set_system_proxy?: boolean
 }
-interface socks<I extends string = never> extends listen<I> {
+interface socks<T extends string, I extends string> extends listen<T, I> {
     type: 'socks'
     users?: auth[]
 }
-interface http<O extends string = never, DS extends string = never, I extends string = never> extends listen<I> {
+interface http<T extends string, O extends string, DS extends string, I extends string> extends listen<T, I> {
     type: 'http'
     users?: auth[]
     set_system_proxy?: boolean
     tls?: tls<O, DS>
 }
-interface shadowsocks<I extends string = never> extends listen<I> {
+interface shadowsocks<T extends string, I extends string> extends listen<T, I> {
     type: 'shadowsocks'
     network?: network
     method: shadowsocks_method
@@ -111,14 +81,14 @@ interface shadowsocks<I extends string = never> extends listen<I> {
     destinations?: [user & server]
     multiplex?: multiplex
 }
-interface vmess<O extends string = never, DS extends string = never, I extends string = never> extends listen<I> {
+interface vmess<T extends string, O extends string, DS extends string, I extends string> extends listen<T, I> {
     type: 'vmess'
     users: vmess_user[]
     tls?: tls<O, DS>
     multiplex?: multiplex
     transport?: transport
 }
-interface trojan<O extends string = never, DS extends string = never, I extends string = never> extends listen<I> {
+interface trojan<T extends string, O extends string, DS extends string, I extends string> extends listen<T, I> {
     type: 'trojan'
     users: user[]
     tls?: tls<O, DS>
@@ -129,13 +99,13 @@ interface trojan<O extends string = never, DS extends string = never, I extends 
     multiplex?: multiplex
     transport?: transport
 }
-interface naive<O extends string = never, DS extends string = never, I extends string = never> extends listen<I> {
+interface naive<T extends string, O extends string, DS extends string, I extends string> extends listen<T, I> {
     type: 'naive'
     users: auth[]
     network?: network
     tls?: tls<O, DS>
 }
-interface hysteria<O extends string = never, DS extends string = never, I extends string = never> extends listen<I> {
+interface hysteria<T extends string, O extends string, DS extends string, I extends string> extends listen<T, I> {
     type: 'hysteria'
     up: string
     up_mbps: number
@@ -149,7 +119,7 @@ interface hysteria<O extends string = never, DS extends string = never, I extend
     disable_mtu_discovery?: boolean
     tls: tls<O, DS>
 }
-interface shadowtls<O extends string = never, DS extends string = never, I extends string = never> extends listen<I> {
+interface shadowtls<T extends string, O extends string, DS extends string, I extends string> extends listen<T, I> {
     type: 'shadowtls'
     version?: 1 | 2 | 3
     password?: string
@@ -161,14 +131,14 @@ interface shadowtls<O extends string = never, DS extends string = never, I exten
     strict_mode?: boolean
     wildcard_sni?: 'off' | 'authed' | 'all'
 }
-interface vless<O extends string = never, DS extends string = never, I extends string = never> extends listen<I> {
+interface vless<T extends string, O extends string, DS extends string, I extends string> extends listen<T, I> {
     type: 'vless'
     users: vless_user[]
     tls?: tls<O, DS>
     multiplex?: multiplex
     transport?: transport
 }
-interface tuic<O extends string = never, DS extends string = never, I extends string = never> extends listen<I> {
+interface tuic<T extends string, O extends string, DS extends string, I extends string> extends listen<T, I> {
     type: 'tuic'
     users: tuic_user[]
     congestion_control?: 'cubic' | 'new_reno' | 'bbr'
@@ -177,7 +147,7 @@ interface tuic<O extends string = never, DS extends string = never, I extends st
     heartbeat?: duration
     tls: tls<O, DS>
 }
-interface hysteria2<O extends string = never, DS extends string = never, I extends string = never> extends listen<I> {
+interface hysteria2<T extends string, O extends string, DS extends string, I extends string> extends listen<T, I> {
     type: 'hysteria2'
     up_mbps?: number
     down_mbps?: number
@@ -191,7 +161,7 @@ interface hysteria2<O extends string = never, DS extends string = never, I exten
     masquerade?: string
     brutal_debug?: boolean
 }
-interface anytls<O extends string = never, DS extends string = never, I extends string = never> extends listen<I> {
+interface anytls<T extends string, O extends string, DS extends string, I extends string> extends listen<T, I> {
     type: 'anytls'
     users: user[]
     /**
@@ -200,7 +170,7 @@ interface anytls<O extends string = never, DS extends string = never, I extends 
     padding_scheme?: listable<string>
     tls?: tls<O, DS>
 }
-interface tun<RS extends string> extends item_with_tag {
+interface tun<T extends string, RS extends string> extends item_with_tag<T> {
     type: 'tun'
     interface_name?: string
     mtu?: number
@@ -238,10 +208,10 @@ interface tun_platform extends server {
     bypass_domain?: listable<string>
     match_domain?: listable<string>
 }
-interface redirect<I extends string = never> extends listen<I> {
+interface redirect<T extends string, I extends string> extends listen<T, I> {
     type: 'redirect'
 }
-interface tproxy<I extends string = never> extends listen<I> {
+interface tproxy<T extends string, I extends string> extends listen<T, I> {
     type: 'tproxy'
     network?: network
 }

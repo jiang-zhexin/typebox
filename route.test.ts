@@ -1,6 +1,6 @@
 import { createRule } from './route.ts'
 
-createRule({
+const _r = createRule({
     type: 'logical',
     mode: 'and',
     rules: [

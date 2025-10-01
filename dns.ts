@@ -25,80 +25,39 @@ import type { headers } from './types.ts'
  * ```
  */
 export const createDnsServer = <
-    const DS extends dns.server<OT[number] | string, ST[number] | string, DST[number] | string>,
-    const DST extends readonly string[] = never,
-    const ST extends readonly string[] = never,
-    const OT extends readonly string[] = never,
->(server: DS, _options?: {
-    /**
-     * @deprecated
-     */
-    assertExistDnsServers?: DST
-    /**
-     * @deprecated
-     */
-    assertExistService?: ST
-    /**
-     * @deprecated
-     */
-    assertExistOutbounds?: OT
-}): DS => server
+    tag extends string,
+    dns_server_tag extends string = never,
+    outbound_tag extends string = never,
+    service_tag extends string = never,
+>(server: dns.server<tag, outbound_tag, service_tag, dns_server_tag>): dns.server<tag, outbound_tag, service_tag, dns_server_tag> => server
 
 export const createDnsServers = <
-    const DS extends readonly dns.server<OT[number] | string, ST[number] | string, DS[number]['tag'] | DST[number]>[],
-    const OT extends readonly string[] = never,
-    const ST extends readonly string[] = never,
-    const DST extends readonly string[] = never,
->(server: DS, _options?: {
-    /**
-     * @deprecated
-     */
-    assertExistOutbounds?: OT
-    /**
-     * @deprecated
-     */
-    assertExistService?: ST
-    assertExistDnsServers?: DST
-}): DS => server
+    tag extends string,
+    outbound_tag extends string,
+    service_tag extends string,
+    DS extends dns.server<tag, outbound_tag, service_tag, DS['tag']>,
+>(server: DS[]): DS[] => server
 
 export const createDnsRule = <
-    const R extends rule<OT[number] | string, IT[number] | string, RS[number] | string, DS[number] | string>,
-    const OT extends readonly string[] = never,
-    const IT extends readonly string[] = never,
-    const RS extends readonly string[] = never,
-    const DS extends readonly string[] = never,
->(r: R, _options?: {
-    /**
-     * @deprecated
-     */
-    assertExistOutbounds?: OT
-    /**
-     * @deprecated
-     */
-    assertExistInbounds?: IT
-    /**
-     * @deprecated
-     */
-    assertExistRuleSet?: RS
-    /**
-     * @deprecated
-     */
-    assertExistDnsServers?: DS
-}): R => r
+    dns_server_tag extends string = never,
+    outbound_tag extends string = never,
+    inbound_tag extends string = never,
+    rule_set_tag extends string = never,
+>(r: rule<outbound_tag, inbound_tag, rule_set_tag, dns_server_tag>): rule<outbound_tag, inbound_tag, rule_set_tag, dns_server_tag> => r
 
 /**
  * You should not use this directly, instead use {@link createDnsServer} or {@link createDnsRule}.
  */
 export interface dns<
-    O extends string = never,
-    I extends string = never,
-    S extends string = never,
-    RS extends string = never,
-    DS extends readonly dns.server<O, S, DS[number]['tag']>[] = never,
+    outbound_tag extends string,
+    inbound_tag extends string,
+    service_tag extends string,
+    rule_set_tag extends string,
+    DS extends dns.server<string, outbound_tag, service_tag, DS['tag']>,
 > {
-    servers?: DS
-    rules?: rule<O | 'any', I, RS, DS[number]['tag']>[]
-    final?: DS[number]['tag']
+    servers?: DS[]
+    rules?: rule<outbound_tag | 'any', inbound_tag, rule_set_tag, DS['tag']>[]
+    final?: DS['tag']
     reverse_mapping?: boolean
     strategy?: strategy
     disable_cache?: boolean
@@ -118,27 +77,27 @@ export interface dns<
 }
 
 export declare namespace dns {
-    export type server<O extends string = never, S extends string = never, DS extends string = never> =
-        | legacy<O, DS>
-        | local<O, DS>
-        | hosts
-        | tcp<O, DS>
-        | udp<O, DS>
-        | tls<O, DS>
-        | quic<O, DS>
-        | https<O, DS>
-        | h3<O, DS>
-        | dhcp<O, DS>
-        | fakeip
-        | tailscale<O>
-        | resolved<S>
+    export type server<tag extends string, outbound_tag extends string, service_tag extends string, dns_server_tag extends string> =
+        | legacy<tag, outbound_tag, dns_server_tag>
+        | local<tag, outbound_tag, dns_server_tag>
+        | hosts<tag>
+        | tcp<tag, outbound_tag, dns_server_tag>
+        | udp<tag, outbound_tag, dns_server_tag>
+        | tls<tag, outbound_tag, dns_server_tag>
+        | quic<tag, outbound_tag, dns_server_tag>
+        | https<tag, outbound_tag, dns_server_tag>
+        | h3<tag, outbound_tag, dns_server_tag>
+        | dhcp<tag, outbound_tag, dns_server_tag>
+        | fakeip<tag>
+        | tailscale<tag, outbound_tag>
+        | resolved<tag, service_tag>
     export { rule }
 }
 /**
  * @deprecated Legacy DNS servers is deprecated and will be removed in sing-box 1.14.0
  * @since 1.12.0
  */
-interface legacy<O extends string = never, DS extends string = never> extends item_with_tag {
+interface legacy<T extends string, O extends string, DS extends string> extends item_with_tag<T> {
     address: string
     address_resolver?: DS
     address_strategy?: string
@@ -147,11 +106,11 @@ interface legacy<O extends string = never, DS extends string = never> extends it
     detour?: O
     client_subnet?: string
 }
-interface local<O extends string = never, DS extends string = never> extends dialer<O, DS>, item_with_tag {
+interface local<T extends string, O extends string, DS extends string> extends dialer<O, DS>, item_with_tag<T> {
     type: 'local'
     prefer_go?: boolean
 }
-interface hosts extends item_with_tag {
+interface hosts<T extends string> extends item_with_tag<T> {
     type: 'hosts'
     /**
      * List of paths to hosts files.
@@ -170,7 +129,7 @@ interface hosts extends item_with_tag {
      */
     predefined?: Record<string, listable<string>>
 }
-interface tcp<O extends string = never, DS extends string = never> extends dialer<O, DS>, item_with_tag {
+interface tcp<T extends string, O extends string, DS extends string> extends dialer<O, DS>, item_with_tag<T> {
     type: 'tcp'
     server: string
     /**
@@ -178,7 +137,7 @@ interface tcp<O extends string = never, DS extends string = never> extends diale
      */
     server_port?: number
 }
-interface udp<O extends string = never, DS extends string = never> extends dialer<O, DS>, item_with_tag {
+interface udp<T extends string, O extends string, DS extends string> extends dialer<O, DS>, item_with_tag<T> {
     type: 'udp'
     server: string
     /**
@@ -186,7 +145,7 @@ interface udp<O extends string = never, DS extends string = never> extends diale
      */
     server_port?: number
 }
-interface tls<O extends string = never, DS extends string = never> extends dialer<O, DS>, item_with_tag {
+interface tls<T extends string, O extends string, DS extends string> extends dialer<O, DS>, item_with_tag<T> {
     type: 'tls'
     server: string
     /**
@@ -195,7 +154,7 @@ interface tls<O extends string = never, DS extends string = never> extends diale
     server_port?: number
     tls?: client_tls
 }
-interface quic<O extends string = never, DS extends string = never> extends dialer<O, DS>, item_with_tag {
+interface quic<T extends string, O extends string, DS extends string> extends dialer<O, DS>, item_with_tag<T> {
     type: 'quic'
     server: string
     /**
@@ -204,7 +163,7 @@ interface quic<O extends string = never, DS extends string = never> extends dial
     server_port?: number
     tls?: client_tls
 }
-interface https<O extends string = never, DS extends string = never> extends dialer<O, DS>, item_with_tag {
+interface https<T extends string, O extends string, DS extends string> extends dialer<O, DS>, item_with_tag<T> {
     type: 'https'
     server: string
     /**
@@ -218,7 +177,7 @@ interface https<O extends string = never, DS extends string = never> extends dia
     headers?: headers
     tls?: client_tls
 }
-interface h3<O extends string = never, DS extends string = never> extends dialer<O, DS>, item_with_tag {
+interface h3<T extends string, O extends string, DS extends string> extends dialer<O, DS>, item_with_tag<T> {
     type: 'h3'
     server: string
     /**
@@ -232,11 +191,11 @@ interface h3<O extends string = never, DS extends string = never> extends dialer
     headers?: headers
     tls?: client_tls
 }
-interface dhcp<O extends string = never, DS extends string = never> extends dialer<O, DS>, item_with_tag {
+interface dhcp<T extends string, O extends string, DS extends string> extends dialer<O, DS>, item_with_tag<T> {
     type: 'dhcp'
     interface?: string
 }
-interface fakeip extends item_with_tag {
+interface fakeip<T extends string> extends item_with_tag<T> {
     type: 'fakeip'
     /**
      * @example 198.18.0.0/15
@@ -247,7 +206,7 @@ interface fakeip extends item_with_tag {
      */
     inet6_range: string
 }
-interface tailscale<O extends string = never> extends item_with_tag {
+interface tailscale<T extends string, O extends string> extends item_with_tag<T> {
     type: 'tailscale'
     /**
      * The tag of the Tailscale endpoint.
@@ -259,15 +218,29 @@ interface tailscale<O extends string = never> extends item_with_tag {
      */
     accept_default_resolvers?: boolean
 }
-interface resolved<S extends string = never> extends item_with_tag {
+interface resolved<T extends string, S extends string> extends item_with_tag<T> {
     type: 'resolved'
     service: S
     accept_default_resolvers?: boolean
 }
 
-type rule<O extends string, I extends string, RS extends string, DS extends string> = rule_item<O, I, RS, DS> & action<DS>
-type rule_item<O extends string, I extends string, RS extends string, DS extends string> = default_rule<O, I, RS> | logical_rule<O, I, RS, DS>
-type action<DS extends string> = action_route<DS> | action_route_options | action_reject | action_predefined
+type rule<
+    O extends string,
+    I extends string,
+    RS extends string,
+    DS extends string,
+> = rule_item<O, I, RS, DS> & action<DS>
+type rule_item<
+    O extends string,
+    I extends string,
+    RS extends string,
+    DS extends string,
+> = default_rule<O, I, RS> | logical_rule<O, I, RS, DS>
+type action<DS extends string> =
+    | action_route<DS>
+    | action_route_options
+    | action_reject
+    | action_predefined
 interface action_route<DS extends string> extends resolver<DS> {
     action?: 'route'
 }
@@ -279,7 +252,13 @@ interface action_predefined {
     /**
      * @default NOERROR
      */
-    rcode?: 'NOERROR' | 'FORMERR' | 'SERVFAIL' | 'NXDOMAIN' | 'NOTIMP' | 'REFUSED'
+    rcode?:
+        | 'NOERROR'
+        | 'FORMERR'
+        | 'SERVFAIL'
+        | 'NXDOMAIN'
+        | 'NOTIMP'
+        | 'REFUSED'
     /**
      * @example localhost. IN A 127.0.0.1
      * @example localhost. IN AAAA ::1
@@ -300,6 +279,11 @@ interface default_rule<O extends string, I extends string, RS extends string> ex
     rule_set_ip_cidr_accept_empty?: boolean
     ip_accept_any?: boolean
 }
-interface logical_rule<O extends string, I extends string, RS extends string, DS extends string> extends base_logical_rule {
+interface logical_rule<
+    O extends string,
+    I extends string,
+    RS extends string,
+    DS extends string,
+> extends base_logical_rule {
     rules: rule_item<O, I, RS, DS>[]
 }

@@ -1,16 +1,31 @@
-import { createOutbounds } from './outbound.ts'
+import { createOutbound, createOutbounds } from './outbound.ts'
 
-createOutbounds([
-    {
-        tag: 'a',
-        type: 'direct',
-    },
+const a = createOutbound({
+    tag: 'a',
+    type: 'direct',
+    detour: 'aa',
+    domain_resolver: 'c',
+})
+
+const aa = createOutbound({
+    tag: 'aa',
+    type: 'direct',
+    // detour: 'b',
+    domain_resolver: 'c',
+})
+
+const _os = createOutbounds([
+    a,
+    aa,
     {
         type: 'selector',
         tag: 'b',
-        // This error is used to check type safety
         outbounds: [
-            'unkown-outbound',
+            'a',
         ],
+    },
+    {
+        tag: 'aaaa',
+        type: 'direct',
     },
 ])

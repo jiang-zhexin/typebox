@@ -46,23 +46,23 @@ import type { service } from './service.ts'
  * You should not use this directly, instead use {@link createTypebox}.
  */
 export interface typebox<
-    O extends readonly outbound<O[number]['tag'] | E[number]['tag'], DS[number]['tag']>[] = never,
-    E extends readonly endpoint<O[number]['tag'] | E[number]['tag'], DS[number]['tag']>[] = never,
-    I extends readonly inbound<O[number]['tag'] | E[number]['tag'], DS[number]['tag'], I[number]['tag'] | E[number]['tag'], RS[number]['tag']>[] = never,
-    S extends readonly service<O[number]['tag'] | E[number]['tag'], I[number]['tag'] | E[number]['tag'], DS[number]['tag']>[] = never,
-    DS extends readonly dns.server<O[number]['tag'], S[number]['tag'], DS[number]['tag']>[] = never,
-    RS extends readonly route.rule_set<O[number]['tag'] | E[number]['tag']>[] = never,
+    O extends outbound<string, E['tag'] | O['tag'], DS['tag']>,
+    E extends endpoint<string, E['tag'] | O['tag'], DS['tag']>,
+    I extends inbound<string, E['tag'] | O['tag'], DS['tag'], E['tag'] | I['tag'], RS['tag']>,
+    S extends service<string, E['tag'] | O['tag'], E['tag'] | I['tag'], DS['tag']>,
+    DS extends dns.server<string, E['tag'] | O['tag'], S['tag'], DS['tag']>,
+    RS extends route.rule_set<string, E['tag'] | O['tag']>,
 > {
     $schema?: string
     log?: log
-    dns?: dns<O[number]['tag'] | E[number]['tag'], I[number]['tag'] | E[number]['tag'], S[number]['tag'], RS[number]['tag'], DS>
-    endpoints?: E
-    inbounds?: I
-    outbounds?: O
-    route?: route<O[number]['tag'] | E[number]['tag'], I[number]['tag'] | E[number]['tag'], RS, DS[number]['tag']>
-    services?: S
+    dns?: dns<E['tag'] | O['tag'], E['tag'] | I['tag'], S['tag'], RS['tag'], DS>
+    endpoints?: E[]
+    inbounds?: I[]
+    outbounds?: O[]
+    route?: route<E['tag'] | O['tag'], E['tag'] | I['tag'], DS['tag'], RS>
+    services?: S[]
     experimental?: experimental
-    ntp?: ntp<O[number]['tag'] | E[number]['tag'], DS[number]['tag']>
+    ntp?: ntp<E['tag'] | O['tag'], DS['tag']>
     certificate?: certificate
 }
 
@@ -83,10 +83,16 @@ export interface typebox<
  * ```
  */
 export const createTypebox = <
-    const O extends readonly outbound<O[number]['tag'] | E[number]['tag'], DS[number]['tag']>[] = never,
-    const E extends readonly endpoint<O[number]['tag'] | E[number]['tag'], DS[number]['tag']>[] = never,
-    const I extends readonly inbound<O[number]['tag'] | E[number]['tag'], DS[number]['tag'], I[number]['tag'] | E[number]['tag'], RS[number]['tag']>[] = never,
-    const S extends readonly service<O[number]['tag'] | E[number]['tag'], I[number]['tag'] | E[number]['tag'], DS[number]['tag']>[] = never,
-    const DS extends readonly dns.server<O[number]['tag'], S[number]['tag'], DS[number]['tag']>[] = never,
-    const RS extends readonly route.rule_set<O[number]['tag'] | E[number]['tag']>[] = never,
+    outbound_tag extends string,
+    inbound_tag extends string,
+    endpoint_tag extends string,
+    dns_server_tag extends string,
+    rule_set_tag extends string,
+    service_tag extends string,
+    DS extends dns.server<dns_server_tag, E['tag'] | O['tag'], S['tag'], DS['tag']> = never,
+    RS extends route.rule_set<rule_set_tag, E['tag'] | O['tag']> = never,
+    O extends outbound<outbound_tag, E['tag'] | O['tag'], DS['tag']> = never,
+    E extends endpoint<endpoint_tag, E['tag'] | O['tag'], DS['tag']> = never,
+    I extends inbound<inbound_tag, E['tag'] | O['tag'], DS['tag'], E['tag'] | I['tag'], RS['tag']> = never,
+    S extends service<service_tag, E['tag'] | O['tag'], E['tag'] | I['tag'], DS['tag']> = never,
 >(typebox: typebox<O, E, I, S, DS, RS>): typebox<O, E, I, S, DS, RS> => typebox

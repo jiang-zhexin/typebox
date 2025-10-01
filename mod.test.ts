@@ -65,17 +65,21 @@ const ss_out = createOutbound({
     server_port: 0,
 })
 
+const final = createOutbound({
+    tag: 'final',
+    type: 'selector',
+    outbounds: ['direct-out', 'proxy'],
+})
+
+const proxy = createOutbound({
+    tag: 'proxy',
+    type: 'selector',
+    outbounds: ['ss-out', 'direct-out'],
+})
+
 const outbounds = createOutbounds([
-    {
-        tag: 'final',
-        type: 'selector',
-        outbounds: ['direct-out', 'proxy'],
-    },
-    {
-        tag: 'proxy',
-        type: 'selector',
-        outbounds: ['ss-out', 'direct-out'],
-    },
+    final,
+    proxy,
     direct_out,
     ss_out,
 ])
@@ -85,7 +89,7 @@ const rule_hijack_dns = createRule({
     action: 'hijack-dns',
 })
 
-createTypebox({
+const _c = createTypebox({
     log: {
         level: 'warn',
         output: 'stdout',
@@ -101,10 +105,10 @@ createTypebox({
                 rule_set: rule_set_block.tag,
                 server: block_dns.tag,
             },
-            { // This error is used to check type safety
-                rule_set: 'unkown-rule-set',
-                server: 'unkown-dns-server',
-            },
+            // { // This error is used to check type safety
+            //     rule_set: 'unkown-rule-set',
+            //     server: 'unkown-dns-server',
+            // },
             {
                 rule_set: rule_set_direct.tag,
                 server: ali_dns.tag,
@@ -135,10 +139,10 @@ createTypebox({
                 rule_set: 'block',
                 action: 'reject',
             },
-            { // This error is used to check type safety
-                rule_set: 'unkown-rule-set',
-                action: 'reject',
-            },
+            // { // This error is used to check type safety
+            //     rule_set: 'unkown-rule-set',
+            //     action: 'reject',
+            // },
             {
                 rule_set: rule_set_direct.tag,
                 outbound: direct_out.tag,

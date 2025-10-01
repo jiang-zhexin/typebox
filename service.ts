@@ -8,32 +8,22 @@
  * ```
  */
 
-import type { dialer, item_with_tag, listable, listen, server } from './types.ts'
+import type { dialer, listable, listen, server } from './types.ts'
 import type { client_tls, server_tls } from './tls.ts'
 
 export const createService = <
-    const S extends service<O[number] | string, I[number] | string, DS[number] | string>,
-    const O extends readonly string[] = never,
-    const I extends readonly string[] = never,
-    const DS extends readonly string[] = never,
->(service: S, _options?: {
-    /**
-     * @deprecated
-     */
-    assertExistOutbounds?: O
-    /**
-     * @deprecated
-     */
-    assertExistInbounds?: I
-    /**
-     * @deprecated
-     */
-    assertExistDnsServers?: DS
-}): S => service
+    tag extends string,
+    outbound_tag extends string,
+    inbound_tag extends string,
+    dns_server_tag extends string,
+>(service: service<tag, outbound_tag, inbound_tag, dns_server_tag>): service<tag, outbound_tag, inbound_tag, dns_server_tag> => service
 
-export type service<O extends string = never, I extends string = never, DS extends string = never> = derp<O, I, DS> | resolved<I> | ssm_api<O, I, DS>
+export type service<tag extends string, outbound_tag extends string, inbound_tag extends string, dns_server_tag extends string> =
+    | derp<tag, outbound_tag, inbound_tag, dns_server_tag>
+    | resolved<tag, inbound_tag>
+    | ssm_api<tag, outbound_tag, inbound_tag, dns_server_tag>
 
-interface derp<O extends string = never, I extends string = never, DS extends string = never> extends listen<I>, item_with_tag {
+interface derp<T extends string, O extends string, I extends string, DS extends string> extends listen<T, I> {
     type: 'derp'
     tls: server_tls<O, DS>
     config_path: string
@@ -43,14 +33,14 @@ interface derp<O extends string = never, I extends string = never, DS extends st
     mesh_with?: listable<mesh_with<O, DS>>
     mesh_psk?: string
     mesh_psk_file?: string
-    stun?: stun
+    stun?: stun<T, I>
 }
 
-interface resolved<I extends string = never> extends listen<I>, item_with_tag {
+interface resolved<T extends string, I extends string> extends listen<T, I> {
     type: 'resolved'
 }
 
-interface ssm_api<O extends string = never, I extends string = never, DS extends string = never> extends listen<I>, item_with_tag {
+interface ssm_api<T extends string, O extends string, I extends string, DS extends string> extends listen<T, I> {
     type: 'ssm-api'
     servers: { [key: string]: I }
     cache_path?: string
@@ -66,6 +56,6 @@ interface mesh_with<O extends string, DS extends string> extends dialer<O, DS>, 
     tls?: client_tls
 }
 
-interface stun<I extends string = never> extends listen<I> {
+interface stun<T extends string, I extends string> extends listen<T, I> {
     enable: true
 }
