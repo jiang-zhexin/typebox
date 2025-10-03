@@ -4,9 +4,12 @@
 
 This project provides TypeScript types for the entire sing-box config.
 
-## Try TypeBox Online
+## Try TypeBox in browser
 
-You can try TypeBox online on [TypeBox Playground](https://typebox.zhexin.org). It runs entirely in the browser, so it is almost identical to the local setup but doesn't require installing anything on your machine.
+You can try TypeBox in browser: [TypeBox Playground](https://typebox.zhexin.org). It runs entirely in the browser, so it is almost identical to the local setup but doesn't require installing anything on your machine.
+
+> [!IMPORTANT]
+> All data is stored in your browser's local storage, so it won't be sent to any server.
 
 ## How to use?
 
