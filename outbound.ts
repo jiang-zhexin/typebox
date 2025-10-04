@@ -194,6 +194,11 @@ interface anytls<T extends string, O extends string, DS extends string> extends 
      * @default 30s
      */
     idle_session_timeout?: duration
+    /**
+     * In the check, at least the first n idle sessions are kept open.
+     * @default 0
+     */
+    min_idle_session?: number
     tls?: tls
 }
 interface tor<T extends string, O extends string, DS extends string> extends dialer<O, DS>, item_with_tag<T> {
