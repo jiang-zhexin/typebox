@@ -9,7 +9,7 @@
  */
 
 import type { action_reject, base_default_rule, base_logical_rule, default_rule_with_metadata } from './rule.ts'
-import type { duration, item_with_tag, listable, network_strategy, resolver, sniff_protocol } from './types.ts'
+import type { duration, item_with_tag, listable, network_strategy, network_type, resolver, sniff_protocol } from './types.ts'
 
 /**
  * @example
@@ -63,6 +63,8 @@ export interface route<
     default_mark?: number
     default_domain_resolver?: dns_server_tag | resolver<dns_server_tag>
     default_network_strategy?: network_strategy
+    default_network_type?: listable<network_type>
+    default_fallback_network_type?: listable<network_type>
     default_fallback_delay?: duration
 }
 
