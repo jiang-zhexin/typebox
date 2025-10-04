@@ -62,6 +62,8 @@ export interface dialer<O extends string, DS extends string> {
     udp_fragment?: boolean
     domain_resolver?: DS | resolver<DS>
     network_strategy?: network_strategy
+    network_type?: listable<network_type>
+    fallback_network_type?: listable<network_type>
     fallback_delay?: duration
     network_fallback_delay?: duration
     /**
@@ -100,3 +102,5 @@ export interface listen<T extends string, I extends string> extends item_with_ta
     udp_timeout?: duration
     detour?: I
 }
+
+export type network_type = 'wifi' | 'cellular' | 'ethernet' | 'other'
