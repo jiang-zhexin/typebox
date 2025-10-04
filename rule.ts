@@ -1,4 +1,4 @@
-import type { listable, network, sniff_protocol } from './types.ts'
+import type { listable, network, network_type, sniff_protocol } from './types.ts'
 
 interface rule {
     invert?: boolean
@@ -52,5 +52,3 @@ export interface action_reject {
     method?: 'default' | 'drop'
     no_drop?: boolean
 }
-
-type network_type = 'wifi' | 'cellular' | 'ethernet' | 'other'
