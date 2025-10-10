@@ -22,6 +22,10 @@ export interface client_tls extends base_tls {
     fragment_fallback_delay?: duration
     record_fragment?: boolean
     certificate_public_key_sha256?: listable<string>
+    client_certificate?: listable<string>
+    client_certificate_path?: string
+    client_key?: listable<string>
+    client_key_path?: string
 }
 
 interface base_tls {
