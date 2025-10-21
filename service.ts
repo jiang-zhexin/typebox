@@ -8,7 +8,7 @@
  * ```
  */
 
-import type { dialer, listable, listen, server } from './types.ts'
+import type { dialer, headers, listable, listen, server } from './types.ts'
 import type { client_tls, server_tls } from './tls.ts'
 
 export const createService = <
@@ -22,6 +22,7 @@ export type service<tag extends string, outbound_tag extends string, inbound_tag
     | derp<tag, outbound_tag, inbound_tag, dns_server_tag>
     | resolved<tag, inbound_tag>
     | ssm_api<tag, outbound_tag, inbound_tag, dns_server_tag>
+    | ccm<tag, outbound_tag, inbound_tag, dns_server_tag>
 
 interface derp<T extends string, O extends string, I extends string, DS extends string> extends listen<T, I> {
     type: 'derp'
@@ -45,6 +46,21 @@ interface ssm_api<T extends string, O extends string, I extends string, DS exten
     servers: { [key: string]: I }
     cache_path?: string
     tls?: server_tls<O, DS>
+}
+
+interface ccm<T extends string, O extends string, I extends string, DS extends string> extends Omit<listen<T, I>, 'detour'> {
+    type: 'ccm'
+    credential_path?: string
+    usages_path?: string
+    users?: ccm_user[]
+    headers?: headers
+    detour?: O
+    tls: server_tls<O, DS>
+}
+
+interface ccm_user {
+    name?: string
+    token?: string
 }
 
 interface verify_client_url<O extends string, DS extends string> extends dialer<O, DS> {
