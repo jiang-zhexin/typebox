@@ -16,7 +16,7 @@ export const createCacheFile = (c: cache_file): cache_file => c
 
 export const createClashApi = (c: clash_api): clash_api => c
 
-export const createV2rayApi = (v: clash_api): clash_api => v
+export const createV2rayApi = (v: v2ray_api): v2ray_api => v
 
 /**
  * You should not use this directly, instead use {@link createExperimental}.
