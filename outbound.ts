@@ -62,6 +62,7 @@ export type outbound<tag extends string, outbound_tag extends string, dns_server
     | shadowsocks<tag, outbound_tag, dns_server_tag>
     | vmess<tag, outbound_tag, dns_server_tag>
     | trojan<tag, outbound_tag, dns_server_tag>
+    | naive<tag, outbound_tag, dns_server_tag>
     | hysteria<tag, outbound_tag, dns_server_tag>
     | shadowtls<tag, outbound_tag, dns_server_tag>
     | vless<tag, outbound_tag, dns_server_tag>
@@ -125,6 +126,14 @@ interface trojan<T extends string, O extends string, DS extends string> extends 
     tls?: tls
     multiplex?: multiplex
     transport?: transport
+}
+interface naive<T extends string, O extends string, DS extends string> extends remote<T, O, DS>, server {
+    type: 'naive'
+    username?: string
+    password?: string
+    insecure_concurrency?: number
+    extra_headers: headers
+    tls: tls
 }
 interface hysteria<T extends string, O extends string, DS extends string> extends remote<T, O, DS>, server {
     type: 'hysteria'
