@@ -59,6 +59,15 @@ export interface dialer<O extends string, DS extends string> {
     connect_timeout?: duration
     tcp_fast_open?: boolean
     tcp_multi_path?: boolean
+    disable_tcp_keep_alive?: boolean
+    /**
+     * @default 5m
+     */
+    tcp_keep_alive?: duration
+    /**
+     * @default 75s
+     */
+    tcp_keep_alive_interval?: duration
     udp_fragment?: boolean
     domain_resolver?: DS | resolver<DS>
     network_strategy?: network_strategy
