@@ -132,7 +132,8 @@ interface naive<T extends string, O extends string, DS extends string> extends r
     username?: string
     password?: string
     insecure_concurrency?: number
-    extra_headers: headers
+    extra_headers?: headers
+    udp_over_tcp?: udp_over_tcp
     tls: tls
 }
 interface hysteria<T extends string, O extends string, DS extends string> extends remote<T, O, DS>, server {
@@ -260,7 +261,7 @@ interface multiplex {
     }
 }
 
-interface udp_over_tcp {
+type udp_over_tcp = boolean | {
     enabled: true
     version: 1 | 2
 }
