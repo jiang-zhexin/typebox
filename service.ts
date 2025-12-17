@@ -23,6 +23,7 @@ export type service<tag extends string, outbound_tag extends string, inbound_tag
     | resolved<tag, inbound_tag>
     | ssm_api<tag, outbound_tag, inbound_tag, dns_server_tag>
     | ccm<tag, outbound_tag, inbound_tag, dns_server_tag>
+    | ocm<tag, outbound_tag, inbound_tag, dns_server_tag>
 
 interface derp<T extends string, O extends string, I extends string, DS extends string> extends listen<T, I> {
     type: 'derp'
@@ -52,13 +53,23 @@ interface ccm<T extends string, O extends string, I extends string, DS extends s
     type: 'ccm'
     credential_path?: string
     usages_path?: string
-    users?: ccm_user[]
+    users?: token_auth[]
     headers?: headers
     detour?: O
     tls: server_tls<O, DS>
 }
 
-interface ccm_user {
+interface ocm<T extends string, O extends string, I extends string, DS extends string> extends Omit<listen<T, I>, 'detour'> {
+    type: 'ocm'
+    credential_path?: string
+    usages_path?: string
+    users?: token_auth[]
+    headers?: headers
+    detour?: O
+    tls: server_tls<O, DS>
+}
+
+interface token_auth {
     name?: string
     token?: string
 }
