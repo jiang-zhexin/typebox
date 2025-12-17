@@ -134,7 +134,26 @@ interface naive<T extends string, O extends string, DS extends string> extends r
     insecure_concurrency?: number
     extra_headers?: headers
     udp_over_tcp?: udp_over_tcp
-    tls: tls
+    tls: Omit<
+        tls,
+        | 'alpn'
+        | 'min_version'
+        | 'max_version'
+        | 'cipher_suites'
+        | 'kernel_tx'
+        | 'kernel_rx'
+        | 'curve_preferences'
+        | 'insecure'
+        | 'utls'
+        | 'reality'
+        | 'fragment'
+        | 'fragment_fallback_delay'
+        | 'record_fragment'
+        | 'client_certificate'
+        | 'client_certificate_path'
+        | 'client_key'
+        | 'client_key_path'
+    >
 }
 interface hysteria<T extends string, O extends string, DS extends string> extends remote<T, O, DS>, server {
     type: 'hysteria'
