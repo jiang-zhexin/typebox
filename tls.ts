@@ -62,6 +62,7 @@ interface server_ech extends base_ech {
 interface client_ech extends base_ech {
     config?: listable<string>
     config_path?: string
+    query_server_name?: string
 }
 
 interface base_reality {
