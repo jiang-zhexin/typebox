@@ -103,6 +103,10 @@ interface naive<T extends string, O extends string, DS extends string, I extends
     type: 'naive'
     users: auth[]
     network?: network
+    /**
+     * @default bbr
+     */
+    quic_congestion_control?: 'bbr' | 'bbr_standard' | 'bbr2' | 'bbr2_variant' | 'cubic' | 'reno'
     tls?: tls<O, DS>
 }
 interface hysteria<T extends string, O extends string, DS extends string, I extends string> extends listen<T, I> {

@@ -134,6 +134,11 @@ interface naive<T extends string, O extends string, DS extends string> extends r
     insecure_concurrency?: number
     extra_headers?: headers
     udp_over_tcp?: udp_over_tcp
+    quic?: boolean
+    /**
+     * @default bbr
+     */
+    quic_congestion_control?: 'bbr' | 'bbr2' | 'cubic' | 'reno'
     tls: Omit<
         tls,
         | 'alpn'
