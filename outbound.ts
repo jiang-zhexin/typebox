@@ -158,6 +158,7 @@ interface naive<T extends string, O extends string, DS extends string> extends r
         | 'client_certificate_path'
         | 'client_key'
         | 'client_key_path'
+        | 'certificate_public_key_sha256'
     >
 }
 interface hysteria<T extends string, O extends string, DS extends string> extends remote<T, O, DS>, server {
