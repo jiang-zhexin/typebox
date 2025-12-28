@@ -87,11 +87,13 @@ interface dns01_ali {
     access_key_id: string
     access_key_secret: string
     region_id: string
+    security_token: string
 }
 
 interface dns01_cf {
     provider: 'cloudflare'
     api_token: string
+    zone_token: string
 }
 
 interface acme {
