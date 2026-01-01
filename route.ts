@@ -74,11 +74,26 @@ export declare namespace route {
 
 type rule<O extends string, I extends string, RS extends string, DS extends string> = rule_item<O, I, RS, DS> & action<O, DS>
 type rule_item<O extends string, I extends string, RS extends string, DS extends string> = default_rule<I, RS, O> | logical_rule<O, I, RS, DS>
-type action<O extends string, DS extends string> = action_route<O> | action_route_options | action_reject | action_dns | action_sniff | action_resolve<DS>
+type action<O extends string, DS extends string> =
+    | action_route<O>
+    | action_bypass<O>
+    | action_reject
+    | action_dns
+    | action_route_options
+    | action_sniff
+    | action_resolve<DS>
 interface action_route<O extends string> extends options {
     action?: 'route'
     outbound: O
 }
+interface action_bypass<O extends string> extends options {
+    action?: 'bypass'
+    outbound: O
+}
+interface action_dns {
+    action: 'hijack-dns'
+}
+
 interface action_route_options extends options {
     action: 'route-options'
 }
@@ -99,9 +114,6 @@ interface options {
      * Conflict with `tls_fragment`.
      */
     tls_record_fragment?: boolean
-}
-interface action_dns {
-    action: 'hijack-dns'
 }
 interface action_sniff {
     action: 'sniff'
