@@ -93,6 +93,27 @@ interface tailscale<T extends string, O extends string, DS extends string> exten
      */
     advertise_exit_node?: boolean
     /**
+     * The port to listen on for incoming relay connections from other Tailscale nodes.
+     */
+    relay_server_port?: number
+    /**
+     * Static endpoints to advertise for the relay server.
+     */
+    relay_server_static_endpoints?: string[]
+    /**
+     * Create a system TUN interface for Tailscale.
+     */
+    system_interface?: boolean
+    /**
+     * Custom TUN interface name.
+     * @default tailscale
+     */
+    system_interface_name?: string
+    /**
+     * Override the TUN MTU.
+     */
+    system_interface_mtu?: number
+    /**
      * UDP NAT expiration time.
      * @default 5m
      */
