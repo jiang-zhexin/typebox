@@ -53,6 +53,7 @@ export interface dialer<O extends string, DS extends string> {
     bind_interface?: string
     inet4_bind_address?: string
     inet6_bind_address?: string
+    bind_address_no_port?: boolean
     protect_path?: string
     routing_mark?: number
     reuse_addr?: boolean
