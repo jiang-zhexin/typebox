@@ -186,9 +186,18 @@ interface tun<T extends string, RS extends string> extends item_with_tag<T> {
     auto_redirect_input_mark?: string
     auto_redirect_output_mark?: string
     /**
+     * @default 0x2025
+     */
+    auto_redirect_reset_mark?: string
+    /**
+     * @default 100
+     */
+    auto_redirect_nfqueue?: number
+    /**
      * @default 32768
      */
     auto_redirect_iproute2_fallback_rule_index?: number
+    exclude_mptcp?: boolean
     loopback_address?: listable<string>
     strict_route?: boolean
     route_address?: listable<string>
