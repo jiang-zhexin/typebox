@@ -164,4 +164,4 @@ interface logical_headless_rule extends base_logical_rule {
     rules: headless_rule[]
 }
 
-type quic_client = 'chrimium' | 'safari' | 'firefox' | 'quic-go'
+type quic_client = 'chromium' | 'safari' | 'firefox' | 'quic-go'
