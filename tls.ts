@@ -80,7 +80,7 @@ interface client_reality extends base_reality {
     public_key: string
 }
 
-type dns01 = dns01_ali | dns01_cf
+type dns01 = dns01_ali | dns01_cf | acmedns
 
 interface dns01_ali {
     provider: 'alidns'
@@ -94,6 +94,14 @@ interface dns01_cf {
     provider: 'cloudflare'
     api_token: string
     zone_token: string
+}
+
+interface acmedns {
+    provider: 'acmedns'
+    username: string
+    password: string
+    subdomain: string
+    server_url: string
 }
 
 interface acme {
