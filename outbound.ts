@@ -116,7 +116,7 @@ interface vmess<T extends string, O extends string, DS extends string> extends r
     global_padding?: boolean
     authenticated_length?: boolean
     tls?: tls
-    packet_encoding?: 'packetaddr' | 'xudp'
+    packet_encoding?: '' | 'packetaddr' | 'xudp'
     multiplex?: multiplex
     transport?: transport
 }
@@ -186,7 +186,7 @@ interface vless<T extends string, O extends string, DS extends string> extends r
     uuid: string
     flow?: 'xtls-rprx-vision'
     tls?: tls
-    packet_encoding?: 'packetaddr' | 'xudp'
+    packet_encoding?: '' | 'packetaddr' | 'xudp'
     multiplex?: multiplex
     transport?: transport
 }
