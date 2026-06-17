@@ -281,13 +281,6 @@ interface base_hysteria2<
    */
   bbr_profile?: "conservative" | "standard" | "aggressive";
   brutal_debug?: boolean;
-  realm?: {
-    server_url: string;
-    token?: string;
-    realm_id: string;
-    stun_servers: string[];
-    http_client?: H | headless_http_client<O, DS>;
-  };
 }
 type hysteria2<
   T extends string,
@@ -296,7 +289,20 @@ type hysteria2<
   H extends string,
 > =
   & base_hysteria2<T, O, DS, H>
-  & hy_server_port;
+  & (
+    | (hy_server_port & { realm?: never })
+    | {
+      realm: {
+        server_url: string;
+        token?: string;
+        realm_id: string;
+        stun_servers: string[];
+        http_client?: H | headless_http_client<O, DS>;
+      };
+      server_port?: never;
+      server_ports?: never;
+    }
+  );
 interface anytls<T extends string, O extends string, DS extends string>
   extends remote<T, O, DS>, server {
   type: "anytls";
