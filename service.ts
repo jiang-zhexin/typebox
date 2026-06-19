@@ -130,7 +130,7 @@ interface api<
     | true
     | string
     | {
-      enable: true;
+      enabled: true;
       /**
        * @default dashboard
        */
@@ -285,5 +285,5 @@ interface mesh_with<O extends string, DS extends string>
 }
 
 interface stun<T extends string, I extends string> extends listen<T, I> {
-  enable: true;
+  enabled: true;
 }
