@@ -122,17 +122,22 @@ interface http<T extends string, O extends string, DS extends string>
   header?: headers;
   tls?: tls;
 }
-interface shadowsocks<T extends string, O extends string, DS extends string>
-  extends remote<T, O, DS>, server {
-  type: "shadowsocks";
-  method: shadowsocks_method;
-  password: string;
-  plugin?: "obfs-local" | "v2ray-plugin";
-  plugin_opts?: string;
-  network?: network;
-  udp_over_tcp?: udp_over_tcp;
-  multiplex?: multiplex;
-}
+type shadowsocks<T extends string, O extends string, DS extends string> =
+  & remote<T, O, DS>
+  & server
+  & {
+    type: "shadowsocks";
+    method: shadowsocks_method;
+    password: string;
+    plugin?: "obfs-local" | "v2ray-plugin";
+    plugin_opts?: string;
+    network?: network;
+  }
+  /** udp_over_tcp and multiplex are mutually exclusive */
+  & (
+    | { udp_over_tcp?: udp_over_tcp; multiplex?: never }
+    | { udp_over_tcp?: never; multiplex?: multiplex }
+  );
 interface vmess<T extends string, O extends string, DS extends string>
   extends remote<T, O, DS>, server {
   type: "vmess";
