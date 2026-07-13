@@ -298,7 +298,7 @@ type rule_item<
   I extends string,
   RS extends string,
   DS extends string,
-> = default_rule<O, I, RS> | logical_rule<O, I, RS, DS>;
+> = default_rule<O, I, RS, DS> | logical_rule<O, I, RS, DS>;
 type action<DS extends string> =
   | action_route<DS>
   | action_route_options
@@ -334,8 +334,12 @@ interface action_predefined {
   ns?: listable<string>;
   extra?: listable<string>;
 }
-interface default_rule<O extends string, I extends string, RS extends string>
-  extends default_rule_with_metadata<I, RS> {
+interface default_rule<
+  O extends string,
+  I extends string,
+  RS extends string,
+  DS extends string,
+> extends default_rule_with_metadata<I, RS> {
   query_type?: listable<string | number>;
   /**
    * @deprecated outbound rule items are deprecated and will be removed in sing-box 1.14.0
@@ -348,9 +352,7 @@ interface default_rule<O extends string, I extends string, RS extends string>
    * @since 1.14.0
    */
   rule_set_ip_cidr_accept_empty?: boolean;
-  preferred_by?: listable<
-    "hosts" | "local" | "mdns" | "tailscale" | "resolved"
-  >;
+  preferred_by?: listable<NoInfer<DS>>;
   match_response?: boolean;
   ip_accept_any?: boolean;
   response_rcode?: dns_rcode;

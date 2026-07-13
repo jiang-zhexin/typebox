@@ -181,7 +181,7 @@ interface default_rule<I extends string, RS extends string, O extends string>
    * Match specified outbounds' preferred routes.
    * Only support the tag of endpoint tailscale/wireguard/bridge now.
    */
-  preferred_by?: listable<O>;
+  preferred_by?: listable<NoInfer<O>>;
 }
 interface logical_rule<
   O extends string,
