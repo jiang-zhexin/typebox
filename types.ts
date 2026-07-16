@@ -140,3 +140,5 @@ export interface listen<T extends string, I extends string>
 }
 
 export type network_type = "wifi" | "cellular" | "ethernet" | "other";
+
+export type non_empty_array<T> = [T, ...T[]];

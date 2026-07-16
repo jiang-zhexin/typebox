@@ -12,6 +12,7 @@ import type { outbound } from "./outbound.ts";
 import type { route } from "./route.ts";
 import type { rule_set } from "./rule_set.ts";
 import type { service } from "./service.ts";
+import type { non_empty_array } from "./types.ts";
 
 export interface schema {
   $schema?: string;
@@ -21,19 +22,25 @@ export interface schema {
     string,
     string,
     string,
-    dns.server<string, string, string, string>
+    string,
+    string
   >;
-  endpoints?: endpoint<string, string, string>[];
-  inbounds?: inbound<string, string, string, string, string, string, string>[];
-  outbounds?: outbound<string, string, string, string>[];
+  endpoints?: non_empty_array<endpoint<string, string, string>>;
+  inbounds?: non_empty_array<
+    inbound<string, string, string, string, string, string, string>
+  >;
+  outbounds?: non_empty_array<outbound<string, string, string, string>>;
   route?: route<
     string,
     string,
     string,
     string,
-    route.rule_set<string, string, string, string>
+    string,
+    string
   >;
-  services?: service<string, string, string, string, string, string>[];
+  services?: non_empty_array<
+    service<string, string, string, string, string, string>
+  >;
   experimental?: experimental;
   ntp?: ntp<string, string>;
   certificate?: certificate;
@@ -43,8 +50,8 @@ export interface schema {
     string,
     string
   >[];
-  http_clients?: http_client<string, string, string>[];
-  network_namespaces?: network_namespace[];
+  http_clients?: non_empty_array<http_client<string, string, string>>;
+  network_namespaces?: non_empty_array<network_namespace>;
 }
 
 export type rule_set_schema = { $schema?: string } & rule_set;

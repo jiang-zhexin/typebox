@@ -19,6 +19,7 @@ import type {
   listable,
   listen,
   network,
+  non_empty_array,
   resolver,
   server,
   shadowsocks_method,
@@ -56,21 +57,34 @@ export function createInbound<
 
 export function createInbounds<
   tag extends string,
-  outbound_tag extends string,
-  dns_server_tag extends string,
-  rule_set_tag extends string,
-  certificate_provider_tag extends string,
-  http_client_tag extends string,
-  I extends inbound<
+  outbound_tag extends string = never,
+  dns_server_tag extends string = never,
+  rule_set_tag extends string = never,
+  certificate_provider_tag extends string = never,
+  http_client_tag extends string = never,
+>(
+  inbounds: non_empty_array<
+    inbound<
+      tag,
+      outbound_tag,
+      dns_server_tag,
+      NoInfer<tag>,
+      rule_set_tag,
+      certificate_provider_tag,
+      http_client_tag
+    >
+  >,
+): non_empty_array<
+  inbound<
     tag,
     outbound_tag,
     dns_server_tag,
-    I["tag"],
+    NoInfer<tag>,
     rule_set_tag,
     certificate_provider_tag,
     http_client_tag
-  >,
->(inbounds: I[]): I[] {
+  >
+> {
   return inbounds;
 }
 

@@ -17,7 +17,7 @@ const rule_set_proxy = createRuleSet({
   type: "remote",
   format: "binary",
   url: "",
-  // download_detour: 'unkown-outbound',
+  // download_detour: "unkown-outbound",
 });
 const rule_set_direct = createRuleSet({
   tag: "direct",
@@ -106,8 +106,8 @@ const _c = createTypebox({
         server: block_dns.tag,
       },
       // { // This error is used to check type safety
-      //     rule_set: 'unkown-rule-set',
-      //     server: 'unkown-dns-server',
+      //   rule_set: "unkown-rule-set",
+      //   server: "unkown-dns-server",
       // },
       {
         rule_set: rule_set_direct.tag,
@@ -140,8 +140,8 @@ const _c = createTypebox({
         action: "reject",
       },
       // { // This error is used to check type safety
-      //     rule_set: 'unkown-rule-set',
-      //     action: 'reject',
+      //   rule_set: "unkown-rule-set",
+      //   action: "reject",
       // },
       {
         rule_set: rule_set_direct.tag,

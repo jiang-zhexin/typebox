@@ -72,14 +72,25 @@ export function createRule<
  * You should not use this directly, instead use {@link createRuleSet} or {@link createRule}.
  */
 export interface route<
+  tag extends string,
+  rule_set_tag extends string,
   outbound_tag extends string,
   inbound_tag extends string,
   dns_server_tag extends string,
   http_client_tag extends string,
-  RS extends rule_set<string, outbound_tag, http_client_tag, dns_server_tag>,
 > {
-  rules?: rule<outbound_tag, inbound_tag, RS["tag"], dns_server_tag>[];
-  rule_set?: RS[];
+  rules?: rule<
+    outbound_tag,
+    inbound_tag,
+    rule_set_tag,
+    dns_server_tag
+  >[];
+  rule_set?: rule_set<
+    tag,
+    outbound_tag,
+    http_client_tag,
+    dns_server_tag
+  >[];
   default_http_client?: http_client_tag;
   final?: outbound_tag;
   find_process?: boolean;
@@ -181,7 +192,7 @@ interface default_rule<I extends string, RS extends string, O extends string>
    * Match specified outbounds' preferred routes.
    * Only support the tag of endpoint tailscale/wireguard/bridge now.
    */
-  preferred_by?: listable<NoInfer<O>>;
+  preferred_by?: listable<O>;
 }
 interface logical_rule<
   O extends string,

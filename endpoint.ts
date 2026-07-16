@@ -8,7 +8,13 @@
  * ```
  */
 
-import type { dialer, duration, item_with_tag, listable } from "./types.ts";
+import type {
+  dialer,
+  duration,
+  item_with_tag,
+  listable,
+  non_empty_array,
+} from "./types.ts";
 
 export function createEndpoint<
   tag extends string,
@@ -22,10 +28,13 @@ export function createEndpoint<
 
 export function createEndpoints<
   tag extends string,
-  outbound_tag extends string,
-  dns_server_tag extends string,
-  E extends endpoint<tag, outbound_tag | E["tag"], dns_server_tag>,
->(endpoints: E[]): E[] {
+  outbound_tag extends string = never,
+  dns_server_tag extends string = never,
+>(
+  endpoints: non_empty_array<
+    endpoint<tag, outbound_tag | NoInfer<tag>, dns_server_tag>
+  >,
+): non_empty_array<endpoint<tag, outbound_tag | NoInfer<tag>, dns_server_tag>> {
   return endpoints;
 }
 

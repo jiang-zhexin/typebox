@@ -18,6 +18,7 @@ import type {
   item_with_tag,
   listable,
   network,
+  non_empty_array,
   server,
   shadowsocks_method,
 } from "./types.ts";
@@ -62,10 +63,15 @@ export function createOutbound<
  */
 export function createOutbounds<
   tag extends string,
-  dns_serever_tag extends string,
-  http_client_tag extends string,
-  O extends outbound<tag, O["tag"], dns_serever_tag, http_client_tag>,
->(outbounds: O[]): O[] {
+  dns_serever_tag extends string = never,
+  http_client_tag extends string = never,
+>(
+  outbounds: non_empty_array<
+    outbound<tag, NoInfer<tag>, dns_serever_tag, http_client_tag>
+  >,
+): non_empty_array<
+  outbound<tag, NoInfer<tag>, dns_serever_tag, http_client_tag>
+> {
   return outbounds;
 }
 
