@@ -23,6 +23,7 @@ import type {
   resolver,
   server,
   shadowsocks_method,
+  udp_nat,
 } from "./types.ts";
 
 export function createInbound<
@@ -408,7 +409,8 @@ type snell6 = {
   version: 6;
   mode?: "default" | "unshaped" | "unsafe-raw";
 };
-interface tun<T extends string, RS extends string> extends item_with_tag<T> {
+interface tun<T extends string, RS extends string>
+  extends item_with_tag<T>, udp_nat {
   type: "tun";
   interface_name?: string;
   /**
@@ -459,7 +461,6 @@ interface tun<T extends string, RS extends string> extends item_with_tag<T> {
   endpoint_independent_nat?: boolean;
   include_mac_address?: listable<string>;
   exclude_mac_address?: listable<string>;
-  udp_timeout?: string;
   stack?: "system" | "gvisor" | "mixed";
   platform?: {
     http_proxy: tun_platform;
@@ -473,7 +474,8 @@ interface tun_platform extends server {
 interface redirect<T extends string, I extends string> extends listen<T, I> {
   type: "redirect";
 }
-interface tproxy<T extends string, I extends string> extends listen<T, I> {
+interface tproxy<T extends string, I extends string>
+  extends listen<T, I>, udp_nat {
   type: "tproxy";
   network?: network;
 }

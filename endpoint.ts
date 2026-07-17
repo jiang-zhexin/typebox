@@ -14,6 +14,7 @@ import type {
   item_with_tag,
   listable,
   non_empty_array,
+  udp_nat,
 } from "./types.ts";
 
 export function createEndpoint<
@@ -50,7 +51,7 @@ export type endpoint<
   | tailscale<tag, outbound_tag, dns_server_tag>;
 
 interface wireguard<T extends string, O extends string, DS extends string>
-  extends dialer<O, DS>, item_with_tag<T> {
+  extends dialer<O, DS>, item_with_tag<T>, udp_nat {
   type: "wireguard";
   name?: string;
   system?: boolean;
@@ -59,7 +60,6 @@ interface wireguard<T extends string, O extends string, DS extends string>
   private_key: string;
   listen_port: number;
   peers: peer[];
-  udp_timeout?: duration;
   workers?: number;
 }
 interface tailscale<T extends string, O extends string, DS extends string>

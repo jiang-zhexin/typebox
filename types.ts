@@ -142,3 +142,25 @@ export interface listen<T extends string, I extends string>
 export type network_type = "wifi" | "cellular" | "ethernet" | "other";
 
 export type non_empty_array<T> = [T, ...T[]];
+
+export interface udp_nat {
+  /**
+   * @default 5m
+   */
+  udp_timeout?: duration;
+  /**
+   * @default endpoint_independent
+   */
+  udp_mapping?:
+    | "endpoint_independent"
+    | "address_dependent"
+    | "address_and_port_dependent";
+  /**
+   * @default endpoint_independent
+   */
+  udp_filtering?:
+    | "endpoint_independent"
+    | "address_dependent"
+    | "address_and_port_dependent	";
+  udp_nat_max?: number;
+}
