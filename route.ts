@@ -215,7 +215,8 @@ interface inline_rule_set<T extends string> extends item_with_tag<T> {
 }
 
 type rule_set_data_format = "source" | "binary";
-interface outline_rule_set<T extends string> extends item_with_tag<T> {
+interface outline_rule_set<T extends string> {
+  tag: listable<T>;
   format?: rule_set_data_format;
 }
 interface local_rule_set<T extends string> extends outline_rule_set<T> {
