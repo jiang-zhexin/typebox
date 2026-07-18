@@ -25,7 +25,7 @@ export interface schema {
     string,
     string
   >;
-  endpoints?: non_empty_array<endpoint<string, string, string>>;
+  endpoints?: non_empty_array<endpoint<string, string, string, string>>;
   inbounds?: non_empty_array<
     inbound<string, string, string, string, string, string, string>
   >;

@@ -8,12 +8,15 @@
  * ```
  */
 
+import type { cipher_suites, tls_version } from "./tls.ts";
 import type {
   dialer,
   duration,
   item_with_tag,
   listable,
+  listen,
   non_empty_array,
+  server,
   udp_nat,
 } from "./types.ts";
 
@@ -21,9 +24,10 @@ export function createEndpoint<
   tag extends string,
   outbound_tag extends string = never,
   dns_server_tag extends string = never,
+  inbound_tag extends string = never,
 >(
-  endpoint: endpoint<tag, outbound_tag, dns_server_tag>,
-): endpoint<tag, outbound_tag, dns_server_tag> {
+  endpoint: endpoint<tag, outbound_tag, dns_server_tag, inbound_tag>,
+): endpoint<tag, outbound_tag, dns_server_tag, inbound_tag> {
   return endpoint;
 }
 
@@ -31,11 +35,14 @@ export function createEndpoints<
   tag extends string,
   outbound_tag extends string = never,
   dns_server_tag extends string = never,
+  inbound_tag extends string = never,
 >(
   endpoints: non_empty_array<
-    endpoint<tag, outbound_tag | NoInfer<tag>, dns_server_tag>
+    endpoint<tag, outbound_tag | NoInfer<tag>, dns_server_tag, inbound_tag>
   >,
-): non_empty_array<endpoint<tag, outbound_tag | NoInfer<tag>, dns_server_tag>> {
+): non_empty_array<
+  endpoint<tag, outbound_tag | NoInfer<tag>, dns_server_tag, inbound_tag>
+> {
   return endpoints;
 }
 
@@ -46,9 +53,12 @@ export type endpoint<
   tag extends string,
   outbound_tag extends string,
   dns_server_tag extends string,
+  inbound_tag extends string,
 > =
   | wireguard<tag, outbound_tag, dns_server_tag>
-  | tailscale<tag, outbound_tag, dns_server_tag>;
+  | tailscale<tag, outbound_tag, dns_server_tag>
+  | openvpn_client<tag, outbound_tag, dns_server_tag>
+  | openvpn_server<tag, inbound_tag>;
 
 interface wireguard<T extends string, O extends string, DS extends string>
   extends dialer<O, DS>, item_with_tag<T>, udp_nat {
@@ -142,6 +152,147 @@ interface tailscale<T extends string, O extends string, DS extends string>
    */
   ssh_server?: true | ssh_server;
 }
+type openvpn_client<T extends string, O extends string, DS extends string> =
+  & dialer<O, DS>
+  & item_with_tag<T>
+  & base_openvpn
+  & {
+    type: "openvpn-client";
+    remote_random: boolean;
+    username?: string;
+    password?: string;
+    auth_retry?: "none" | "nointeract" | "interact";
+    static_challenge?: string;
+    static_challenge_echo?: boolean;
+    tls: openvpn_outbound_tls;
+    mss_fix?: number;
+    fragment?: number;
+    compression?:
+      | "none"
+      | "no"
+      | "lz4"
+      | "lz4-v2"
+      | "stub"
+      | "stub-v2"
+      | "disabled"
+      | "off";
+    compression_lzo?:
+      | "none"
+      | "no"
+      | "yes"
+      | "adaptive"
+      | "asym"
+      | "disabled"
+      | "off";
+    allow_compression?: "no" | "asym" | "yes";
+    route_no_pull?: boolean;
+    pull_filters?: openvpn_pull_filter[];
+    routes?: listable<string>;
+    route_gateway?: string;
+    route_metric?: number;
+    redirect_gateway?: false;
+    redirect_gateway_flags?: listable<string>;
+    explicit_exit_notify?: number;
+  }
+  & (
+    | server
+    | { servers: openvpn_remote[] }
+  );
+
+type openvpn_server<T extends string, I extends string> =
+  & listen<T, I>
+  & Omit<base_openvpn, "udp_timeout">
+  & {
+    type: "openvpn-server";
+    max_clients?: number;
+    address: string;
+    topology?: "subnet" | "p2p" | "net30";
+    duplicate_cn?: boolean;
+    users?: { username: string; password: string }[];
+    tls: openvpn_inbound_tls;
+    push?: openvpn_push;
+  };
+
+interface base_openvpn extends udp_nat {
+  system?: boolean;
+  name?: string;
+  mtu?: number;
+  network?: "udp" | "tcp";
+  data_ciphers?: listable<string>;
+  data_ciphers_fallback?: string;
+  auth?: string;
+  ping_interval?: duration;
+  ping_restart?: duration;
+  renegotiate_interval?: duration;
+}
+interface openvpn_remote extends server {
+  network?: "udp" | "tcp";
+}
+interface openvpn_push {
+  routes?: listable<string>;
+  dns?: listable<string>;
+  redirect_gateway?: false;
+  redirect_gateway_flags?: listable<string>;
+  block_outside_dns?: boolean;
+  ping_interval?: duration;
+  ping_restart?: duration;
+}
+interface openvpn_pull_filter {
+  action: "ignore" | "accept" | "reject";
+  text: string;
+}
+type openvpn_inbound_tls =
+  & {
+    verify_client_certificate?: "require" | "optional" | "none";
+    control_wrap?: openvpn_control_wrap & { force_cookie?: boolean };
+  }
+  & (
+    | { certificate?: listable<string> }
+    | { certificate_path?: string }
+  )
+  & (
+    | { key?: listable<string> }
+    | { key_path?: string }
+  )
+  & (
+    | { client_certificate?: listable<string> }
+    | { client_certificate_path?: string }
+  );
+type openvpn_outbound_tls =
+  & {
+    server_name?: string;
+    server_name_type?: "name" | "subject" | "name-prefix";
+    peer_fingerprint?: listable<string>;
+    crl_path?: string;
+    remote_certificate_ku?: listable<string>;
+    remote_certificate_eku?: string;
+    version_min?: tls_version;
+    version_max?: tls_version;
+    cipher?: cipher_suites;
+    groups?: string;
+    control_wrap?: openvpn_control_wrap;
+  }
+  & (
+    | { certificate?: listable<string> }
+    | { certificate_path?: string }
+  )
+  & (
+    | { client_certificate?: listable<string> }
+    | { client_certificate_path?: string }
+  )
+  & (
+    | { client_key?: listable<string> }
+    | { client_key_path?: string }
+  );
+type openvpn_control_wrap =
+  & (
+    | { type: "tls_auth"; direction?: "server" | "client" }
+    | { type?: "tls_crypt" | "tls_crypt_v2" }
+  )
+  & (
+    | { key?: listable<string> }
+    | { key_path?: string }
+  );
 
 interface ssh_server {
   enabled: true;

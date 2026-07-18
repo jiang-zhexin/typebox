@@ -73,7 +73,8 @@ export interface typebox<
     endpoint<
       endpoint_tag,
       NoInfer<outbound_tag | endpoint_tag>,
-      NoInfer<dns_server_tag>
+      NoInfer<dns_server_tag>,
+      NoInfer<inbound_tag | endpoint_tag>
     >
   >;
   inbounds?: non_empty_array<

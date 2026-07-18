@@ -174,8 +174,8 @@ type fingerprint =
   | "android"
   | "random"
   | "randomized";
-type tls_version = "1.0" | "1.1" | "1.2" | "1.3";
-type cipher_suites =
+export type tls_version = "1.0" | "1.1" | "1.2" | "1.3";
+export type cipher_suites =
   | "TLS_RSA_WITH_AES_128_CBC_SHA"
   | "TLS_RSA_WITH_AES_256_CBC_SHA"
   | "TLS_RSA_WITH_AES_128_GCM_SHA256"
