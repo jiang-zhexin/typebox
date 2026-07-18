@@ -58,7 +58,8 @@ export type endpoint<
   | wireguard<tag, outbound_tag, dns_server_tag>
   | tailscale<tag, outbound_tag, dns_server_tag>
   | openvpn_client<tag, outbound_tag, dns_server_tag>
-  | openvpn_server<tag, inbound_tag>;
+  | openvpn_server<tag, inbound_tag>
+  | openconnect<tag, outbound_tag, dns_server_tag>;
 
 interface wireguard<T extends string, O extends string, DS extends string>
   extends dialer<O, DS>, item_with_tag<T>, udp_nat {
@@ -212,6 +213,96 @@ type openvpn_server<T extends string, I extends string> =
     tls: openvpn_inbound_tls;
     push?: openvpn_push;
   };
+
+type openconnect<T extends string, O extends string, DS extends string> =
+  & dialer<O, DS>
+  & item_with_tag<T>
+  & udp_nat
+  & {
+    system?: boolean;
+    name?: string;
+    server: string;
+    flavor?: "anyconnect" | "gp" | "fortinet" | "f5" | "pulse" | "nc";
+    username?: string;
+    password?: string;
+    auth_group?: string;
+    token?: openconnect_token;
+    reported_os?:
+      | "linux"
+      | "linux-64"
+      | "win"
+      | "mac-intel"
+      | "android"
+      | "apple-ios";
+    user_agent?: string;
+    csd?: openconnect_csd;
+    hip?: openconnect_hip;
+    tncc?: openconnect_tncc;
+    no_udp?: boolean;
+    allow_insecure_crypto?: boolean;
+    tls?: openconnect_tls;
+    form_entries?: openconnect_form_entry[];
+  };
+
+interface openconnect_token {
+  mode: "totp" | "hotp" | "stoken";
+  secret: string;
+  pin?: string;
+  password?: string;
+  device_id?: string;
+  counter?: number;
+}
+interface openconnect_csd {
+  wrapper_path?: string;
+}
+interface openconnect_hip {
+  wrapper_path?: string;
+}
+type openconnect_tncc =
+  | { wrapper_path?: string }
+  | {
+    device_id?: string;
+    user_agent?: string;
+    machine_identification_enabled?: boolean;
+    certificates?: openconnect_tncc_certificate[];
+  };
+type openconnect_tncc_certificate =
+  | { certificate?: listable<string> }
+  | { certificate_path?: string };
+
+type openconnect_tls =
+  & (
+    | { certificate_authority?: listable<string> }
+    | { certificate_authority_path?: string }
+  )
+  & (
+    | { client_certificate?: listable<string> }
+    | { client_certificate_path?: string }
+  )
+  & (
+    | { client_key?: listable<string> }
+    | { client_key_path?: string }
+  )
+  & (
+    | { mca_certificate?: listable<string> }
+    | { mca_certificate_path?: string }
+  )
+  & (
+    | { mca_key?: listable<string> }
+    | { mca_key_path?: string }
+  )
+  & {
+    client_key_password?: string;
+    mca_key_password?: string;
+  };
+
+interface openconnect_form_entry {
+  form_id?: string;
+  submission_key?: string;
+  name?: string;
+  value?: string;
+  promote?: boolean;
+}
 
 interface base_openvpn extends udp_nat {
   system?: boolean;
