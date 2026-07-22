@@ -1,0 +1,4 @@
+[submodule "sing-box"]
+	path = sing-box
+	url = git@github.com:SagerNet/sing-box.git
+	branch = testing
