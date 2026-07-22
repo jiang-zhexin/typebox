@@ -160,13 +160,13 @@ type openvpn_client<T extends string, O extends string, DS extends string> =
   & {
     type: "openvpn-client";
     remote_random: boolean;
+    address?: listable<string>;
     username?: string;
     password?: string;
     auth_retry?: "none" | "nointeract" | "interact";
     static_challenge?: string;
     static_challenge_echo?: boolean;
     tls: openvpn_outbound_tls;
-    mss_fix?: number;
     fragment?: number;
     compression?:
       | "none"
@@ -193,6 +193,10 @@ type openvpn_client<T extends string, O extends string, DS extends string> =
     route_metric?: number;
     redirect_gateway?: false;
     redirect_gateway_flags?: listable<string>;
+    redirect_private?: boolean;
+    block_ipv6?: boolean;
+    ping_restart_disabled?: boolean;
+    tls_timeout?: duration;
     explicit_exit_notify?: number;
   }
   & (
@@ -205,9 +209,10 @@ type openvpn_server<T extends string, I extends string> =
   & Omit<base_openvpn, "udp_timeout">
   & {
     type: "openvpn-server";
+    remote?: string;
+    remote_port?: number;
     max_clients?: number;
     address: string;
-    topology?: "subnet" | "p2p" | "net30";
     duplicate_cn?: boolean;
     users?: { username: string; password: string }[];
     tls: openvpn_inbound_tls;
@@ -226,6 +231,7 @@ type openconnect<T extends string, O extends string, DS extends string> =
     username?: string;
     password?: string;
     auth_group?: string;
+    cookie?: string;
     token?: openconnect_token;
     reported_os?:
       | "linux"
@@ -235,28 +241,61 @@ type openconnect<T extends string, O extends string, DS extends string> =
       | "android"
       | "apple-ios";
     user_agent?: string;
+    version?: string;
+    local_hostname?: string;
+    mobile?: openconnect_mobile;
     csd?: openconnect_csd;
     hip?: openconnect_hip;
     tncc?: openconnect_tncc;
+    fortinet_host_check?: openconnect_fortinet_host_check;
     no_udp?: boolean;
+    dtls_local_port?: number;
+    compression_disabled?: boolean;
+    compression_mode?: "stateless" | "all";
+    ipv6_disabled?: boolean;
+    http_keepalive_disabled?: boolean;
+    xml_post_disabled?: boolean;
+    external_auth_disabled?: boolean;
+    password_authentication_disabled?: boolean;
+    tcp_keep_alive_enabled?: boolean;
+    pfs?: boolean;
+    mtu?: number;
+    base_mtu?: number;
+    dpd_interval?: duration;
+    reconnect_timeout?: duration;
+    trojan_interval?: duration;
+    queue_length?: number;
     allow_insecure_crypto?: boolean;
     tls?: openconnect_tls;
     form_entries?: openconnect_form_entry[];
   };
 
-interface openconnect_token {
-  mode: "totp" | "hotp" | "stoken";
-  secret: string;
-  pin?: string;
-  password?: string;
-  device_id?: string;
-  counter?: number;
-}
+type openconnect_token =
+  & {
+    mode: "totp" | "hotp" | "stoken" | "oidc";
+    pin?: string;
+    password?: string;
+    device_id?: string;
+    counter?: number;
+  }
+  & (
+    | { secret: string }
+    | { secret_path: string }
+  );
 interface openconnect_csd {
   wrapper_path?: string;
 }
 interface openconnect_hip {
   wrapper_path?: string;
+}
+interface openconnect_mobile {
+  platform_version: string;
+  device_type: string;
+  device_unique_id: string;
+}
+interface openconnect_fortinet_host_check {
+  hostcheck?: string;
+  check_virtual_desktop?: string;
 }
 type openconnect_tncc =
   | { wrapper_path?: string }
@@ -292,6 +331,10 @@ type openconnect_tls =
     | { mca_key_path?: string }
   )
   & {
+    insecure?: boolean;
+    server_name?: string;
+    peer_fingerprint?: listable<string>;
+    system_trust_disabled?: boolean;
     client_key_password?: string;
     mca_key_password?: string;
   };
@@ -309,9 +352,26 @@ interface base_openvpn extends udp_nat {
   name?: string;
   mtu?: number;
   network?: "udp" | "tcp";
+  mode?: "tls" | "static_key";
+  peer_address?: string;
+  peer_address_ipv6?: string;
+  topology?: "net30" | "p2p" | "subnet";
+  static_key?: listable<string>;
+  static_key_path?: string;
+  key_direction?: "server" | "client";
+  cipher?: string;
   data_ciphers?: listable<string>;
   data_ciphers_fallback?: string;
   auth?: string;
+  mss_fix?: number;
+  mss_fix_disabled?: boolean;
+  mss_fix_mode?: "mtu" | "fixed";
+  replay_window?: number;
+  replay_window_time?: duration;
+  renegotiate_disabled?: boolean;
+  renegotiate_bytes?: number;
+  renegotiate_packets?: number;
+  handshake_window?: duration;
   ping_interval?: duration;
   ping_restart?: duration;
   renegotiate_interval?: duration;
@@ -322,11 +382,22 @@ interface openvpn_remote extends server {
 interface openvpn_push {
   routes?: listable<string>;
   dns?: listable<string>;
+  dns_servers?: openvpn_push_dns_server[];
+  search_domains?: listable<string>;
+  dhcp_options?: listable<string>;
   redirect_gateway?: false;
   redirect_gateway_flags?: listable<string>;
   block_outside_dns?: boolean;
   ping_interval?: duration;
   ping_restart?: duration;
+}
+interface openvpn_push_dns_server {
+  priority: number;
+  addresses: listable<string>;
+  resolve_domains?: listable<string>;
+  dnssec?: "yes" | "optional" | "no";
+  transport?: "plain" | "dot" | "doh";
+  sni?: string;
 }
 interface openvpn_pull_filter {
   action: "ignore" | "accept" | "reject";
@@ -335,6 +406,19 @@ interface openvpn_pull_filter {
 type openvpn_inbound_tls =
   & {
     verify_client_certificate?: "require" | "optional" | "none";
+    client_name?: string;
+    client_name_type?: "subject" | "name" | "name-prefix";
+    peer_fingerprint?: listable<string>;
+    crl_path?: string;
+    remote_certificate_ku?: listable<string>;
+    remote_certificate_eku?: string;
+    remote_certificate_tls?: "server" | "client" | "none";
+    certificate_profile?: "insecure" | "legacy" | "preferred" | "suiteb";
+    ns_certificate_type?: "server" | "client";
+    version_min?: tls_version;
+    version_max?: tls_version;
+    cipher?: cipher_suites;
+    groups?: string;
     control_wrap?: openvpn_control_wrap & { force_cookie?: boolean };
   }
   & (
@@ -357,6 +441,9 @@ type openvpn_outbound_tls =
     crl_path?: string;
     remote_certificate_ku?: listable<string>;
     remote_certificate_eku?: string;
+    remote_certificate_tls?: "server" | "client" | "none";
+    certificate_profile?: "insecure" | "legacy" | "preferred" | "suiteb";
+    ns_certificate_type?: "server" | "client";
     version_min?: tls_version;
     version_max?: tls_version;
     cipher?: cipher_suites;

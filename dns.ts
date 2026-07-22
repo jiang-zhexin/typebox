@@ -148,6 +148,8 @@ export declare namespace dns {
     | mdns<tag, outbound_tag, dns_server_tag>
     | fakeip<tag>
     | tailscale<tag, outbound_tag>
+    | openconnect<tag, outbound_tag>
+    | openvpn<tag, outbound_tag>
     | resolved<tag, service_tag>;
   export { rule };
 }
@@ -295,6 +297,25 @@ interface tailscale<T extends string, O extends string>
    * When enabled, single-label queries (e.g. my-device) are retried against each Tailscale search domain until one resolves.
    * Default resolvers are not consulted for single-label queries regardless of accept_default_resolvers.
    */
+  accept_search_domain?: boolean;
+}
+interface openconnect<T extends string, O extends string>
+  extends item_with_tag<T> {
+  type: "openconnect";
+  /**
+   * The tag of the Openconnect endpoint.
+   */
+  endpoint: O;
+  accept_default_resolvers?: boolean;
+  accept_search_domain?: boolean;
+}
+interface openvpn<T extends string, O extends string> extends item_with_tag<T> {
+  type: "openvpn";
+  /**
+   * The tag of the OpenVPN endpoint.
+   */
+  endpoint: O;
+  accept_default_resolvers?: boolean;
   accept_search_domain?: boolean;
 }
 interface resolved<T extends string, S extends string>
