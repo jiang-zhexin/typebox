@@ -58,6 +58,7 @@ export interface typebox<
   service_tag extends string,
   certificate_provider_tag extends string,
   http_client_tag extends string,
+  match_response_tag extends string,
 > {
   $schema?: string;
   log?: log;
@@ -67,7 +68,9 @@ export interface typebox<
     NoInfer<outbound_tag | endpoint_tag>,
     NoInfer<inbound_tag | endpoint_tag>,
     NoInfer<service_tag>,
-    NoInfer<rule_set_tag>
+    NoInfer<rule_set_tag>,
+    match_response_tag,
+    NoInfer<match_response_tag>
   >;
   endpoints?: non_empty_array<
     endpoint<
@@ -163,6 +166,7 @@ export function createTypebox<
   service_tag extends string = never,
   certificate_provider_tag extends string = never,
   http_client_tag extends string = never,
+  match_response_tag extends string = never,
 >(
   typebox: typebox<
     outbound_tag,
@@ -172,7 +176,8 @@ export function createTypebox<
     rule_set_tag,
     service_tag,
     certificate_provider_tag,
-    http_client_tag
+    http_client_tag,
+    match_response_tag
   >,
 ): typebox<
   outbound_tag,
@@ -182,7 +187,8 @@ export function createTypebox<
   rule_set_tag,
   service_tag,
   certificate_provider_tag,
-  http_client_tag
+  http_client_tag,
+  match_response_tag
 > {
   return typebox;
 }

@@ -8,11 +8,7 @@
  * ```
  */
 
-import type {
-  action_reject,
-  base_logical_rule,
-  default_rule_with_metadata,
-} from "./rule.ts";
+import type { base_logical_rule, default_rule_with_metadata } from "./rule.ts";
 import type { client_tls } from "./tls.ts";
 import type {
   dialer,
@@ -23,7 +19,6 @@ import type {
   listable,
   non_empty_array,
   options,
-  resolver,
   strategy,
 } from "./types.ts";
 
@@ -68,9 +63,25 @@ export function createDnsRule<
   outbound_tag extends string = never,
   inbound_tag extends string = never,
   rule_set_tag extends string = never,
+  match_response_tag extends string = never,
+  match_response_tag_noinfer extends string = never,
 >(
-  r: rule<outbound_tag, inbound_tag, rule_set_tag, dns_server_tag>,
-): rule<outbound_tag, inbound_tag, rule_set_tag, dns_server_tag> {
+  r: rule<
+    outbound_tag,
+    inbound_tag,
+    rule_set_tag,
+    dns_server_tag,
+    match_response_tag,
+    match_response_tag_noinfer
+  >,
+): rule<
+  outbound_tag,
+  inbound_tag,
+  rule_set_tag,
+  dns_server_tag,
+  match_response_tag,
+  match_response_tag_noinfer
+> {
   return r;
 }
 
@@ -84,6 +95,8 @@ export interface dns<
   inbound_tag extends string,
   service_tag extends string,
   rule_set_tag extends string,
+  match_response_tag extends string,
+  match_response_tag_noinfer extends string,
 > {
   servers?: dns.server<
     tag,
@@ -95,7 +108,9 @@ export interface dns<
     outbound_tag | "any",
     inbound_tag,
     rule_set_tag,
-    dns_server_tag
+    dns_server_tag,
+    match_response_tag,
+    match_response_tag_noinfer
   >[];
   final?: dns_server_tag;
   optimistic?: boolean | {
@@ -330,35 +345,62 @@ type rule<
   I extends string,
   RS extends string,
   DS extends string,
-> = rule_item<O, I, RS, DS> & action<DS>;
+  MS extends string,
+  MSN extends string,
+> = rule_item<O, I, RS, DS, MSN> & action<DS, MS>;
 type rule_item<
   O extends string,
   I extends string,
   RS extends string,
   DS extends string,
-> = default_rule<O, I, RS, DS> | logical_rule<O, I, RS, DS>;
-type action<DS extends string> =
+  MS extends string,
+> = default_rule<O, I, RS, DS, MS> | logical_rule<O, I, RS, DS, MS>;
+type action<DS extends string, MS extends string> =
   | action_route<DS>
   | action_route_options
-  | action_evaluate<DS>
+  | action_evaluate<DS, MS>
   | action_respond
   | action_reject
   | action_predefined;
-interface action_route<DS extends string> extends resolver<DS> {
-  action?: "route";
-}
+type action_route<DS extends string> =
+  & options
+  & {
+    action?: "route";
+    server: DS;
+    /**
+     * @deprecated strategy is deprecated and will be removed in sing-box 1.16.0
+     * @since 1.12.0
+     */
+    strategy?: strategy;
+  }
+  & (
+    | { race?: boolean }
+    | { speculative?: boolean }
+  );
 interface action_route_options extends options {
   action: "route-options";
 }
-interface action_evaluate<DS extends string> extends options {
+interface action_evaluate<DS extends string, MS extends string>
+  extends options {
   action: "evaluate";
   server: DS;
+  tag?: MS;
+  speculative?: boolean;
 }
 interface action_respond {
   action: "respond";
+  race?: boolean;
 }
+interface action_reject {
+  action: "reject";
+  race?: boolean;
+  method?: "default" | "drop" | "reply";
+  no_drop?: boolean;
+}
+
 interface action_predefined {
   action: "predefined";
+  race?: boolean;
   /**
    * @default NOERROR
    */
@@ -377,6 +419,7 @@ interface default_rule<
   I extends string,
   RS extends string,
   DS extends string,
+  MS extends string,
 > extends default_rule_with_metadata<I, RS> {
   query_type?: listable<string | number>;
   /**
@@ -387,11 +430,11 @@ interface default_rule<
   network?: listable<dns_network>;
   /**
    * @deprecated rule_set_ip_cidr_accept_empty is deprecated and will be removed in sing-box 1.16.0
-   * @since 1.14.0
+   * @since 1.10.0
    */
   rule_set_ip_cidr_accept_empty?: boolean;
   preferred_by?: listable<DS>;
-  match_response?: boolean;
+  match_response?: boolean | MS;
   ip_accept_any?: boolean;
   response_rcode?: dns_rcode;
   /**
@@ -408,8 +451,9 @@ interface logical_rule<
   I extends string,
   RS extends string,
   DS extends string,
+  MS extends string,
 > extends base_logical_rule {
-  rules: rule_item<O, I, RS, DS>[];
+  rules: rule_item<O, I, RS, DS, MS>[];
 }
 
 type dns_rcode =

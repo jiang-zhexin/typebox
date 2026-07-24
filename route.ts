@@ -9,11 +9,7 @@
  */
 
 import type { headless_http_client } from "./http_client.ts";
-import type {
-  action_reject,
-  base_logical_rule,
-  default_rule_with_metadata,
-} from "./rule.ts";
+import type { base_logical_rule, default_rule_with_metadata } from "./rule.ts";
 import type { headless_rule } from "./rule_set.ts";
 import type {
   duration,
@@ -139,6 +135,12 @@ interface action_bypass<O extends string> extends options {
   action?: "bypass";
   outbound: O;
 }
+interface action_reject {
+  action: "reject";
+  method?: "default" | "drop" | "reply";
+  no_drop?: boolean;
+}
+
 interface action_dns {
   action: "hijack-dns";
 }

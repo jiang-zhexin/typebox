@@ -23,6 +23,8 @@ export interface schema {
     string,
     string,
     string,
+    string,
+    string,
     string
   >;
   endpoints?: non_empty_array<endpoint<string, string, string, string>>;

@@ -58,9 +58,3 @@ export interface default_rule_with_metadata<I extends string, RS extends string>
   rule_set?: listable<RS>;
   rule_set_ip_cidr_match_source?: boolean;
 }
-
-export interface action_reject {
-  action: "reject";
-  method?: "default" | "drop" | "reply";
-  no_drop?: boolean;
-}
