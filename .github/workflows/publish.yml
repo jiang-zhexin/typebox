@@ -46,6 +46,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v6
+        with:
+          submodules: true
 
       - name: Build
         run: npx ts-json-schema-generator --path rule_set.ts --type "rule_set" -o rule_set.json
