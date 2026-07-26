@@ -69,7 +69,6 @@ export function createRule<
  */
 export interface route<
   tag extends string,
-  rule_set_tag extends string,
   outbound_tag extends string,
   inbound_tag extends string,
   dns_server_tag extends string,
@@ -78,7 +77,7 @@ export interface route<
   rules?: rule<
     outbound_tag,
     inbound_tag,
-    rule_set_tag,
+    NoInfer<tag>,
     dns_server_tag
   >[];
   rule_set?: rule_set<

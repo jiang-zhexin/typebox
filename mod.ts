@@ -64,13 +64,11 @@ export interface typebox<
   log?: log;
   dns?: dns<
     dns_server_tag,
-    NoInfer<dns_server_tag>,
     NoInfer<outbound_tag | endpoint_tag>,
     NoInfer<inbound_tag | endpoint_tag>,
     NoInfer<service_tag>,
     NoInfer<rule_set_tag>,
-    match_response_tag,
-    NoInfer<match_response_tag>
+    match_response_tag
   >;
   endpoints?: non_empty_array<
     endpoint<
@@ -101,7 +99,6 @@ export interface typebox<
   >;
   route?: route<
     rule_set_tag,
-    NoInfer<rule_set_tag>,
     NoInfer<outbound_tag | endpoint_tag>,
     NoInfer<inbound_tag | endpoint_tag>,
     NoInfer<dns_server_tag>,

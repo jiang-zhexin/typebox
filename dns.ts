@@ -90,29 +90,27 @@ export function createDnsRule<
  */
 export interface dns<
   tag extends string,
-  dns_server_tag extends string,
   outbound_tag extends string,
   inbound_tag extends string,
   service_tag extends string,
   rule_set_tag extends string,
   match_response_tag extends string,
-  match_response_tag_noinfer extends string,
 > {
   servers?: dns.server<
     tag,
     outbound_tag,
     service_tag,
-    dns_server_tag
+    NoInfer<tag>
   >[];
   rules?: rule<
     outbound_tag | "any",
     inbound_tag,
     rule_set_tag,
-    dns_server_tag,
+    NoInfer<tag>,
     match_response_tag,
-    match_response_tag_noinfer
+    NoInfer<match_response_tag>
   >[];
-  final?: dns_server_tag;
+  final?: NoInfer<tag>;
   optimistic?: boolean | {
     enabled: true;
     /**
