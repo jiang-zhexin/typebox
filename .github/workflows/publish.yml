@@ -48,15 +48,12 @@ jobs:
       - uses: actions/checkout@v6
 
       - name: Build
-        run: npx ts-json-schema-generator --path schema.ts --type "schema" -o schema.json
-
-      - name: Build
-        run: npx ts-json-schema-generator --path schema.ts --type "rule_set_schema" -o rule_set.json
+        run: npx ts-json-schema-generator --path rule_set.ts --type "rule_set" -o rule_set.json
 
       - name: Release
         uses: softprops/action-gh-release@v3
         with:
           prerelease: true
           files: |
-            schema.json
+            sing-box/docs/schema.json
             rule_set.json

@@ -6,10 +6,13 @@ export type default_headless_rule = v5;
 export type logical_headless_rule = logical_rule<v5>;
 
 export type rule_set =
-  | { version: 1 | 2; rules: rule<v1>[] }
-  | { version: 3; rules: rule<v3>[] }
-  | { version: 4; rules: rule<v4>[] }
-  | { version: 5; rules: rule<v5>[] };
+  & { $schema?: string }
+  & (
+    | { version: 1 | 2; rules: rule<v1>[] }
+    | { version: 3; rules: rule<v3>[] }
+    | { version: 4; rules: rule<v4>[] }
+    | { version: 5; rules: rule<v5>[] }
+  );
 
 type v1 = {
   type?: "default";
