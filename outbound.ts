@@ -330,6 +330,7 @@ interface anytls<T extends string, O extends string, DS extends string>
    * @default 0
    */
   min_idle_session?: number;
+  client_metadata?: string;
   tls?: tls;
 }
 type snell<T extends string, O extends string, DS extends string> =
