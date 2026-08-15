@@ -123,6 +123,17 @@ interface tailscale<T extends string, O extends string, DS extends string>
    */
   advertise_exit_node?: boolean;
   /**
+   * Tags to advertise for this node, for ACL enforcement purposes.
+   * @example ["tag:server"]
+   */
+  advertise_tags?: listable<string>;
+  /**
+   * The UDP port to listen on for WireGuard and peer-to-peer traffic.
+   * A port is automatically selected by default.
+   * @since 1.14.0
+   */
+  listen_port?: number;
+  /**
    * The port to listen on for incoming relay connections from other Tailscale nodes.
    */
   relay_server_port?: number;
@@ -152,6 +163,13 @@ interface tailscale<T extends string, O extends string, DS extends string>
    * Run a Tailscale SSH server on tailnet port 22.
    */
   ssh_server?: true | ssh_server;
+  /**
+   * The directory where files received from tailnet peers (Taildrop) are stored.
+   * Relative paths are resolved against the working directory, as `state_directory` is.
+   * @default Taildrop
+   * @since 1.14.0
+   */
+  taildrop_directory?: string;
 }
 type openvpn_client<T extends string, O extends string, DS extends string> =
   & dialer<O, DS>
