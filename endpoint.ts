@@ -177,7 +177,7 @@ type openvpn_client<T extends string, O extends string, DS extends string> =
   & base_openvpn
   & {
     type: "openvpn-client";
-    remote_random: boolean;
+    remote_random?: boolean;
     address?: listable<string>;
     username?: string;
     password?: string;
@@ -209,7 +209,7 @@ type openvpn_client<T extends string, O extends string, DS extends string> =
     routes?: listable<string>;
     route_gateway?: string;
     route_metric?: number;
-    redirect_gateway?: false;
+    redirect_gateway?: boolean;
     redirect_gateway_flags?: listable<string>;
     redirect_private?: boolean;
     block_ipv6?: boolean;
@@ -224,9 +224,10 @@ type openvpn_client<T extends string, O extends string, DS extends string> =
 
 type openvpn_server<T extends string, I extends string> =
   & listen<T, I>
-  & Omit<base_openvpn, "udp_timeout">
+  & Omit<base_openvpn, "udp_timeout" | "network">
   & {
     type: "openvpn-server";
+    network?: "tcp" | "udp";
     remote?: string;
     remote_port?: number;
     max_clients?: number;
@@ -369,7 +370,7 @@ interface base_openvpn extends udp_nat {
   system?: boolean;
   name?: string;
   mtu?: number;
-  network?: "udp" | "tcp";
+  network?: openvpn_network;
   mode?: "tls" | "static_key";
   peer_address?: string;
   peer_address_ipv6?: string;
@@ -395,15 +396,22 @@ interface base_openvpn extends udp_nat {
   renegotiate_interval?: duration;
 }
 interface openvpn_remote extends server {
-  network?: "udp" | "tcp";
+  network?: openvpn_network;
 }
+type openvpn_network =
+  | "udp"
+  | "udp4"
+  | "udp6"
+  | "tcp"
+  | "tcp4"
+  | "tcp6";
 interface openvpn_push {
   routes?: listable<string>;
   dns?: listable<string>;
   dns_servers?: openvpn_push_dns_server[];
   search_domains?: listable<string>;
   dhcp_options?: listable<string>;
-  redirect_gateway?: false;
+  redirect_gateway?: boolean;
   redirect_gateway_flags?: listable<string>;
   block_outside_dns?: boolean;
   ping_interval?: duration;

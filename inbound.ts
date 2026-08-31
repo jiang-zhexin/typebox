@@ -18,6 +18,7 @@ import type {
   item_with_tag,
   listable,
   listen,
+  memory_bytes,
   network,
   non_empty_array,
   resolver,
@@ -220,6 +221,7 @@ interface shadowsocks<T extends string, I extends string> extends listen<T, I> {
   users?: user[];
   destinations?: [user & server];
   multiplex?: multiplex;
+  managed?: boolean;
 }
 interface vmess<
   T extends string,
@@ -267,13 +269,7 @@ interface naive<
   /**
    * @default bbr
    */
-  quic_congestion_control?:
-    | "bbr"
-    | "bbr_standard"
-    | "bbr2"
-    | "bbr2_variant"
-    | "cubic"
-    | "reno";
+  quic_congestion_control?: "bbr" | "cubic" | "reno";
   tls?: tls<O, DS, C, H>;
 }
 interface hysteria<
@@ -296,6 +292,13 @@ interface hysteria<
   max_conn_client?: number;
   disable_mtu_discovery?: boolean;
   tls: tls<O, DS, C, H>;
+  idle_timeout?: duration;
+  keep_alive_period?: duration;
+  stream_receive_window?: memory_bytes;
+  connection_receive_window?: memory_bytes;
+  max_concurrent_streams?: number;
+  initial_packet_size?: number;
+  disable_path_mtu_discovery?: boolean;
 }
 interface shadowtls<
   T extends string,
@@ -343,6 +346,13 @@ interface tuic<
   zero_rtt_handshake?: boolean;
   heartbeat?: duration;
   tls: tls<O, DS, C, H>;
+  idle_timeout?: duration;
+  keep_alive_period?: duration;
+  stream_receive_window?: memory_bytes;
+  connection_receive_window?: memory_bytes;
+  max_concurrent_streams?: number;
+  initial_packet_size?: number;
+  disable_path_mtu_discovery?: boolean;
 }
 interface hysteria2<
   T extends string,
@@ -365,13 +375,32 @@ interface hysteria2<
    */
   bbr_profile?: "conservative" | "standard" | "aggressive";
   brutal_debug?: boolean;
+  idle_timeout?: duration;
+  keep_alive_period?: duration;
+  stream_receive_window?: memory_bytes;
+  connection_receive_window?: memory_bytes;
+  max_concurrent_streams?: number;
+  initial_packet_size?: number;
+  disable_path_mtu_discovery?: boolean;
   realm?: {
     server_url: string;
     token?: string;
     realm_id: string;
-    stun_servers: string[];
+    stun_servers: listable<string>;
     stun_domain_resolver?: DS | resolver<DS>;
     http_client?: H | headless_http_client<O, DS>;
+    ip_version?: 0 | 4 | 6;
+    port_mapping?: {
+      enabled: true;
+      /**
+       * @default 10s
+       */
+      timeout?: duration;
+      /**
+       * @default 10m
+       */
+      lifetime?: duration;
+    };
   };
 }
 interface anytls<
@@ -403,7 +432,7 @@ type snell<
   & (snell5 | snell6);
 type snell5 = {
   version: 5;
-  obfs_mode?: "none" | "http";
+  obfs_mode?: "none" | "http" | "tls";
 };
 type snell6 = {
   version: 6;
@@ -484,7 +513,7 @@ interface cloudflared<T extends string, O extends string, DS extends string>
   type: "cloudflared";
   token: string;
   ha_connections?: number;
-  protocol?: "quic" | "http2";
+  protocol?: "auto" | "quic" | "http2" | "h2mux";
   post_quantum?: boolean;
   edge_ip_version?: 0 | 4 | 6;
   datagram_version?: "v2" | "v3";
@@ -515,6 +544,7 @@ interface user {
 interface vmess_user {
   name: string;
   uuid: string;
+  alterId?: number;
 }
 interface hysteria_user {
   name: string;

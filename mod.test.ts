@@ -37,10 +37,6 @@ const fakeip = createDnsServer({
   inet4_range: "198.18.0.0/15",
   inet6_range: "fc00::/18",
 });
-const block_dns = createDnsServer({
-  tag: "block-dns",
-  address: "rcode://success",
-});
 
 const tun_in = createInbound({
   tag: "tun-in",
@@ -95,7 +91,7 @@ const _c = createTypebox({
     output: "stdout",
   },
   dns: {
-    servers: [ali_dns, fakeip, block_dns],
+    servers: [ali_dns, fakeip],
     rules: [
       {
         outbound: "any",
@@ -103,7 +99,7 @@ const _c = createTypebox({
       },
       {
         rule_set: rule_set_block.tag,
-        server: block_dns.tag,
+        action: "reject",
       },
       // { // This error is used to check type safety
       //   rule_set: "unkown-rule-set",
@@ -116,7 +112,7 @@ const _c = createTypebox({
       {
         query_type: "HTTPS",
         rule_set: "proxy",
-        server: block_dns.tag,
+        action: "reject",
       },
       {
         query_type: ["A", "AAAA"],

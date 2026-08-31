@@ -68,6 +68,7 @@ interface base_tls {
   kernel_tx?: boolean;
   kernel_rx?: boolean;
   curve_preferences?: listable<curve_preference>;
+  handshake_timeout?: duration;
 }
 
 interface base_ech {
@@ -103,7 +104,7 @@ interface client_ech extends base_ech {
 
 interface base_reality {
   enabled: true;
-  short_id: string;
+  short_id: listable<string>;
 }
 
 interface server_reality<O extends string, DS extends string>
@@ -156,6 +157,7 @@ interface acme {
     mac_key: string;
   };
   dns01_challenge?: dns01;
+  profile?: string;
 }
 
 interface utls {
@@ -164,6 +166,11 @@ interface utls {
 }
 
 type fingerprint =
+  | "chrome_psk"
+  | "chrome_psk_shuffle"
+  | "chrome_padding_psk_shuffle"
+  | "chrome_pq"
+  | "chrome_pq_psk"
   | "chrome"
   | "firefox"
   | "edge"

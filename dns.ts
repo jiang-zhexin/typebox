@@ -116,7 +116,7 @@ export interface dns<
     /**
      * @default 3d
      */
-    timeout: duration;
+    timeout?: duration;
   };
   timeout?: duration;
   reverse_mapping?: boolean;
@@ -124,21 +124,12 @@ export interface dns<
   disable_cache?: boolean;
   disable_expire?: boolean;
   /**
-   * @deprecated independent_cache is deprecated and will be removed in sing-box 1.14.0
+   * @deprecated independent_cache is deprecated and will be removed in sing-box 1.16.0
    * @since 1.14.0
    */
   independent_cache?: boolean;
   cache_capacity?: number;
   client_subnet?: string;
-  /**
-   * @deprecated Legacy fake-ip configuration is deprecated and will be removed in sing-box 1.14.0
-   * @since 1.12.0
-   */
-  fakeip?: {
-    enabled: true;
-    inet4_range: string;
-    inet6_range: string;
-  };
 }
 
 export declare namespace dns {
@@ -148,7 +139,6 @@ export declare namespace dns {
     service_tag extends string,
     dns_server_tag extends string,
   > =
-    | legacy<tag, outbound_tag, dns_server_tag>
     | local<tag, outbound_tag, dns_server_tag>
     | hosts<tag>
     | tcp<tag, outbound_tag, dns_server_tag>
@@ -165,20 +155,6 @@ export declare namespace dns {
     | openvpn<tag, outbound_tag>
     | resolved<tag, service_tag>;
   export { rule };
-}
-/**
- * @deprecated Legacy DNS servers is deprecated and will be removed in sing-box 1.14.0
- * @since 1.12.0
- */
-interface legacy<T extends string, O extends string, DS extends string>
-  extends item_with_tag<T> {
-  address: string;
-  address_resolver?: DS;
-  address_strategy?: string;
-  address_fallback_delay?: duration;
-  strategy?: strategy;
-  detour?: O;
-  client_subnet?: string;
 }
 interface local<T extends string, O extends string, DS extends string>
   extends dialer<O, DS>, item_with_tag<T> {
@@ -277,11 +253,15 @@ interface dhcp<T extends string, O extends string, DS extends string>
   extends dialer<O, DS>, item_with_tag<T> {
   type: "dhcp";
   interface?: string;
+  prefer_go?: boolean;
+  neighbor_domain?: listable<string>;
 }
 interface mdns<T extends string, O extends string, DS extends string>
   extends dialer<O, DS>, item_with_tag<T> {
   type: "mdns";
   interface?: listable<string>;
+  prefer_go?: boolean;
+  neighbor_domain?: listable<string>;
 }
 interface fakeip<T extends string> extends item_with_tag<T> {
   type: "fakeip";
@@ -420,6 +400,8 @@ interface default_rule<
   MS extends string,
 > extends default_rule_with_metadata<I, RS> {
   query_type?: listable<string | number>;
+  query_client_subnet?: listable<string>;
+  query_dnssec?: boolean;
   /**
    * @deprecated outbound rule items are deprecated and will be removed in sing-box 1.14.0
    * @since 1.12.0

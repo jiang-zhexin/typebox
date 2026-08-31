@@ -38,6 +38,17 @@ export type shadowsocks_method =
   | "aes-256-gcm"
   | "chacha20-ietf-poly1305"
   | "xchacha20-ietf-poly1305";
+/** legacy methods are only supported in the shadowsocks outbound */
+export type shadowsocks_legacy_method =
+  | "aes-128-ctr"
+  | "aes-192-ctr"
+  | "aes-256-ctr"
+  | "aes-128-cfb"
+  | "aes-192-cfb"
+  | "aes-256-cfb"
+  | "rc4-md5"
+  | "chacha20-ietf"
+  | "xchacha20";
 export type sniff_protocol =
   | "http"
   | "tls"
@@ -47,18 +58,10 @@ export type sniff_protocol =
   | "bittorrent"
   | "dtls"
   | "ssh"
-  | "rdp";
+  | "rdp"
+  | "ntp";
 
-export type network_strategy =
-  | "default"
-  | "fallback"
-  | "hybrid"
-  | "wifi"
-  | "cellular"
-  | "ethernet"
-  | "wifi_only"
-  | "cellular_only"
-  | "ethernet_only";
+export type network_strategy = "default" | "fallback" | "hybrid";
 export type network = "tcp" | "udp" | "icmp";
 export type dns_network = "tcp" | "udp";
 
@@ -94,7 +97,6 @@ export interface dialer<O extends string, DS extends string> {
   network_type?: listable<network_type>;
   fallback_network_type?: listable<network_type>;
   fallback_delay?: duration;
-  network_fallback_delay?: duration;
   /**
    * @deprecated domain_strategy is merged to domain_resolver in sing-box 1.12.0
    * @since 1.12.0
@@ -108,6 +110,7 @@ export interface options {
   client_subnet?: string;
   timeout?: duration;
   disable_optimistic_cache?: boolean;
+  remove_client_subnet?: boolean;
 }
 
 export interface resolver<DS extends string> extends options {
@@ -134,6 +137,15 @@ export interface listen<T extends string, I extends string>
   netns?: string;
   tcp_fast_open?: boolean;
   tcp_multi_path?: boolean;
+  disable_tcp_keep_alive?: boolean;
+  /**
+   * @default 5m
+   */
+  tcp_keep_alive?: duration;
+  /**
+   * @default 75s
+   */
+  tcp_keep_alive_interval?: duration;
   udp_fragment?: boolean;
   udp_timeout?: duration;
   detour?: I;
@@ -161,6 +173,6 @@ export interface udp_nat {
   udp_filtering?:
     | "endpoint_independent"
     | "address_dependent"
-    | "address_and_port_dependent	";
+    | "address_and_port_dependent";
   udp_nat_max?: number;
 }

@@ -9,7 +9,7 @@
  */
 
 import type { headless_http_client } from "./http_client.ts";
-import type { item_with_tag, listable } from "./types.ts";
+import type { duration, item_with_tag, listable } from "./types.ts";
 
 export function createCertificateProvider<
   tag extends string,
@@ -127,12 +127,22 @@ interface dns01_ali {
   access_key_secret: string;
   region_id: string;
   security_token: string;
+  ttl?: duration;
+  propagation_delay?: duration;
+  propagation_timeout?: duration;
+  resolvers?: listable<string>;
+  override_domain?: string;
 }
 
 interface dns01_cf {
   provider: "cloudflare";
   api_token: string;
   zone_token?: string;
+  ttl?: duration;
+  propagation_delay?: duration;
+  propagation_timeout?: duration;
+  resolvers?: listable<string>;
+  override_domain?: string;
 }
 
 interface acmedns {
@@ -141,4 +151,9 @@ interface acmedns {
   password: string;
   subdomain: string;
   server_url: string;
+  ttl?: duration;
+  propagation_delay?: duration;
+  propagation_timeout?: duration;
+  resolvers?: listable<string>;
+  override_domain?: string;
 }

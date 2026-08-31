@@ -8,7 +8,7 @@
  * ```
  */
 
-import type { duration, listable } from "./types.ts";
+import type { duration, listable, memory_bytes } from "./types.ts";
 
 export function createExperimental(e: experimental): experimental {
   return e;
@@ -33,6 +33,7 @@ export interface experimental {
   cache_file?: cache_file;
   clash_api?: clash_api;
   v2ray_api?: v2ray_api;
+  debug?: debug;
 }
 
 interface cache_file {
@@ -68,4 +69,15 @@ interface v2ray_api {
     outbounds?: string[];
     users?: string[];
   };
+}
+
+interface debug {
+  listen?: string;
+  gc_percent?: number;
+  max_stack?: number;
+  max_threads?: number;
+  panic_on_fault?: boolean;
+  trace_back?: string;
+  memory_limit?: memory_bytes;
+  oom_killer?: boolean;
 }

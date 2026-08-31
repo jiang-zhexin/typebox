@@ -121,6 +121,7 @@ type rule_item<
 type action<O extends string, DS extends string> =
   | action_route<O>
   | action_bypass<O>
+  | action_direct<DS>
   | action_reject
   | action_dns
   | action_route_options
@@ -133,6 +134,35 @@ interface action_route<O extends string> extends options {
 interface action_bypass<O extends string> extends options {
   action?: "bypass";
   outbound: O;
+}
+interface action_direct<DS extends string> {
+  action: "direct";
+  bind_interface?: string;
+  inet4_bind_address?: string;
+  inet6_bind_address?: string;
+  bind_address_no_port?: boolean;
+  protect_path?: string;
+  routing_mark?: string;
+  reuse_addr?: boolean;
+  netns?: string;
+  connect_timeout?: duration;
+  tcp_fast_open?: boolean;
+  tcp_multi_path?: boolean;
+  disable_tcp_keep_alive?: boolean;
+  /**
+   * @default 5m
+   */
+  tcp_keep_alive?: duration;
+  /**
+   * @default 75s
+   */
+  tcp_keep_alive_interval?: duration;
+  udp_fragment?: boolean;
+  domain_resolver?: DS | resolver<DS>;
+  network_strategy?: network_strategy;
+  network_type?: listable<network_type>;
+  fallback_network_type?: listable<network_type>;
+  fallback_delay?: duration;
 }
 interface action_reject {
   action: "reject";
@@ -232,6 +262,7 @@ interface remote_rule_set<
 > extends outline_rule_set<T> {
   type: "remote";
   url: string;
+  initial_path?: string;
   http_client?: H | headless_http_client<O, DS>;
   /**
    * @deprecated download_detour is deprecated in sing-box 1.14.0 and will be removed in sing-box 1.16.0, use {@link http_client} instead.

@@ -17,6 +17,7 @@ import type {
   item_with_tag,
   listable,
   listen,
+  memory_bytes,
   server,
 } from "./types.ts";
 
@@ -231,6 +232,11 @@ interface hysteria_realm<
   type: "hysteria-realm";
   tls?: server_tls<O, DS, C, H>;
   users: hysteria_realm_user[];
+  idle_timeout?: duration;
+  keep_alive_period?: duration;
+  stream_receive_window?: memory_bytes;
+  connection_receive_window?: memory_bytes;
+  max_concurrent_streams?: number;
 }
 
 interface usbip_server<

@@ -17,9 +17,11 @@ import type {
   headers,
   item_with_tag,
   listable,
+  memory_bytes,
   network,
   non_empty_array,
   server,
+  shadowsocks_legacy_method,
   shadowsocks_method,
 } from "./types.ts";
 
@@ -144,7 +146,7 @@ interface http<T extends string, O extends string, DS extends string>
   username?: string;
   password?: string;
   path?: string;
-  header?: headers;
+  headers?: headers;
   tls?: tls;
 }
 type shadowsocks<T extends string, O extends string, DS extends string> =
@@ -152,7 +154,7 @@ type shadowsocks<T extends string, O extends string, DS extends string> =
   & server
   & {
     type: "shadowsocks";
-    method: shadowsocks_method;
+    method: shadowsocks_method | shadowsocks_legacy_method;
     password: string;
     plugin?: "obfs-local" | "v2ray-plugin";
     plugin_opts?: string;
@@ -167,7 +169,14 @@ interface vmess<T extends string, O extends string, DS extends string>
   extends remote<T, O, DS>, server {
   type: "vmess";
   uuid: string;
-  security?: "auto" | "none" | "zero" | "aes-128-gcm" | "chacha20-poly1305";
+  security?:
+    | "auto"
+    | "none"
+    | "zero"
+    | "aes-128-cfb"
+    | "aes-128-gcm"
+    | "chacha20-poly1305";
+  alter_id?: number;
   global_padding?: boolean;
   authenticated_length?: boolean;
   tls?: tls;
@@ -190,12 +199,14 @@ interface naive<T extends string, O extends string, DS extends string>
   password?: string;
   insecure_concurrency?: number;
   extra_headers?: headers;
+  stream_receive_window?: memory_bytes;
   udp_over_tcp?: udp_over_tcp;
   quic?: boolean;
   /**
-   * @default bbr
+   * @default cubic
    */
   quic_congestion_control?: "bbr" | "bbr2" | "cubic" | "reno";
+  quic_session_receive_window?: memory_bytes;
   tls: Omit<
     tls,
     | "alpn"
@@ -294,6 +305,17 @@ interface base_hysteria2<
   obfs?: {
     type: "salamander";
     password: string;
+  } | {
+    type: "gecko";
+    password: string;
+    /**
+     * @default 512
+     */
+    min_packet_size?: number;
+    /**
+     * @default 1200
+     */
+    max_packet_size?: number;
   };
   password?: string;
   tls: tls;
@@ -344,7 +366,8 @@ type snell<T extends string, O extends string, DS extends string> =
   & (snell4 | snell6);
 type snell4 = {
   version: 4;
-  obfs_mode?: "none" | "http";
+  obfs_mode?: "none" | "http" | "tls";
+  obfs_host?: string;
 };
 type snell6 = {
   version: 6;

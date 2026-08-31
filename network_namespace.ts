@@ -27,5 +27,5 @@ interface default_namespace extends item_with_tag<string> {
 
 interface unshare_namespace extends item_with_tag<string> {
   type: "unshare";
-  path?: string;
+  pid_file?: string;
 }
