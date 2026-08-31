@@ -36,7 +36,7 @@ jobs:
       - working-directory: package
         run: |
           npm pkg set repository.url="git+https://github.com/jiang-zhexin/typebox.git"
-          npm publish --tag alpha
+          npm publish
 
   releases:
     runs-on: ubuntu-latest
@@ -55,7 +55,6 @@ jobs:
       - name: Release
         uses: softprops/action-gh-release@v3
         with:
-          prerelease: true
           files: |
             sing-box/docs/schema.json
             rule_set.json
