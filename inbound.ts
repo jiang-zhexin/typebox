@@ -464,6 +464,11 @@ interface tun<T extends string, RS extends string>
    */
   auto_redirect_reset_mark?: string;
   /**
+   * Mark for TProxy packets in auto redirect mode.
+   * @since 1.15.0
+   */
+  auto_redirect_tproxy_mark?: string;
+  /**
    * @default 100
    */
   auto_redirect_nfqueue?: number;

@@ -47,6 +47,16 @@ interface cache_file {
    */
   store_rdrc?: boolean;
   store_dns?: boolean;
+  /**
+   * Maximum size of the write buffer.
+   * @since 1.15.0
+   */
+  buffer_size?: memory_bytes;
+  /**
+   * The interval to flush the write buffer.
+   * @since 1.15.0
+   */
+  flush_interval?: duration;
   rdrc_timeout?: duration;
 }
 

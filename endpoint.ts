@@ -72,6 +72,11 @@ interface wireguard<T extends string, O extends string, DS extends string>
   listen_port: number;
   peers: peer[];
   workers?: number;
+  /**
+   * Disconnect the endpoint when there are no active connections.
+   * @since 1.15.0
+   */
+  on_demand?: boolean;
 }
 interface tailscale<T extends string, O extends string, DS extends string>
   extends dialer<O, DS>, item_with_tag<T> {
@@ -170,6 +175,11 @@ interface tailscale<T extends string, O extends string, DS extends string>
    * @since 1.14.0
    */
   taildrop_directory?: string;
+  /**
+   * Disconnect the endpoint when there are no active connections.
+   * @since 1.15.0
+   */
+  on_demand?: boolean;
 }
 type openvpn_client<T extends string, O extends string, DS extends string> =
   & dialer<O, DS>
@@ -216,6 +226,11 @@ type openvpn_client<T extends string, O extends string, DS extends string> =
     ping_restart_disabled?: boolean;
     tls_timeout?: duration;
     explicit_exit_notify?: number;
+    /**
+     * Disconnect the endpoint when there are no active connections.
+     * @since 1.15.0
+     */
+    on_demand?: boolean;
   }
   & (
     | server
@@ -287,6 +302,11 @@ type openconnect<T extends string, O extends string, DS extends string> =
     allow_insecure_crypto?: boolean;
     tls?: openconnect_tls;
     form_entries?: openconnect_form_entry[];
+    /**
+     * Disconnect the endpoint when there are no active connections.
+     * @since 1.15.0
+     */
+    on_demand?: boolean;
   };
 
 type openconnect_token =
