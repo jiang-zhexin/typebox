@@ -495,7 +495,17 @@ interface tun<T extends string, RS extends string>
   endpoint_independent_nat?: boolean;
   include_mac_address?: listable<string>;
   exclude_mac_address?: listable<string>;
+  /**
+   * Legacy TCP/IP stack. Omit to use sing-tun's own TCP/IP stack.
+   * @deprecated Since 1.15.0; will be removed in 1.17.0.
+   */
   stack?: "system" | "gvisor" | "mixed";
+  /**
+   * Enable IFF_MULTI_QUEUE to scale throughput with the number of CPU cores.
+   * Only supported on Linux and requires sing-tun's own TCP/IP stack.
+   * @since 1.15.0
+   */
+  multi_queue?: boolean;
   platform?: {
     http_proxy: tun_platform;
   };

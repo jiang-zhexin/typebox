@@ -44,7 +44,6 @@ const tun_in = createInbound({
   interface_name: "sing-box",
   address: ["172.19.0.1/30", "fdfe:dcba:9876::1/126"],
   auto_route: true,
-  stack: "system",
 });
 
 const direct_out = createOutbound({
