@@ -161,6 +161,16 @@ interface derp<
   tls: server_tls<O, DS, C, H>;
   config_path: string;
   verify_client_endpoint?: listable<string>;
+  /**
+   * Tailcat inbound tags to verify clients.
+   * @since 1.15.0
+   */
+  verify_client_inbound?: listable<I>;
+  /**
+   * Tailcat public keys to verify clients.
+   * @since 1.15.0
+   */
+  verify_client_key?: listable<string>;
   verify_client_url?: listable<verify_client_url<O, DS>> | listable<string>;
   home?: string;
   mesh_with?: listable<mesh_with<O, DS>>;

@@ -105,7 +105,40 @@ export type outbound<
   | tor<tag, outbound_tag, dns_server_tag>
   | ssh<tag, outbound_tag, dns_server_tag>
   | selector<tag, outbound_tag>
-  | urltest<tag, outbound_tag>;
+  | urltest<tag, outbound_tag>
+  | tailcat<tag, outbound_tag, dns_server_tag>;
+
+/**
+ * @since 1.15.0
+ */
+interface tailcat<T extends string, O extends string, DS extends string>
+  extends item_with_tag<T>, dialer<O, DS> {
+  type: "tailcat";
+  /** A random key is used by default. Use a fixed key for client verification. */
+  private_key?: string;
+  server_public_key: string;
+  server_disco_key: string;
+  pre_shared_key?: string;
+  /**
+   * @default https://tailcat.dev/derpmap.json
+   */
+  derp_map_url?: string;
+  /** Conflicts with derp_servers. */
+  derp_region?: number;
+  /** Conflicts with derp_map_url and derp_region. */
+  derp_servers?: listable<
+    string | {
+      host: string;
+      ipv4?: string;
+      ipv6?: string;
+      derp_port?: number;
+      stun_port?: number;
+      cert_name?: string;
+    }
+  >;
+  /** HTTP client used to fetch the DERP map. */
+  http_client?: headless_http_client<O, DS>;
+}
 
 interface remote<T extends string, O extends string, DS extends string>
   extends dialer<O, DS>, item_with_tag<T> {
