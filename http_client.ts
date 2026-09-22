@@ -14,6 +14,7 @@ import type {
   duration,
   headers,
   item_with_tag,
+  listable,
   memory_bytes,
 } from "./types.ts";
 
@@ -40,13 +41,22 @@ export interface http1_client {
 }
 
 export interface http2_client extends mux_client {
-  version?: 2;
+  version?: 0 | 2;
 }
 
 export interface quic_client extends mux_client {
   version: 3;
   initial_packet_size?: number;
   disable_path_mtu_discovery?: boolean;
+}
+
+/**
+ * HTTP/2 and QUIC server parameters, flattened into the configuration.
+ * HTTP/2 fields apply when serving version 2; QUIC fields require version 3.
+ * @since 1.15.0
+ */
+export interface http_server extends Omit<quic_client, "version"> {
+  version?: listable<1 | 2 | 3>;
 }
 
 interface base_client<O extends string, DS extends string>

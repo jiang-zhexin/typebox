@@ -8,7 +8,12 @@
  * ```
  */
 
-import type { headless_http_client, quic_client } from "./http_client.ts";
+import type {
+  headless_http_client,
+  http1_client,
+  http2_client,
+  quic_client,
+} from "./http_client.ts";
 import type { client_tls as tls } from "./tls.ts";
 import type { transport } from "./transport.ts";
 import type {
@@ -173,15 +178,30 @@ interface socks<T extends string, O extends string, DS extends string>
   password?: string;
   udp_over_tcp?: udp_over_tcp;
 }
-interface http<T extends string, O extends string, DS extends string>
-  extends dialer<O, DS>, server, item_with_tag<T> {
-  type: "http";
-  username?: string;
-  password?: string;
-  path?: string;
-  headers?: headers;
-  tls?: tls;
-}
+type http<T extends string, O extends string, DS extends string> =
+  & dialer<O, DS>
+  & server
+  & item_with_tag<T>
+  & {
+    type: "http";
+    username?: string;
+    password?: string;
+    /** Only available for HTTP/1.1. */
+    path?: string;
+    headers?: headers;
+    tls?: tls;
+    /**
+     * Disable automatic fallback to lower HTTP versions.
+     * @since 1.15.0
+     */
+    disable_version_fallback?: boolean;
+  }
+  /**
+   * HTTP/2 by default, or HTTP/1.1 when path or the Host header is set.
+   * HTTP/2 and QUIC parameters are flattened into the configuration.
+   * @since 1.15.0
+   */
+  & (http1_client | http2_client | quic_client);
 type shadowsocks<T extends string, O extends string, DS extends string> =
   & remote<T, O, DS>
   & server

@@ -8,10 +8,22 @@
  * ```
  */
 
-import type { cipher_suites, tls_version } from "./tls.ts";
+import type {
+  http1_client,
+  http2_client,
+  http_server,
+  quic_client,
+} from "./http_client.ts";
+import type {
+  cipher_suites,
+  client_tls,
+  server_tls,
+  tls_version,
+} from "./tls.ts";
 import type {
   dialer,
   duration,
+  headers,
   item_with_tag,
   listable,
   listen,
@@ -25,9 +37,25 @@ export function createEndpoint<
   outbound_tag extends string = never,
   dns_server_tag extends string = never,
   inbound_tag extends string = never,
+  certificate_provider_tag extends string = never,
+  http_client_tag extends string = never,
 >(
-  endpoint: endpoint<tag, outbound_tag, dns_server_tag, inbound_tag>,
-): endpoint<tag, outbound_tag, dns_server_tag, inbound_tag> {
+  endpoint: endpoint<
+    tag,
+    outbound_tag,
+    dns_server_tag,
+    inbound_tag,
+    certificate_provider_tag,
+    http_client_tag
+  >,
+): endpoint<
+  tag,
+  outbound_tag,
+  dns_server_tag,
+  inbound_tag,
+  certificate_provider_tag,
+  http_client_tag
+> {
   return endpoint;
 }
 
@@ -36,12 +64,28 @@ export function createEndpoints<
   outbound_tag extends string = never,
   dns_server_tag extends string = never,
   inbound_tag extends string = never,
+  certificate_provider_tag extends string = never,
+  http_client_tag extends string = never,
 >(
   endpoints: non_empty_array<
-    endpoint<tag, outbound_tag | NoInfer<tag>, dns_server_tag, inbound_tag>
+    endpoint<
+      tag,
+      outbound_tag | NoInfer<tag>,
+      dns_server_tag,
+      inbound_tag,
+      certificate_provider_tag,
+      http_client_tag
+    >
   >,
 ): non_empty_array<
-  endpoint<tag, outbound_tag | NoInfer<tag>, dns_server_tag, inbound_tag>
+  endpoint<
+    tag,
+    outbound_tag | NoInfer<tag>,
+    dns_server_tag,
+    inbound_tag,
+    certificate_provider_tag,
+    http_client_tag
+  >
 > {
   return endpoints;
 }
@@ -54,12 +98,81 @@ export type endpoint<
   outbound_tag extends string,
   dns_server_tag extends string,
   inbound_tag extends string,
+  certificate_provider_tag extends string = never,
+  http_client_tag extends string = never,
 > =
   | wireguard<tag, outbound_tag, dns_server_tag>
   | tailscale<tag, outbound_tag, dns_server_tag>
   | openvpn_client<tag, outbound_tag, dns_server_tag>
   | openvpn_server<tag, inbound_tag>
-  | openconnect<tag, outbound_tag, dns_server_tag>;
+  | openconnect<tag, outbound_tag, dns_server_tag>
+  | masque_client<tag, outbound_tag, dns_server_tag>
+  | masque_server<
+    tag,
+    outbound_tag,
+    dns_server_tag,
+    inbound_tag,
+    certificate_provider_tag,
+    http_client_tag
+  >;
+
+/** @since 1.15.0 */
+interface base_masque extends udp_nat {
+  /** Use a system TUN interface instead of the internal network stack. */
+  system?: boolean;
+  name?: string;
+  /** @default 1280 */
+  mtu?: number;
+  /** IP prefixes to advertise to the peer. */
+  advertise_routes?: listable<string>;
+  /** @default /.well-known/masque/ip/{target}/{ipproto}/ */
+  path?: string;
+}
+
+/** @since 1.15.0 */
+type masque_client<T extends string, O extends string, DS extends string> =
+  & dialer<O, DS>
+  & server
+  & item_with_tag<T>
+  & base_masque
+  & {
+    type: "masque-client";
+    username?: string;
+    password?: string;
+    headers?: headers;
+    disable_version_fallback?: boolean;
+    /** Required for HTTP/3. */
+    tls?: client_tls;
+    /** Allow the endpoint to be disconnected when necessary. */
+    on_demand?: boolean;
+  }
+  & (
+    | http1_client
+    | (Omit<http2_client, "version"> & { version: 2 })
+    | (Omit<quic_client, "version"> & {
+      /** @default 3 */
+      version?: 0 | 3;
+    })
+  );
+
+/** @since 1.15.0 */
+interface masque_server<
+  T extends string,
+  O extends string,
+  DS extends string,
+  I extends string,
+  C extends string,
+  H extends string,
+> extends listen<T, I>, base_masque, http_server {
+  type: "masque-server";
+  /** All HTTP versions are served by default. */
+  version?: listable<1 | 2 | 3>;
+  users?: { username: string; password: string }[];
+  /** Required for HTTP/3. May be omitted behind a TLS-terminating intermediary. */
+  tls?: server_tls<O, DS, C, H>;
+  /** Tunnel network prefixes, at most one per IP version. */
+  address: listable<string>;
+}
 
 interface wireguard<T extends string, O extends string, DS extends string>
   extends dialer<O, DS>, item_with_tag<T>, udp_nat {

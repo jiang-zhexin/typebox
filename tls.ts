@@ -19,6 +19,11 @@ export interface server_tls<
   client_authentication?: client_authentication;
   client_certificate?: listable<string>;
   client_certificate_path?: listable<string>;
+  /**
+   * Base64 SHA-256 hashes of whole DER-encoded client certificates.
+   * @since 1.15.0
+   */
+  client_certificate_sha256?: listable<string>;
   client_certificate_public_key_sha256?: listable<string>;
   certificate_provider?: C | headless_certificate_provider<O, H, DS>;
 }
@@ -35,6 +40,12 @@ export interface client_tls extends base_tls {
   fragment?: boolean;
   fragment_fallback_delay?: duration;
   record_fragment?: boolean;
+  /**
+   * Base64 SHA-256 hashes of whole DER-encoded server certificates.
+   * Unlike public key pins, these change whenever the certificate is renewed.
+   * @since 1.15.0
+   */
+  certificate_sha256?: listable<string>;
   certificate_public_key_sha256?: listable<string>;
   client_certificate?: listable<string>;
   client_certificate_path?: string;

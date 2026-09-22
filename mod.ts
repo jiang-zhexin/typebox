@@ -75,7 +75,9 @@ export interface typebox<
       endpoint_tag,
       NoInfer<outbound_tag | endpoint_tag>,
       NoInfer<dns_server_tag>,
-      NoInfer<inbound_tag | endpoint_tag>
+      NoInfer<inbound_tag | endpoint_tag>,
+      NoInfer<certificate_provider_tag>,
+      NoInfer<http_client_tag>
     >
   >;
   inbounds?: non_empty_array<

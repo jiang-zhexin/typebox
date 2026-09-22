@@ -8,7 +8,7 @@
  * ```
  */
 
-import type { headless_http_client } from "./http_client.ts";
+import type { headless_http_client, http_server } from "./http_client.ts";
 import type { server_tls as tls } from "./tls.ts";
 import type { transport } from "./transport.ts";
 import type {
@@ -239,8 +239,14 @@ interface http<
   I extends string,
   C extends string,
   H extends string,
-> extends listen<T, I> {
+> extends listen<T, I>, http_server {
   type: "http";
+  /**
+   * HTTP versions to serve. TLS is required for version 3.
+   * @default [1, 2]
+   * @since 1.15.0
+   */
+  version?: listable<1 | 2 | 3>;
   users?: auth[];
   set_system_proxy?: boolean;
   tls?: tls<O, DS, C, H>;
