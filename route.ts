@@ -117,7 +117,7 @@ type rule_item<
   I extends string,
   RS extends string,
   DS extends string,
-> = default_rule<I, RS, O> | logical_rule<O, I, RS, DS>;
+> = default_rule<I, RS, O, DS> | logical_rule<O, I, RS, DS>;
 type action<O extends string, DS extends string> =
   | action_route<O>
   | action_bypass<O>
@@ -216,8 +216,12 @@ interface action_sniff {
 interface action_resolve<DS extends string> extends Partial<resolver<DS>> {
   action: "resolve";
 }
-interface default_rule<I extends string, RS extends string, O extends string>
-  extends default_rule_with_metadata<I, RS> {
+interface default_rule<
+  I extends string,
+  RS extends string,
+  O extends string,
+  DS extends string,
+> extends default_rule_with_metadata<I, RS, DS> {
   client?: listable<quic_client>;
   /**
    * Match specified outbounds' preferred routes.

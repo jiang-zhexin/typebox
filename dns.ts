@@ -398,7 +398,7 @@ interface default_rule<
   RS extends string,
   DS extends string,
   MS extends string,
-> extends default_rule_with_metadata<I, RS> {
+> extends default_rule_with_metadata<I, RS, DS> {
   query_type?: listable<string | number>;
   query_client_subnet?: listable<string>;
   query_dnssec?: boolean;

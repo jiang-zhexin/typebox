@@ -44,8 +44,11 @@ export interface base_logical_rule extends rule {
   mode: "and" | "or";
 }
 
-export interface default_rule_with_metadata<I extends string, RS extends string>
-  extends base_default_rule {
+export interface default_rule_with_metadata<
+  I extends string,
+  RS extends string,
+  DS extends string = string,
+> extends base_default_rule {
   inbound?: listable<I>;
   ip_version?: 4 | 6;
   auth_user?: listable<string>;
@@ -55,6 +58,18 @@ export interface default_rule_with_metadata<I extends string, RS extends string>
   user?: listable<string>;
   user_id?: listable<number>;
   clash_mode?: string;
+  /**
+   * Match DNS server addresses obtained from the system, DHCP or VPN.
+   * Keys are DNS server tags; values are IP addresses or CIDR prefixes.
+   * @since 1.15.0
+   */
+  dns_server_address?: Partial<Record<DS, listable<string>>>;
+  /**
+   * Match search domains obtained from the system, DHCP or VPN.
+   * Keys are DNS server tags; values are search domains.
+   * @since 1.15.0
+   */
+  dns_search_domain?: Partial<Record<DS, listable<string>>>;
   rule_set?: listable<RS>;
   rule_set_ip_cidr_match_source?: boolean;
 }
